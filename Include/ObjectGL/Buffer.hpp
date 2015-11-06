@@ -61,6 +61,8 @@ namespace ObjectGL{
 		virtual void Destroy() override;
 	};
 
+	//typedef BindGuard<const BufferTarget> BufferGuard;
+
 }
 
 #include "Buffer.inl"

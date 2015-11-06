@@ -42,10 +42,23 @@ namespace ObjectGL{
 	public:
 		friend Program;
 	public:
+		enum Type : GLenum{
+			VERTEX					= GL_VERTEX_SHADER,
+			GEOMETRY				= GL_GEOMETRY_SHADER,
+			FRAGMENT				= GL_FRAGMENT_SHADER,
+			#if OBJECT_GL_MAX_VERSION_MAJOR >= 4
+				#if OBJECT_GL_MAX_VERSION_MINOR >= 3
+					COMPUTE = GL_COMPUTE_SHADER,
+				#endif
+				TESSELLATION_CONTROL	= GL_TESS_CONTROL_SHADER,
+				TESSELLATION_EVALUATION	= GL_TESS_EVALUATION_SHADER,
+			#endif
+		};
+	public:
 		Shader(Context& aContext);
 		virtual ~Shader();
 
-		virtual GLenum GetType() const = 0;
+		virtual Type GetType() const = 0;
 
 		virtual GLuint GetMaxUniformComponents() const = 0;
 		virtual GLuint GetMaxUniformBlocks() const = 0;

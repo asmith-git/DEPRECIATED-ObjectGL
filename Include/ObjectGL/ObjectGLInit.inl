@@ -1,5 +1,5 @@
-#ifndef OBJECT_GL_CONTEXT_HPP
-#define OBJECT_GL_CONTEXT_HPP
+#ifndef OBJECT_GL_INIT_INL
+#define OBJECT_GL_INIT_INL
 
 //Copyright 2015 Adam Smith
 //
@@ -19,42 +19,18 @@
 // Email             : $objectgl_email
 // GitHub repository : $objectgl_git
 
-#include "ObjectGLInit.inl"
+#include "..\GLLoadGen\gl_core_3_3.h"
+#include "..\GL\freeglut.h"
 
 /*!
-	\file Context.hpp
+	\file ObjectGLInit.inl
 	\brief
 	\author Adam Smith
-	\date 4th November 2015
+	\date 6th November 2015
 */
 
-namespace ObjectGL{
-	
-	/*!
-		\brief
-		\author Adam Smith
-		\date 4th November 2015
-		\version 1.0
-	*/
-	class Context{
-	private:
-		const GLuint mVersionMajor;
-		const GLuint mVersionMinor;
-	private:
-		Context(const Context&);
-		Context(Context&&);
-		Context& operator=(const Context&);
-		Context& operator=(Context&&);
-	public:
-		Context(const GLuint, const GLuint);
-		~Context();
-
-		GLuint GetVersionMajor() const;
-		GLuint GetVersionMinor() const;
-	};
-
-}
-
-#include "Context.inl"
+#define OBJECT_GL
+#define OBJECT_GL_MAX_VERSION_MAJOR 3
+#define OBJECT_GL_MIN_VERSION_MINOR 1
 
 #endif

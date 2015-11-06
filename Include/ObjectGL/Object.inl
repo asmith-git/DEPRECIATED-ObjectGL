@@ -56,7 +56,7 @@ namespace ObjectGL{
 	}
 
 	Object::ID Object::GetID() const{
-		return static_cast<ObjectID>(mID);
+		return static_cast<ID>(mID);
 	}
 
 	Context& Object::GetContext() const{

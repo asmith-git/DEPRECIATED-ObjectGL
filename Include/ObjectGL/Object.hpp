@@ -40,18 +40,21 @@ namespace ObjectGL{
 	*/
 	class Object{
 	public:
+		friend Context;
+	public:
 		enum ID : GLuint{
 			INVALID_ID = 0
 		};
-	private:
-		Context& mContext;
 	protected:
+		Context& mContext;
 		GLuint mID;
 	private:
 		Object(const Object&) = delete;
 		Object(Object&&) = delete;
 		Object& operator=(const Object&) = delete;
 		Object& operator=(Object&&) = delete;
+	protected:
+		virtual void OnContextCreated() = 0;
 	public:
 		Object(Context&);
 		virtual ~Object();

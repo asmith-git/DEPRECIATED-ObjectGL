@@ -73,6 +73,10 @@ namespace ObjectGL{
 		mID = INVALID_ID;
 	}
 
+	void Buffer::OnContextCreated(){
+		//! \todo Rebind buffer if current
+	}
+
 }
 
 #endif

@@ -26,6 +26,8 @@
 	\date 4th November 2015
 */
 
+#include "Object.hpp"
+
 namespace ObjectGL{
 
 	static bool GLUT_INIT = false;
@@ -64,6 +66,19 @@ namespace ObjectGL{
 
 	const Program& Context::GetCurrentProgram() const{
 		return *mProgramStack.back();
+	}
+
+	void Context::Create(){
+		for(Object* object : mObjectList){
+			object->Create();
+			object->OnContextCreated();
+		}
+	}
+
+	void Context::Destroy(){
+		for(Object* object : mObjectList){
+			object->Destroy();
+		}
 	}
 
 }

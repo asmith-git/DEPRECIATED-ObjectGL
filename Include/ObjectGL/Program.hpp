@@ -48,6 +48,10 @@ namespace ObjectGL{
 		typedef BindGuard<void> Guard;
 	private:
 		std::vector<Shader*> mShaders;
+	protected:
+		// Inherited from Object
+
+		void OnContextCreated() override;
 	public:
 		Program(Context&);
 		~Program();

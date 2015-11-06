@@ -39,21 +39,19 @@ namespace ObjectGL{
 	Program::~Program(){
 		if (IsCreated()) Destroy();
 
-		// Remove all references to this program from the context
-		Context& context = GetContext();
-
+		// Remove all references to this program from the mContext
 		bool erased = false;
-		while ((!context.mProgramStack.empty()) && context.mProgramStack.back() == this){
+		while ((!mContext.mProgramStack.empty()) && mContext.mProgramStack.back() == this){
 			erased = true;
-			context.mProgramStack.pop_back();
+			mContext.mProgramStack.pop_back();
 		}
 
-		if(erased) glUseProgram(context.mProgramStack.empty() ? 0 : context.mProgramStack.back()->mID);
+		if(erased) glUseProgram(mContext.mProgramStack.empty() ? 0 : mContext.mProgramStack.back()->mID);
 
-		auto it = std::find(context.mProgramStack.begin(), context.mProgramStack.end(), this);
-		while(it != context.mProgramStack.end()){
-			context.mProgramStack.erase(it);
-			it = std::find(context.mProgramStack.begin(), context.mProgramStack.end(), this);
+		auto it = std::find(mContext.mProgramStack.begin(), mContext.mProgramStack.end(), this);
+		while(it != mContext.mProgramStack.end()){
+			mContext.mProgramStack.erase(it);
+			it = std::find(mContext.mProgramStack.begin(), mContext.mProgramStack.end(), this);
 			erased = true;
 		}
 	}
@@ -102,24 +100,23 @@ namespace ObjectGL{
 		mID = 0;
 	}
 
-	void Program::Bind(){
-		Context& context = GetContext();
+	void Program::OnContextCreated(){
+		if(mContext.mProgramStack.empty() || mContext.mProgramStack.back() != this) glUseProgram(mID);
+	}
 
-		context.mProgramStack.push_back(this);
+	void Program::Bind(){
+		mContext.mProgramStack.push_back(this);
 		glUseProgram(mID);
 	}
 
 	void Program::Unbind(){
-		Context& context = GetContext();
-
-		if(context.mProgramStack.empty() || context.mProgramStack.back() != this) throw std::runtime_error("ObjectGL::Program : Program is not currently bound to Context");
-		context.mProgramStack.pop_back();
-		glUseProgram(context.mProgramStack.empty() ? 0 : context.mProgramStack.back()->mID);
+		if(mContext.mProgramStack.empty() || mContext.mProgramStack.back() != this) throw std::runtime_error("ObjectGL::Program : Program is not currently bound to Context");
+		mContext.mProgramStack.pop_back();
+		glUseProgram(mContext.mProgramStack.empty() ? 0 : mContext.mProgramStack.back()->mID);
 	}
 
 	bool Program::IsBound() const{
-		const Context& context = GetContext();
-		return context.mProgramStack.empty() ? false : context.mProgramStack.back() == this;
+		return mContext.mProgramStack.empty() ? false : mContext.mProgramStack.back() == this;
 	}
 
 }

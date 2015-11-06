@@ -31,6 +31,7 @@
 
 namespace ObjectGL{
 
+	class Object;
 	class Program;
 	
 	/*!
@@ -40,12 +41,14 @@ namespace ObjectGL{
 		\version 1.0
 	*/
 	class Context{
-	public: 
+	public:
+		friend Object;
 		friend Program;
 	private:
 		const GLuint mVersionMajor;
 		const GLuint mVersionMinor;
 		std::vector<Program*> mProgramStack;
+		std::vector<Object*> mObjectList;
 	private:
 		Context(const Context&);
 		Context(Context&&);
@@ -54,6 +57,9 @@ namespace ObjectGL{
 	public:
 		Context(const GLuint, const GLuint);
 		~Context();
+
+		void Create();
+		void Destroy();
 
 		GLuint GetVersionMajor() const;
 		GLuint GetVersionMinor() const;

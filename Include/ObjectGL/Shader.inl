@@ -77,6 +77,10 @@ namespace ObjectGL{
 		mID = 0;
 	}
 
+	void Shader::OnContextCreated(){
+		
+	}
+
 }
 
 #endif

@@ -59,6 +59,10 @@ namespace ObjectGL{
 		};
 	protected:
 		SourceFactory& mSource;
+	protected:
+		// Inherited from Object
+
+		virtual void OnContextCreated() override;
 	public:
 		Shader(Context& aContext, SourceFactory& aSource);
 		virtual ~Shader();

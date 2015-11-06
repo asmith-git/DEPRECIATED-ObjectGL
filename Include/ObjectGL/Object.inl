@@ -35,10 +35,14 @@ namespace ObjectGL{
 	Object::Object(Context& aContext):
 		mContext(aContext),
 		mID(0)
-	{}
+	{
+		mContext.mObjectList.push_back(this);
+	}
 
 	Object::~Object(){
-		
+		mContext.mObjectList.erase(
+			std::find(mContext.mObjectList.begin(), mContext.mObjectList.end(), this)
+		);
 	}
 
 	bool Object::IsCreated() const{

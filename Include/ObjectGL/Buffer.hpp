@@ -41,6 +41,10 @@ namespace ObjectGL{
 	class Buffer : public Object, public Bindable<const BufferTarget>{
 	protected:
 		GLuint mSize;
+	protected:
+		// Inherited from Object
+
+		virtual void OnContextCreated() override;
 	public:
 		Buffer(Context&);
 		virtual ~Buffer();

@@ -102,6 +102,42 @@ namespace ObjectGL { namespace ColourFormat{
 			return Implementation::CopyBits<Format::FormatSizeBits>(&aValue, 0, aData, aOffset * Format::FormatSizeBits);
 		}
 	};
+
+	template<class STORAGE>
+	using ColourR = ColourFormat<STORAGE, 1>;
+
+	template<class STORAGE>
+	using ColourRG = ColourFormat<STORAGE, 2>;
+
+	template<class STORAGE>
+	using ColourRGB = ColourFormat<STORAGE, 3>;
+
+	template<class STORAGE>
+	using ColourRGBA = ColourFormat<STORAGE, 4>;
+
+	typedef ColourR<StorageUnsignedNormalised>		ColourR_UN;
+	typedef ColourR<StorageSignedNormalised>		ColourR_IN;
+	typedef ColourR<StorageUnsignedIntegral>		ColourR_U;
+	typedef ColourR<StorageSignedIntegral>			ColourR_I;
+	typedef ColourR<StorageFloat>					ColourR_F;
+
+	typedef ColourRG<StorageUnsignedNormalised>		ColourRG_UN;
+	typedef ColourRG<StorageSignedNormalised>		ColourRG_IN;
+	typedef ColourRG<StorageUnsignedIntegral>		ColourRG_U;
+	typedef ColourRG<StorageSignedIntegral>			ColourRG_I;
+	typedef ColourRG<StorageFloat>					ColourRG_F;
+
+	typedef ColourRGB<StorageUnsignedNormalised>	ColourRGB_UN;
+	typedef ColourRGB<StorageSignedNormalised>		ColourRGB_IN;
+	typedef ColourRGB<StorageUnsignedIntegral>		ColourRGB_U;
+	typedef ColourRGB<StorageSignedIntegral>		ColourRGB_I;
+	typedef ColourRGB<StorageFloat>					ColourRGB_F;
+
+	typedef ColourRGBA<StorageUnsignedNormalised>	ColourRGBA_UN;
+	typedef ColourRGBA<StorageSignedNormalised>		ColourRGBA_IN;
+	typedef ColourRGBA<StorageUnsignedIntegral>		ColourRGBA_U;
+	typedef ColourRGBA<StorageSignedIntegral>		ColourRGBA_I;
+	typedef ColourRGBA<StorageFloat>				ColourRGBA_F;
 }}
 
 #include "ColourFormat.inl"

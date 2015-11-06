@@ -54,6 +54,17 @@ namespace ObjectGL{
 		return mVersionMinor;
 	}
 
+	bool Context::HasProgramBound() const{
+		return ! mProgramStack.empty();
+	}
+
+	Program& Context::GetCurrentProgram(){
+		return *mProgramStack.back();
+	}
+
+	const Program& Context::GetCurrentProgram() const{
+		return *mProgramStack.back();
+	}
 
 }
 

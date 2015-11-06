@@ -1,5 +1,5 @@
-#ifndef OBJECT_GL_CONTEXT_HPP
-#define OBJECT_GL_CONTEXT_HPP
+#ifndef OBJECT_GL_PROGRAM_HPP
+#define OBJECT_GL_PROGRAM_HPP
 
 //Copyright 2015 Adam Smith
 //
@@ -20,51 +20,53 @@
 // GitHub repository : $objectgl_git
 
 #include <vector>
-#include "ObjectGLInit.inl"
+#include "Bindable.hpp"
+#include "Shader.hpp"
 
 /*!
-	\file Context.hpp
+	\file Program.hpp
 	\brief
 	\author Adam Smith
-	\date 4th November 2015
+	\date 6th November 2015
 */
 
 namespace ObjectGL{
 
-	class Program;
-	
+	//! \todo Program vertex shader inputs
+	//! \todo Program fragment shader outputs
+	//! \todo Program transform feedpack
+	//! \todo Program speration
+
 	/*!
 		\brief
 		\author Adam Smith
-		\date 4th November 2015
+		\date 6th November 2015
 		\version 1.0
 	*/
-	class Context{
-	public: 
-		friend Program;
-	private:
-		const GLuint mVersionMajor;
-		const GLuint mVersionMinor;
-		std::vector<Program*> mProgramStack;
-	private:
-		Context(const Context&);
-		Context(Context&&);
-		Context& operator=(const Context&);
-		Context& operator=(Context&&);
+	class Program : public Object, public Bindable<void>{
 	public:
-		Context(const GLuint, const GLuint);
-		~Context();
+		typedef BindGuard<void> Guard;
+	private:
+		std::vector<Shader*> mShaders;
+	public:
+		Program(Context&);
+		~Program();
 
-		GLuint GetVersionMajor() const;
-		GLuint GetVersionMinor() const;
+		void Attach(Shader&);
 
-		bool HasProgramBound() const;
-		Program& GetCurrentProgram();
-		const Program& GetCurrentProgram() const;
+		// Inherited from Bindable
+		void Bind() override;
+		void Unbind() override;
+		bool IsBound() const override;
+
+		// Inherited from Object
+
+		void Create() override;
+		void Destroy() override;
 	};
 
 }
 
-#include "Context.inl"
+#include "Program.inl"
 
 #endif

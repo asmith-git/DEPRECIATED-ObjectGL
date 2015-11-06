@@ -50,6 +50,7 @@ namespace ObjectGL{
 		const GLint length = std::strlen(source);
 
 		mID = glCreateShader(type);
+		if(mID == Object::INVALID_ID) throw std::runtime_error("ObjectGL::Shader : glCreateShader returned invalid ID");
 		glShaderSource(mID, 1, &source, &length);
 		glCompileShader(mID);
 

@@ -64,6 +64,7 @@ namespace ObjectGL{
 	void Buffer::Create(){
 		if(IsCreated()) throw std::runtime_error("ObjectGL::Buffer : Buffer has already been created");
 		glGenBuffers(1, &mID);
+		if(mID == Object::INVALID_ID) throw std::runtime_error("ObjectGL::Buffer : glGenBuffers returned invalid ID");
 	}
 
 	void Buffer::Destroy(){

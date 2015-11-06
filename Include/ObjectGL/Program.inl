@@ -67,6 +67,7 @@ namespace ObjectGL{
 		if(IsCreated()) throw std::runtime_error("ObjectGL::Program : Program has already been linked");
 
 		mID = glCreateProgram();
+		if(mID == Object::INVALID_ID) throw std::runtime_error("ObjectGL::Program : glCreateProgram returned invalid ID");
 		
 		for(const Shader* const shader : mShaders){
 			glAttachShader(mID, static_cast<GLuint>(shader->GetID()));

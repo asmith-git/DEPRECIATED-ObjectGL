@@ -28,9 +28,41 @@
 
 #include "Object.hpp"
 #include "Bindable.hpp"
-#include "BufferTarget.hpp"
 
 namespace ObjectGL{
+
+	namespace BufferImplementation{
+		enum class Target : GLenum{
+			ARRAY = GL_ARRAY_BUFFER,
+			COPY_READ = GL_COPY_READ_BUFFER,
+			COPY_WRITE = GL_COPY_WRITE_BUFFER,
+			ELEMENT_ARRAY = GL_ELEMENT_ARRAY_BUFFER,
+			PIXEL_PACK = GL_PIXEL_PACK_BUFFER,
+			PIXEL_UNPACK = GL_PIXEL_UNPACK_BUFFER,
+			TEXTURE = GL_TEXTURE_BUFFER,
+			TRANSFORM_FEEDBACK = GL_TRANSFORM_FEEDBACK_BUFFER,
+			UNIFORM = GL_UNIFORM_BUFFER,
+			#if OBJECT_GL_MAX_VERSION_MAJOR >= 4
+						ATOMIC_COUNTER = GL_ATOMIC_COUNTER_BUFFER,
+						DRAW_INDIRECT = GL_DRAW_INDIRECT_BUFFER,
+						DISPATCH_INDIRECT = GL_DISPATCH_INDIRECT_BUFFER,
+						QUERY = GL_QUERY_BUFFER,
+						SHADER_STORAGE = GL_SHADER_STORAGE_BUFFER
+			#endif
+		};
+
+		enum class Frequency{
+			STATIC,
+			DYNAMIC,
+			STREAM
+		};
+
+		enum class Usage{
+			DRAW,
+			READ,
+			COPY
+		};
+	}
 
 	/*!
 		\brief
@@ -38,7 +70,11 @@ namespace ObjectGL{
 		\date 4th November 2015
 		\version 1.0
 	*/
-	class Buffer : public Object, public Bindable<const BufferTarget>{
+	class Buffer : public Object, public Bindable<const BufferImplementation::Target>{
+	public:
+		typedef BufferImplementation::Target Target;
+		typedef BufferImplementation::Frequency Frequency;
+		typedef BufferImplementation::Usage Usage;
 	protected:
 		GLuint mSize;
 	protected:
@@ -55,9 +91,9 @@ namespace ObjectGL{
 
 		// Inherited from Bindable
 
-		void Bind(const BufferTarget) override;
-		void Unbind(const BufferTarget) override;
-		bool IsBound(const BufferTarget) const override;
+		void Bind(const Target) override;
+		void Unbind(const Target) override;
+		bool IsBound(const Target) const override;
 
 		// Inherited from Object
 

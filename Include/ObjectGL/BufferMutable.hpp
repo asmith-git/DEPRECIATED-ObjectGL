@@ -20,19 +20,17 @@
 // GitHub repository : $objectgl_git
 
 /*!
-	\file MutableBuffer.hpp
+	\file BufferMutable.hpp
 	\brief
 	\author Adam Smith
 	\date 4th November 2015
 */
 
 #include "Buffer.hpp"
-#include "BufferFrequency.hpp"
-#include "BufferUsage.hpp"
 
 namespace ObjectGL{
 	
-	static /*constexpr*/ GLenum GetBufferHint(const BufferFrequency, const BufferUsage);
+	static /*constexpr*/ GLenum GetBufferHint(const Buffer::Frequency, const Buffer::Usage);
 
 	/*!
 		\brief
@@ -40,11 +38,11 @@ namespace ObjectGL{
 		\date 4th November 2015
 		\version 1.0
 	*/
-	template<const BufferFrequency FREQ, const BufferUsage USE>
+	template<const Buffer::Frequency FREQ, const Buffer::Usage USE>
 	class MutableBuffer : public Buffer, public ReadWriteMapable{
 	public:
-		static const BufferFrequency Frequency = FREQ;
-		static const BufferUsage Usage = USE;
+		static const Buffer::Frequency Frequency = FREQ;
+		static const Buffer::Usage Usage = USE;
 	public:
 		MutableBuffer(Context&);
 		~MutableBuffer();
@@ -79,17 +77,17 @@ namespace ObjectGL{
 		void Allocate(const GLuint) override;
 	};
 
-	typedef MutableBuffer<BufferFrequency::STATIC, BufferUsage::DRAW> StaticDrawBuffer;
-	typedef MutableBuffer<BufferFrequency::STATIC, BufferUsage::READ> StaticReadBuffer;
-	typedef MutableBuffer<BufferFrequency::STATIC, BufferUsage::COPY> StaticCopyBuffer;
+	typedef MutableBuffer<Buffer::Frequency::STATIC, Buffer::Usage::DRAW> StaticDrawBuffer;
+	typedef MutableBuffer<Buffer::Frequency::STATIC, Buffer::Usage::READ> StaticReadBuffer;
+	typedef MutableBuffer<Buffer::Frequency::STATIC, Buffer::Usage::COPY> StaticCopyBuffer;
 
-	typedef MutableBuffer<BufferFrequency::DYNAMIC, BufferUsage::DRAW> DynamicDrawBuffer;
-	typedef MutableBuffer<BufferFrequency::DYNAMIC, BufferUsage::READ> DynamicReadBuffer;
-	typedef MutableBuffer<BufferFrequency::DYNAMIC, BufferUsage::COPY> DynamicCopyBuffer;
+	typedef MutableBuffer<Buffer::Frequency::DYNAMIC, Buffer::Usage::DRAW> DynamicDrawBuffer;
+	typedef MutableBuffer<Buffer::Frequency::DYNAMIC, Buffer::Usage::READ> DynamicReadBuffer;
+	typedef MutableBuffer<Buffer::Frequency::DYNAMIC, Buffer::Usage::COPY> DynamicCopyBuffer;
 
-	typedef MutableBuffer<BufferFrequency::STREAM, BufferUsage::DRAW> StreamDrawBuffer;
-	typedef MutableBuffer<BufferFrequency::STREAM, BufferUsage::READ> StreamReadBuffer;
-	typedef MutableBuffer<BufferFrequency::STREAM, BufferUsage::COPY> StreamCopyBuffer;
+	typedef MutableBuffer<Buffer::Frequency::STREAM, Buffer::Usage::DRAW> StreamDrawBuffer;
+	typedef MutableBuffer<Buffer::Frequency::STREAM, Buffer::Usage::READ> StreamReadBuffer;
+	typedef MutableBuffer<Buffer::Frequency::STREAM, Buffer::Usage::COPY> StreamCopyBuffer;
 
 	template<const BufferUsage USE>
 	using StaticBuffer = MutableBuffer<BufferFrequency::STATIC, USE>;

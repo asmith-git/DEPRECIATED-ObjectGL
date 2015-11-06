@@ -42,21 +42,21 @@ namespace ObjectGL{
 		return mSize;
 	}
 
-	void Buffer::Bind(const BufferTarget aTarget){
+	void Buffer::Bind(const Target aTarget){
 		glBindBuffer(
 			static_cast<GLenum>(aTarget), 
 			static_cast<GLint>(GetID())
 		);
 	}
 
-	void Buffer::Unbind(const BufferTarget aTarget){
+	void Buffer::Unbind(const Target aTarget){
 		glBindBuffer(
 			static_cast<GLenum>(aTarget),
 			0
 		);
 	}
 	
-	bool Buffer::IsBound(const BufferTarget aTarget) const{
+	bool Buffer::IsBound(const Target aTarget) const{
 		//! \todo Implement Buffer::IsBound
 		return false;
 	}

@@ -65,7 +65,7 @@ namespace ObjectGL{
 			glDeleteShader(mID);
 			mID = 0;
 
-			throw std::runtime_error("ObjectGL : Failed to compile shader : " + log);
+			throw std::runtime_error(std::string("ObjectGL::Shader : Failed to compile shader source : ") + log.c_str());
 		}
 	}
 

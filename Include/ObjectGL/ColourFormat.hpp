@@ -28,6 +28,7 @@
 
 #include <cstdint>
 #include "ObjectGLInit.inl"
+#include "BinaryData.hpp"
 
 namespace ObjectGL { namespace ColourFormat{
 
@@ -35,7 +36,6 @@ namespace ObjectGL { namespace ColourFormat{
 
 		template<const GLuint BITS>
 		static void CopyBits(const void* aSrc, const GLuint aSrcOffset, void* aDst, const GLuint aDstOffset){
-			//! \todo Optimise
 
 			const bool byteAligned = ! ((BITS & 7) || (aSrcOffset & 7) || (aDstOffset & 7));
 
@@ -46,6 +46,7 @@ namespace ObjectGL { namespace ColourFormat{
 					BITS / 8
 				);
 			}else{
+				//! \todo Optimise
 				const uint8_t* const src = static_cast<const uint8_t*>(aSrc);
 				uint8_t* const dst = static_cast<uint8_t*>(aDst);
 
@@ -82,44 +83,163 @@ namespace ObjectGL { namespace ColourFormat{
 		return Implementation::CopyBits<Format::BitDepth>(&aValue, 0, aData, aOffset * Format::BitDepth);
 	}
 
+	enum class Storage : GLenum{
+		NONE				= GL_NONE,
+		UNSIGNED_NORMALISED	= GL_UNSIGNED_NORMALIZED,
+		SIGNED_NORMALISED	= GL_SIGNED_NORMALIZED,
+		UNSIGNED_INTEGRAL	= GL_UNSIGNED_INT,
+		SIGNED_INTEGRAL		= GL_INT,
+		FLOAT				= GL_FLOAT
+	};
+
+	template<const Storage TYPE>
+	struct StorageType{
+		typedef void Type;
+		enum : GLuint{
+			SizeBytes = 0,
+			SizeBits = 0
+		};
+	};
+
+	template<>
+	struct StorageType<Storage::NONE>{
+		typedef void Type;
+		enum : GLuint{
+			SizeBytes = 0,
+			SizeBits = 0
+		};
+	};
+
+	template<>
+	struct StorageType<Storage::UNSIGNED_NORMALISED>{
+		typedef uint8_t Type;
+		enum : GLuint{
+			SizeBytes = sizeof(Type),
+			SizeBits = SizeBytes * 8
+		};
+
+		static_assert(SizeBytes * 8 >= SizeBytes, "ObjectGL::StorageType<UNSIGNED_NORMALISED> SizeBits is larger than SizeBytes");
+		static_assert(sizeof(Type) >= SizeBytes, "ObjectGL::StorageType<UNSIGNED_NORMALISED> Type is not large enough to contain Size SizeBytes");
+	};
+
+	template<>
+	struct StorageType<Storage::SIGNED_NORMALISED>{
+		typedef int8_t Type;
+		enum : GLuint{
+			SizeBytes = sizeof(Type),
+			SizeBits = SizeBytes * 8
+		};
+
+		static_assert(SizeBytes * 8 >= SizeBytes, "ObjectGL::StorageType<SIGNED_NORMALISED> SizeBits is larger than SizeBytes");
+		static_assert(sizeof(Type) >= SizeBytes, "ObjectGL::StorageType<SIGNED_NORMALISED> Type is not large enough to contain Size SizeBytes");
+	};
+
+	template<>
+	struct StorageType<Storage::UNSIGNED_INTEGRAL>{
+		typedef uint8_t Type;
+		enum : GLuint{
+			SizeBytes = sizeof(Type),
+			SizeBits = SizeBytes * 8
+		};
+
+		static_assert(SizeBytes * 8 >= SizeBytes, "ObjectGL::StorageType<UNSIGNED_INTEGRAL> SizeBits is larger than SizeBytes");
+		static_assert(sizeof(Type) >= SizeBytes, "ObjectGL::StorageType<UNSIGNED_INTEGRAL> Type is not large enough to contain Size SizeBytes");
+	};
+
+	template<>
+	struct StorageType<Storage::SIGNED_INTEGRAL>{
+		typedef uint8_t Type;
+		enum : GLuint{
+			SizeBytes = sizeof(Type),
+			SizeBits = SizeBytes * 8
+		};
+
+		static_assert(SizeBytes * 8 >= SizeBytes, "ObjectGL::StorageType<SIGNED_INTEGRAL> SizeBits is larger than SizeBytes");
+		static_assert(sizeof(Type) >= SizeBytes, "ObjectGL::StorageType<SIGNED_INTEGRAL> Type is not large enough to contain Size SizeBytes");
+	};
+
+	template<>
+	struct StorageType<Storage::FLOAT>{
+		typedef float Type;
+		enum : GLuint{
+			SizeBytes = sizeof(Type),
+			SizeBits = SizeBytes * 8
+		};
+
+		static_assert(SizeBytes * 8 >= SizeBytes, "ObjectGL::StorageType<FLOAT> SizeBits is larger than SizeBytes");
+		static_assert(sizeof(Type) >= SizeBytes, "ObjectGL::StorageType<FLOAT> Type is not large enough to contain Size SizeBytes");
+	};
+
+	template<const Storage TYPE>
 	struct R{
 		enum : GLuint{
-			BitDepth = 8
+			ElementCount = 1,
+			FormatEnum = GL_RED,
+			ElementSizeBits = StorageType<TYPE>::SizeBits,
+			ElementSizeBytes = StorageType<TYPE>::SizeBytes,
+			FormatSizeBits = ElementSizeBits * ElementCount,
+			FormatSizeBytes = ElementSizeBytes * ElementCount,
+			ElementEnum = static_cast<GLuint>(TYPE)
 		};
 
-		typedef uint8_t Type;
+		typedef BinaryData<FormatSizeBytes> FormatType;
+		typedef typename StorageType<TYPE>::Type ElementType;
 
-		static_assert(sizeof(Type) * 8 >= BitDepth, "ObjectGL::R Type is not large enough to contain BitDepth");
+		static_assert(sizeof(FormatType) >= FormatSizeBytes, "ObjectGL::R FormatType is not large enough to contain FormatSize");
 	};
 
+	template<const Storage TYPE>
 	struct RG{
 		enum : GLuint{
-			BitDepth = 16
+			ElementCount = 2,
+			FormatEnum = GL_RG,
+			ElementSizeBits = StorageType<TYPE>::SizeBits,
+			ElementSizeBytes = StorageType<TYPE>::SizeBytes,
+			FormatSizeBits = ElementSizeBits * ElementCount,
+			FormatSizeBytes = ElementSizeBytes * ElementCount,
+			ElementEnum = static_cast<GLuint>(TYPE)
 		};
 
-		typedef uint16_t Type;
+		typedef BinaryData<FormatSizeBytes> FormatType;
+		typedef typename StorageType<TYPE>::Type ElementType;
 
-		static_assert(sizeof(Type) * 8 >= BitDepth, "ObjectGL::RG Type is not large enough to contain BitDepth");
+		static_assert(sizeof(FormatType) >= FormatSizeBytes, "ObjectGL::RG FormatType is not large enough to contain FormatSize");
 	};
 
+	template<const Storage TYPE>
 	struct RGB{
 		enum : GLuint{
-			BitDepth = 24
+			ElementCount = 3,
+			FormatEnum = GL_RGB,
+			ElementSizeBits = StorageType<TYPE>::SizeBits,
+			ElementSizeBytes = StorageType<TYPE>::SizeBytes,
+			FormatSizeBits = ElementSizeBits * ElementCount,
+			FormatSizeBytes = ElementSizeBytes * ElementCount,
+			ElementEnum = static_cast<GLuint>(TYPE)
 		};
 
-		typedef uint32_t Type;
+		typedef BinaryData<FormatSizeBytes> FormatType;
+		typedef typename StorageType<TYPE>::Type ElementType;
 
-		static_assert(sizeof(Type) * 8 >= BitDepth, "ObjectGL::RGB Type is not large enough to contain BitDepth");
+		static_assert(sizeof(FormatType) >= FormatSizeBytes, "ObjectGL::RGB FormatType is not large enough to contain FormatSize");
 	};
 
+	template<const Storage TYPE>
 	struct RGBA{
 		enum : GLuint{
-			BitDepth = 32
+			ElementCount = 4,
+			FormatEnum = GL_RGBA,
+			ElementSizeBits = StorageType<TYPE>::SizeBits,
+			ElementSizeBytes = StorageType<TYPE>::SizeBytes,
+			FormatSizeBits = ElementSizeBits * ElementCount,
+			FormatSizeBytes = ElementSizeBytes * ElementCount,
+			ElementEnum = static_cast<GLuint>(TYPE)
 		};
 
-		typedef uint32_t Type;
+		typedef BinaryData<FormatSizeBytes> FormatType;
+		typedef typename StorageType<TYPE>::Type ElementType;
 
-		static_assert(sizeof(Type) * 8 >= BitDepth, "ObjectGL::RGBA Type is not large enough to contain BitDepth");
+		static_assert(sizeof(FormatType) * 8 >= FormatSizeBytes, "ObjectGL::RGBA FormatType is not large enough to contain FormatSize");
 	};
 }}
 

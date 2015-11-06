@@ -1,5 +1,5 @@
-#ifndef OBJECT_GL_BINDABLE_HPP
-#define OBJECT_GL_BINDABLE_HPP
+#ifndef OBJECT_GL_FACTORY_HPP
+#define OBJECT_GL_FACTORY_HPP
 
 //Copyright 2015 Adam Smith
 //
@@ -19,14 +19,15 @@
 // Email             : $objectgl_email
 // GitHub repository : $objectgl_git
 
-#include "Context.hpp"
-
 /*!
-	\file Bindable.hpp
+	\file Factory.hpp
 	\brief
 	\author Adam Smith
 	\date 6th November 2015
 */
+
+#include <cstdint>
+#include "Bindable.hpp"
 
 namespace ObjectGL{
 
@@ -36,50 +37,31 @@ namespace ObjectGL{
 		\date 6th November 2015
 		\version 1.0
 	*/
-	template<class ...PARAMS>
-	class Bindable{
-	public:
-		virtual ~Bindable(){}
-
-		virtual void Bind(PARAMS...) = 0;
-		virtual void Unbind(PARAMS...) = 0;
-		virtual bool IsBound(PARAMS...) const = 0;
-	};
-
-	template<>
-	class Bindable<void>{
-	public:
-		virtual ~Bindable(){}
-
-		virtual void Bind() = 0;
-		virtual void Unbind() = 0;
-		virtual bool IsBound() const = 0;
-	};
-
-	/*!
-		\brief
-		\author Adam Smith
-		\date 6th November 2015
-		\version 1.0
-	*/
-	/*template<class ...PARAMS>
-	class BindGuard{
+	class BaseFactory : public Bindable<void>{
 	private:
-		Bindable<PARAMS>& mBindable;
-		PARAMS mParams;
+		uint16_t mUsers;
+	protected:
+		virtual void OnBind() = 0;
+		virtual void OnUnBind() = 0;
 	public:
-		BindGuard(Bindable<PARAMS>& aBindable, PARAMS... aParams) :
-			mBindable(aBindable),
-			mParams(aParams)
-		{
-			mBindable.Bind(mParams);
-		}
+		BaseFactory();
+		virtual ~BaseFactory();
 
-		~BindGuard(){
-			mBindable.Unbind(mParams);
-		}
-	};*/
+		// Inherited from Bindable
+
+		void Bind() override;
+		void Unbind() override;
+		bool IsBound() const override;
+	};
+
+	template<class T>
+	class Factory : public BaseFactory{
+	public:
+		virtual T Get() const = 0;
+	};
 
 }
+
+#include "Factory.inl"
 
 #endif

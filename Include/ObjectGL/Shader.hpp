@@ -20,6 +20,7 @@
 // GitHub repository : $objectgl_git
 
 #include "Object.hpp"
+#include "Factory.hpp"
 
 /*!
 	\file Shader.hpp

@@ -45,7 +45,7 @@ namespace ObjectGL{
 	public:
 		typedef Factory<const char*> SourceFactory;
 
-		enum Type : GLenum{
+		enum class Type : GLenum{
 			VERTEX					= GL_VERTEX_SHADER,
 			GEOMETRY				= GL_GEOMETRY_SHADER,
 			FRAGMENT				= GL_FRAGMENT_SHADER,

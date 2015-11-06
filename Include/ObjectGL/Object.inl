@@ -38,17 +38,7 @@ namespace ObjectGL{
 	{}
 
 	Object::~Object(){
-		if(IsCreated()){
-			Destroy();
-		}
-	}
-
-	void Object::Create(){
-		if(IsCreated()) throw std::runtime_error("ObjectGL::Object : Object has already been created");
-	}
-
-	void Object::Destroy(){
-		if(! IsCreated()) throw std::runtime_error("ObjectGL::Object : Object has not been created");
+		
 	}
 
 	bool Object::IsCreated() const{

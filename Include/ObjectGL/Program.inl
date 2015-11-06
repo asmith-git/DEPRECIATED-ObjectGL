@@ -37,6 +37,8 @@ namespace ObjectGL{
 	{}
 
 	Program::~Program(){
+		if (IsCreated()) Destroy();
+
 		// Remove all references to this program from the context
 		Context& context = GetContext();
 
@@ -62,7 +64,7 @@ namespace ObjectGL{
 	}
 
 	void Program::Create(){
-		Object::Create();
+		if(IsCreated()) throw std::runtime_error("ObjectGL::Program : Program has already been linked");
 
 		mID = glCreateProgram();
 		
@@ -93,7 +95,7 @@ namespace ObjectGL{
 	}
 
 	void Program::Destroy(){
-		Object::Destroy();
+		if(! IsCreated()) throw std::runtime_error("ObjectGL::Program : Program has not been linked");
 
 		glDeleteProgram(mID);
 		mID = 0;

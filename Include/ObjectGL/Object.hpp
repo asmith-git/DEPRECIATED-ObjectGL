@@ -56,8 +56,8 @@ namespace ObjectGL{
 		Object(Context&);
 		virtual ~Object();
 
-		virtual void Create();
-		virtual void Destroy();
+		virtual void Create() = 0;
+		virtual void Destroy() = 0;
 		bool IsCreated() const;
 
 		ID GetID() const;

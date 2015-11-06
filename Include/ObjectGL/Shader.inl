@@ -38,11 +38,11 @@ namespace ObjectGL{
 	{}
 
 	Shader::~Shader(){
-
+		if(IsCreated()) Destroy();
 	}
 
 	void Shader::Create(){
-		Object::Create();
+		if(IsCreated()) throw std::runtime_error("ObjectGL::Shader : Shader has already been compiled");
 
 		SourceFactory::Guard guard(mSource);
 		const GLenum type = static_cast<GLenum>(GetType());
@@ -70,7 +70,7 @@ namespace ObjectGL{
 	}
 
 	void Shader::Destroy(){
-		Object::Destroy();
+		if (IsCreated()) throw std::runtime_error("ObjectGL::Shader : Shader has not been compiled");
 
 		glDeleteShader(mID);
 		mID = 0;

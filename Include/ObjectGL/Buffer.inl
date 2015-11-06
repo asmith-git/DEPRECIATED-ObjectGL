@@ -35,7 +35,7 @@ namespace ObjectGL{
 	{}
 
 	Buffer::~Buffer(){
-
+		if(IsCreated()) Destroy();
 	}
 
 	GLuint Buffer::Size() const{
@@ -62,12 +62,12 @@ namespace ObjectGL{
 	}
 
 	void Buffer::Create(){
-		Object::Create();
+		if(IsCreated()) throw std::runtime_error("ObjectGL::Buffer : Buffer has already been created");
 		glGenBuffers(1, &mID);
 	}
 
 	void Buffer::Destroy(){
-		Object::Destroy();
+		if(! IsCreated()) throw std::runtime_error("ObjectGL::Buffer : Buffer has not been created");
 		glDeleteBuffers(1, &mID);
 		mID = INVALID_ID;
 	}

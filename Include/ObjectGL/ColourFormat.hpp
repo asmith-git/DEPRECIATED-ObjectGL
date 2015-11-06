@@ -72,15 +72,15 @@ namespace ObjectGL { namespace ColourFormat{
 	}
 
 	template<class Format>
-	static typename Format::Type Read(const void* const aData, const GLuint aOffset){
-		typename Format::Type tmp = 0;
-		return Implementation::CopyBits<Format::BitDepth>(aData, aOffset * Format::BitDepth, &tmp, 0);
+	static typename Format::FormatType Read(const void* const aData, const GLuint aOffset){
+		typename Format::FormatType tmp = 0;
+		return Implementation::CopyBits<Format::FormatSizeBits>(aData, aOffset * Format::FormatSizeBits, &tmp, 0);
 		return tmp;
 	}
 
 	template<class Format>
-	static void Write(void* const aData, const GLuint aOffset, const typename Format::Type aValue){
-		return Implementation::CopyBits<Format::BitDepth>(&aValue, 0, aData, aOffset * Format::BitDepth);
+	static void Write(void* const aData, const GLuint aOffset, const typename Format::FormatType aValue){
+		return Implementation::CopyBits<Format::FormatSizeBits>(&aValue, 0, aData, aOffset * Format::FormatSizeBits);
 	}
 
 	enum class Storage : GLenum{

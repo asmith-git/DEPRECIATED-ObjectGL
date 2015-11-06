@@ -43,6 +43,8 @@ namespace ObjectGL{
 	public:
 		friend Program;
 	public:
+		typedef Factory<const char*> SourceFactory;
+
 		enum Type : GLenum{
 			VERTEX					= GL_VERTEX_SHADER,
 			GEOMETRY				= GL_GEOMETRY_SHADER,
@@ -55,8 +57,10 @@ namespace ObjectGL{
 				TESSELLATION_EVALUATION	= GL_TESS_EVALUATION_SHADER,
 			#endif
 		};
+	protected:
+		SourceFactory& mSource;
 	public:
-		Shader(Context& aContext);
+		Shader(Context& aContext, SourceFactory& aSource);
 		virtual ~Shader();
 
 		virtual Type GetType() const = 0;
@@ -66,12 +70,11 @@ namespace ObjectGL{
 		virtual GLuint GetMaxInputComponents() const = 0;
 		virtual GLuint GetMaxOutputComponents() const = 0;
 		virtual GLuint GetMaxTextureImageUnits() const = 0;
-		virtual GLuint GetMaxImageUniforms() const = 0;
 
 		// Inherited from Object
 
-		virtual void Create();
-		virtual void Destroy();
+		virtual void Create() override;
+		virtual void Destroy() override;
 	};
 
 }

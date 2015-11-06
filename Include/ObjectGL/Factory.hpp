@@ -38,6 +38,8 @@ namespace ObjectGL{
 		\version 1.0
 	*/
 	class BaseFactory : public Bindable<void>{
+	public:
+		typedef BindGuard<void> Guard;
 	private:
 		uint16_t mUsers;
 	protected:

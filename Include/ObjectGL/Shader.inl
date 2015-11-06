@@ -26,9 +26,56 @@
 	\date 6th November 2015
 */
 
+#include <string>
+
 namespace ObjectGL{
 
 	// Shader
+
+	Shader::Shader(Context& aContext, SourceFactory& aSource):
+		Object(aContext),
+		mSource(aSource)
+	{}
+
+	Shader::~Shader(){
+
+	}
+
+	void Shader::Create(){
+		Object::Create();
+
+		SourceFactory::Guard guard(mSource);
+		const GLenum type = static_cast<GLenum>(GetType());
+		const char* const source = mSource.Get();
+		const GLint length = std::strlen(source);
+
+		mID = glCreateShader(type);
+		glShaderSource(mID, 1, &source, &length);
+		glCompileShader(mID);
+
+		GLint status = 0;
+		glGetShaderiv(mID, GL_COMPILE_STATUS, &status);
+		if(status == GL_FALSE){
+			GLint logLength = 0;
+			glGetShaderiv(mID, GL_INFO_LOG_LENGTH, &logLength);
+
+			std::string log(logLength, '\0');
+			glGetShaderInfoLog(mID, logLength, &logLength, &log[0]);
+
+			glDeleteShader(mID);
+			mID = 0;
+
+			throw std::runtime_error("ObjectGL : Failed to compile shader : " + log);
+		}
+	}
+
+	void Shader::Destroy(){
+		Object::Destroy();
+
+		glDeleteShader(mID);
+		mID = 0;
+	}
+
 }
 
 #endif

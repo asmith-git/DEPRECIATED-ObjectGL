@@ -41,7 +41,7 @@ namespace ObjectGL{
 	class Object{
 	public:
 		enum ID : GLuint{
-			INVALID_ID
+			INVALID_ID = 0
 		};
 	private:
 		Context& mContext;

@@ -62,9 +62,9 @@ namespace ObjectGL{
 		\date 6th November 2015
 		\version 1.0
 	*/
-	/*template<class ...PARAMS>
+	template<class ...PARAMS>
 	class BindGuard{
-	private:
+	/*private:
 		Bindable<PARAMS>& mBindable;
 		PARAMS mParams;
 	public:
@@ -77,8 +77,24 @@ namespace ObjectGL{
 
 		~BindGuard(){
 			mBindable.Unbind(mParams);
+		}*/
+	};
+
+	template<>
+	class BindGuard<void>{
+	private:
+		Bindable<void>& mBindable;
+	public:
+		BindGuard(Bindable<void>& aBindable) :
+			mBindable(aBindable)
+		{
+			mBindable.Bind();
 		}
-	};*/
+
+		~BindGuard(){
+			mBindable.Unbind();
+		}
+	};
 
 }
 

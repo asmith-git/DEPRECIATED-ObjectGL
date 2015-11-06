@@ -1,5 +1,5 @@
-#ifndef OBJECT_GL_BUFFER_HPP
-#define OBJECT_GL_BUFFER_HPP
+#ifndef OBJECT_GL_BINDABLE_HPP
+#define OBJECT_GL_BINDABLE_HPP
 
 //Copyright 2015 Adam Smith
 //
@@ -19,50 +19,57 @@
 // Email             : $objectgl_email
 // GitHub repository : $objectgl_git
 
+#include "Context.hpp"
+
 /*!
-	\file Buffer.hpp
+	\file Bindable.hpp
 	\brief
 	\author Adam Smith
-	\date 4th November 2015
+	\date 6th November 2015
 */
-
-#include "Object.hpp"
-#include "Bindable.hpp"
-#include "BufferTarget.hpp"
 
 namespace ObjectGL{
 
 	/*!
 		\brief
 		\author Adam Smith
-		\date 4th November 2015
+		\date 6th November 2015
 		\version 1.0
 	*/
-	class Buffer : public Object, public Bindable<const BufferTarget>{
-	protected:
-		GLuint mSize;
+	template<class ...PARAMS>
+	class Bindable{
 	public:
-		Buffer(Context&);
-		virtual ~Buffer();
+		virtual ~Bindable(){}
 
-		GLuint Size() const;
+		virtual void Bind(PARAMS...) = 0;
+		virtual void Unbind(PARAMS...) = 0;
+		virtual bool IsBound(PARAMS...) const = 0;
+	};
 
-		virtual void Allocate(const GLuint) = 0;
+	/*!
+		\brief
+		\author Adam Smith
+		\date 6th November 2015
+		\version 1.0
+	*/
+	template<class ...PARAMS>
+	class BindGuard{
+	private:
+		Bindable<PARAMS>& mBindable;
+		PARAMS mParams;
+	public:
+		BindGuard(Bindable<PARAMS>& aBindable, PARAMS... aParams) :
+			mBindable(aBindable),
+			mParams(aParams)
+		{
+			mBindable.Bind(mParams);
+		}
 
-		// Inherited from Bindable
-
-		void Bind(const BufferTarget) override;
-		void Unbind(const BufferTarget) override;
-		bool IsBound(const BufferTarget) const override;
-
-		// Inherited from Object
-
-		virtual void Create() override;
-		virtual void Destroy() override;
+		~BindGuard(){
+			mBindable.Unbind(mParams);
+		}
 	};
 
 }
-
-#include "Buffer.inl"
 
 #endif

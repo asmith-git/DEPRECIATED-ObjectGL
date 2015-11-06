@@ -55,6 +55,11 @@ namespace ObjectGL{
 			0
 		);
 	}
+	
+	bool Buffer::IsBound(const BufferTarget aTarget) const{
+		//! \todo Implement Buffer::IsBound
+		return false;
+	}
 
 	void Buffer::Create(){
 		Object::Create();

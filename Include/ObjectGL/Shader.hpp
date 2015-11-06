@@ -1,5 +1,5 @@
-#ifndef OBJECT_GL_BUFFER_HPP
-#define OBJECT_GL_BUFFER_HPP
+#ifndef OBJECT_GL_SHADER_HPP
+#define OBJECT_GL_SHADER_HPP
 
 //Copyright 2015 Adam Smith
 //
@@ -19,50 +19,49 @@
 // Email             : $objectgl_email
 // GitHub repository : $objectgl_git
 
+#include "Object.hpp"
+
 /*!
-	\file Buffer.hpp
+	\file Shader.hpp
 	\brief
 	\author Adam Smith
-	\date 4th November 2015
+	\date 6th November 2015
 */
-
-#include "Object.hpp"
-#include "Bindable.hpp"
-#include "BufferTarget.hpp"
 
 namespace ObjectGL{
 
+	class Program;
+	
 	/*!
 		\brief
 		\author Adam Smith
-		\date 4th November 2015
+		\date 6th November 2015
 		\version 1.0
 	*/
-	class Buffer : public Object, public Bindable<const BufferTarget>{
-	protected:
-		GLuint mSize;
+	class Shader : public Object{
 	public:
-		Buffer(Context&);
-		virtual ~Buffer();
+		friend Program;
+	public:
+		Shader(Context& aContext);
+		virtual ~Shader();
 
-		GLuint Size() const;
+		virtual GLenum GetType() const = 0;
 
-		virtual void Allocate(const GLuint) = 0;
-
-		// Inherited from Bindable
-
-		void Bind(const BufferTarget) override;
-		void Unbind(const BufferTarget) override;
-		bool IsBound(const BufferTarget) const override;
+		virtual GLuint GetMaxUniformComponents() const = 0;
+		virtual GLuint GetMaxUniformBlocks() const = 0;
+		virtual GLuint GetMaxInputComponents() const = 0;
+		virtual GLuint GetMaxOutputComponents() const = 0;
+		virtual GLuint GetMaxTextureImageUnits() const = 0;
+		virtual GLuint GetMaxImageUniforms() const = 0;
 
 		// Inherited from Object
 
-		virtual void Create() override;
-		virtual void Destroy() override;
+		virtual void Create();
+		virtual void Destroy();
 	};
 
 }
 
-#include "Buffer.inl"
+#include "Shader.inl"
 
 #endif

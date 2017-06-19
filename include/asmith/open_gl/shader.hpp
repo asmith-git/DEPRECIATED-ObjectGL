@@ -26,12 +26,12 @@ namespace asmith { namespace gl {
 	*/
 	class shader : public object {
 	public:
-		enum class type : GLenum{
+		enum type : GLenum{
 			VERTEX						= GL_VERTEX_SHADER,
 			GEOMETRY					= GL_GEOMETRY_SHADER,
 			FRAGMENT					= GL_FRAGMENT_SHADER,
 			#if OBJECT_GL_MAX_VERSION_MAJOR >= 4
-				#if OBJECT_GL_MAX_VERSION_MINOR >= 3
+				#if OBJECT_GL_MAX_VERSION_MINOR >= 3 || OBJECT_GL_MAX_VERSION_MAJOR > 4
 					COMPUTE 			= GL_COMPUTE_SHADER,
 				#endif
 				TESSELLATION_CONTROL	= GL_TESS_CONTROL_SHADER,
@@ -59,7 +59,119 @@ namespace asmith { namespace gl {
 		void create() override;
 		void destroy() override;
 	};
+	
+	
+	/*!
+		\brief OpenGL fragment shader
+		\author Adam Smith
+		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\version 2.0
+	*/
+	class fragment_shader : public shader {
+	public:
+		// Inherited from shader
 
+		type get_type() const override;
+		GLuint get_max_uniform_components() const throw() override;
+		GLuint get_max_uniform_blocks() const throw() override;
+		GLuint get_max_input_components() const throw() override;
+		GLuint get_max_output_components() const throw() override;
+		GLuint get_max_texture_image_units() const throw() override;
+	};
+	
+	/*!
+		\brief OpenGL vertex shader
+		\author Adam Smith
+		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\version 2.0
+	*/
+	class vertex_shader : public shader {
+	public:
+		// Inherited from shader
+
+		type get_type() const override;
+		GLuint get_max_uniform_components() const throw() override;
+		GLuint get_max_uniform_blocks() const throw() override;
+		GLuint get_max_input_components() const throw() override;
+		GLuint get_max_output_components() const throw() override;
+		GLuint get_max_texture_image_units() const throw() override;
+	};
+	
+#if OBJECT_GL_MAX_VERSION_MAJOR >= 4	
+#if OBJECT_GL_MAX_VERSION_MINOR >= 3 || OBJECT_GL_MAX_VERSION_MAJOR > 4
+	/*!
+		\brief OpenGL computer shader
+		\author Adam Smith
+		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\version 2.0
+	*/
+	class compute_shader : public shader {
+	public:
+		// Inherited from shader
+
+		type get_type() const override;
+		GLuint get_max_uniform_components() const throw() override;
+		GLuint get_max_uniform_blocks() const throw() override;
+		GLuint get_max_input_components() const throw() override;
+		GLuint get_max_output_components() const throw() override;
+		GLuint get_max_texture_image_units() const throw() override;
+	};
+#endif
+	
+	/*!
+		\brief OpenGL geometry shader
+		\author Adam Smith
+		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\version 2.0
+	*/
+	class geometry_shader : public shader {
+	public:
+		// Inherited from shader
+
+		type get_type() const override;
+		GLuint get_max_uniform_components() const throw() override;
+		GLuint get_max_uniform_blocks() const throw() override;
+		GLuint get_max_input_components() const throw() override;
+		GLuint get_max_output_components() const throw() override;
+		GLuint get_max_texture_image_units() const throw() override;
+	};
+	
+	/*!
+		\brief OpenGL tessellation control shader shader
+		\author Adam Smith
+		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\version 2.0
+	*/
+	class tessellation_control_shader : public shader {
+	public:
+		// Inherited from shader
+
+		type get_type() const override;
+		GLuint get_max_uniform_components() const throw() override;
+		GLuint get_max_uniform_blocks() const throw() override;
+		GLuint get_max_input_components() const throw() override;
+		GLuint get_max_output_components() const throw() override;
+		GLuint get_max_texture_image_units() const throw() override;
+	};
+	
+	/*!
+		\brief OpenGL tessellation evaluation shader shader
+		\author Adam Smith
+		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\version 2.0
+	*/
+	class tessellation_evaluation_shader : public shader {
+	public:
+		// Inherited from shader
+
+		type get_type() const override;
+		GLuint get_max_uniform_components() const throw() override;
+		GLuint get_max_uniform_blocks() const throw() override;
+		GLuint get_max_input_components() const throw() override;
+		GLuint get_max_output_components() const throw() override;
+		GLuint get_max_texture_image_units() const throw() override;
+	};
+#endif
 }}
 
 #endif

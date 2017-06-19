@@ -97,27 +97,6 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 	
-#if OBJECT_GL_MAX_VERSION_MAJOR >= 4	
-#if OBJECT_GL_MAX_VERSION_MINOR >= 3 || OBJECT_GL_MAX_VERSION_MAJOR > 4
-	/*!
-		\brief OpenGL computer shader
-		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
-		\version 2.0
-	*/
-	class compute_shader : public shader {
-	public:
-		// Inherited from shader
-
-		type get_type() const override;
-		GLuint get_max_uniform_components() const throw() override;
-		GLuint get_max_uniform_blocks() const throw() override;
-		GLuint get_max_input_components() const throw() override;
-		GLuint get_max_output_components() const throw() override;
-		GLuint get_max_texture_image_units() const throw() override;
-	};
-#endif
-	
 	/*!
 		\brief OpenGL geometry shader
 		\author Adam Smith
@@ -135,6 +114,27 @@ namespace asmith { namespace gl {
 		GLuint get_max_output_components() const throw() override;
 		GLuint get_max_texture_image_units() const throw() override;
 	};
+	
+#if OBJECT_GL_MAX_VERSION_MAJOR >= 4	
+#if OBJECT_GL_MAX_VERSION_MINOR >= 3 || OBJECT_GL_MAX_VERSION_MAJOR > 4
+	/*!
+		\brief OpenGL compute shader
+		\author Adam Smith
+		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\version 2.0
+	*/
+	class compute_shader : public shader {
+	public:
+		// Inherited from shader
+
+		type get_type() const override;
+		GLuint get_max_uniform_components() const throw() override;
+		GLuint get_max_uniform_blocks() const throw() override;
+		GLuint get_max_input_components() const throw() override;
+		GLuint get_max_output_components() const throw() override;
+		GLuint get_max_texture_image_units() const throw() override;
+	};
+#endif
 	
 	/*!
 		\brief OpenGL tessellation control shader shader

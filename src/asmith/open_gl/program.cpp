@@ -21,7 +21,9 @@ namespace asmith { namespace gl {
 	// program
 	
 	program::~program() {
-		
+		while(is_bound()) {
+			unbind();
+		}
 	}
 
 	void program::attach(std::shared_ptr<shader> aShader) {

@@ -14,15 +14,17 @@
 #ifndef ASMITH_OPENGL_OBJECT_HPP
 #define ASMITH_OPENGL_OBJECT_HPP
 
+#include <memory>
+
 namespace asmith { namespace gl {
 	
 	/*!
 		\brief Base class for OpenGL objects
 		\author Adam Smith
 		\date Created : 4th November 2015 Modified 19th Jube 2017
-		\version 2.0
+		\version 2.1
 	*/
-	class object {
+	class object : public std::enable_shared_from_this<object> {
 	public:
 		enum id_t : GLuint{
 			INVALID_ID = 0

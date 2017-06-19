@@ -22,7 +22,7 @@ namespace asmith { namespace gl {
 	{}
 	
 	object::~object() {
-		
+		if(is_created()) destroy();
 	}
 	
 	id_t object::get_id() const throw() {

@@ -23,7 +23,7 @@ namespace asmith { namespace gl {
 	{}
 	
 	shader::~shader(){
-		if(is_created()) destroy();
+		
 	}
 	
 	void shader::set_source(const char* aSource) throw() {

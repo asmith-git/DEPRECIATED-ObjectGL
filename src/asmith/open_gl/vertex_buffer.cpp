@@ -14,6 +14,10 @@
 #include <stdexcept>
 #include "asmith/open_gl/vertex_buffer.hpp"
 
+//! \todo Implement binding at multiple targets
+//! \todo Implement global binding stack
+//! \todo Implement named buffers
+
 namespace asmith { namespace gl {
 	
 	// vertex_buffer

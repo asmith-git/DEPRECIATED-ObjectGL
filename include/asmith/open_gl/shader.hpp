@@ -59,6 +59,14 @@ namespace asmith { namespace gl {
 		void create() override;
 		void destroy() override;
 	};
+
+	template<class T>
+	std::shared_ptr<shader> compile_shader(const char* aSource) throw() {
+		std::shared_ptr<shader> tmp(new T());
+		tmp->set_source(aSource);
+		tmp->create();
+		return tmp;
+	}
 	
 	
 	/*!
@@ -78,6 +86,8 @@ namespace asmith { namespace gl {
 		GLuint get_max_output_components() const throw() override;
 		GLuint get_max_texture_image_units() const throw() override;
 	};
+
+	inline std::shared_ptr<shader> compile_fragment_shader(const char* aSource) throw() { return compile_shader<fragment_shader>(aSource); }
 	
 	/*!
 		\brief OpenGL vertex shader
@@ -96,6 +106,8 @@ namespace asmith { namespace gl {
 		GLuint get_max_output_components() const throw() override;
 		GLuint get_max_texture_image_units() const throw() override;
 	};
+
+	inline std::shared_ptr<shader> compile_vertex_shader(const char* aSource) throw() { return compile_shader<vertex_shader>(aSource); }
 	
 	/*!
 		\brief OpenGL geometry shader
@@ -114,6 +126,8 @@ namespace asmith { namespace gl {
 		GLuint get_max_output_components() const throw() override;
 		GLuint get_max_texture_image_units() const throw() override;
 	};
+
+	inline std::shared_ptr<shader> compile_geometry_shader(const char* aSource) throw() { return compile_shader<geometry_shader>(aSource); }
 	
 #if ASMITH_GL_VERSION_GE(4,3)
 	/*!
@@ -133,6 +147,8 @@ namespace asmith { namespace gl {
 		GLuint get_max_output_components() const throw() override;
 		GLuint get_max_texture_image_units() const throw() override;
 	};
+
+	inline std::shared_ptr<shader> compile_compute_shader(const char* aSource) throw() { return compile_shader<compute_shader>(aSource); }
 #endif
 #if ASMITH_GL_VERSION_GE(4,0)
 	/*!
@@ -152,6 +168,8 @@ namespace asmith { namespace gl {
 		GLuint get_max_output_components() const throw() override;
 		GLuint get_max_texture_image_units() const throw() override;
 	};
+
+	inline std::shared_ptr<shader> compile_tessellation_control_shader(const char* aSource) throw() { return compile_shader<tessellation_control_shader>(aSource); }
 	
 	/*!
 		\brief OpenGL tessellation evaluation shader shader
@@ -170,6 +188,8 @@ namespace asmith { namespace gl {
 		GLuint get_max_output_components() const throw() override;
 		GLuint get_max_texture_image_units() const throw() override;
 	};
+
+	inline std::shared_ptr<shader> compile_tessellation_evaluation_shader(const char* aSource) throw() { return compile_shader<tessellation_evaluation_shader>(aSource); }
 #endif
 }}
 

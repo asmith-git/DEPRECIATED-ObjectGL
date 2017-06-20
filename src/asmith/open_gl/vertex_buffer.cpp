@@ -73,11 +73,11 @@ namespace asmith { namespace gl {
 #if ASMITH_GL_VERSION_GE(4,3)
 		case 11: return GL_DISPATCH_INDIRECT_BUFFER;
 		case 12: return GL_SHADER_STORAGE_BUFFER;
-		case 13: return GL_QUERY_BUFFER;
 #endif
 #if ASMITH_GL_VERSION_GE(4,4)
-		default: return GL_INVALID_ENUM;
+		case 13: return GL_QUERY_BUFFER;
 #endif
+		default: return GL_INVALID_ENUM;
 		}
 	}
 

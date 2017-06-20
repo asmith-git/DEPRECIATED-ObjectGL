@@ -14,7 +14,8 @@
 #ifndef ASMITH_OPENGL_PROGRAM_HPP
 #define ASMITH_OPENGL_PROGRAM_HPP
 
-#include "object.hpp"
+#include <vector>
+#include "shader.hpp"
 
 namespace asmith { namespace gl {
 	

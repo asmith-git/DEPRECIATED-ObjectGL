@@ -31,7 +31,7 @@ namespace asmith { namespace gl {
 		mShaders.push_back(aShader);
 	}
 
-	void program::detach(shader& std::shared_ptr<shader>) {
+	void program::detach(std::shared_ptr<shader> aShader) {
 		if(is_created()) throw std::runtime_error("asmith::gl::program::detach : Shaders can only be detached before program is linked");
 		const auto end = mShaders.end();
 		const auto i = std::find(mShaders.begin(), end, aShader);
@@ -56,12 +56,13 @@ namespace asmith { namespace gl {
 		std::shared_ptr<object> tmp = shared_from_this();
 		if(PROGRAM_BIND_STACK.back() == tmp) {
 			PROGRAM_BIND_STACK.pop_back();
-			glUseProgram(PROGRAM_BIND_STACK.empty() 0 : PROGRAM_BIND_STACK.back()->mID);
+			glUseProgram(PROGRAM_BIND_STACK.empty() ? 0 : PROGRAM_BIND_STACK.back()->get_id());
 		}else {
 			const auto end = PROGRAM_BIND_STACK.rend();
 			const auto i = std::find(PROGRAM_BIND_STACK.rbegin(), end, shared_from_this());
 			if(i == end) throw std::runtime_error("asmith::gl::program::unbind : Program is not bound");
-			PROGRAM_BIND_STACK.erase(i);
+			//PROGRAM_BIND_STACK.erase(i);
+			//! \todo Erase program from binding stack
 		}
 	}
 
@@ -71,7 +72,7 @@ namespace asmith { namespace gl {
 		return i != end;
 	}
 
-	bool program::is_currently_bound() {
+	bool program::is_currently_bound() const throw() {
 		return PROGRAM_BIND_STACK.back() == shared_from_this();
 	}
 
@@ -79,7 +80,7 @@ namespace asmith { namespace gl {
 		if(is_created()) destroy();
 		
 		mID = glCreateProgram();
-		if(mID == Object::INVALID_ID) throw std::runtime_error("asmith::gl::program::destroy : glCreateProgram returned 0");
+		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::program::destroy : glCreateProgram returned 0");
 		
 		for(const std::shared_ptr<shader>& i : mShaders){
 			glAttachShader(mID, static_cast<GLuint>(i->get_id()));
@@ -113,5 +114,3 @@ namespace asmith { namespace gl {
 	}
 
 }}
-
-#endif

@@ -30,8 +30,8 @@ namespace asmith { namespace gl {
 			VERTEX						= GL_VERTEX_SHADER,
 			GEOMETRY					= GL_GEOMETRY_SHADER,
 			FRAGMENT					= GL_FRAGMENT_SHADER,
-			#if OBJECT_GL_MAX_VERSION_MAJOR >= 4
-				#if OBJECT_GL_MAX_VERSION_MINOR >= 3 || OBJECT_GL_MAX_VERSION_MAJOR > 4
+			#if ASMITH_GL_VERSION_MAJOR >= 4
+				#if ASMITH_GL_VERSION_MINOR >= 3 || ASMITH_GL_VERSION_MAJOR > 4
 					COMPUTE 			= GL_COMPUTE_SHADER,
 				#endif
 				TESSELLATION_CONTROL	= GL_TESS_CONTROL_SHADER,
@@ -44,7 +44,7 @@ namespace asmith { namespace gl {
 		shader();
 		virtual ~shader();
 		
-		void set_source(const char*) throw() = 0;
+		void set_source(const char*) throw();
 
 		virtual type get_type() const throw() = 0;
 
@@ -115,8 +115,7 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 	
-#if OBJECT_GL_MAX_VERSION_MAJOR >= 4	
-#if OBJECT_GL_MAX_VERSION_MINOR >= 3 || OBJECT_GL_MAX_VERSION_MAJOR > 4
+#if ASMITH_GL_VERSION_GE(4,3)
 	/*!
 		\brief OpenGL compute shader
 		\author Adam Smith
@@ -135,7 +134,7 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 #endif
-	
+#if ASMITH_GL_VERSION_GE(4,0)
 	/*!
 		\brief OpenGL tessellation control shader shader
 		\author Adam Smith

@@ -15,6 +15,7 @@
 #define ASMITH_OPENGL_OBJECT_HPP
 
 #include <memory>
+#include "core.hpp"
 
 namespace asmith { namespace gl {
 	
@@ -26,7 +27,7 @@ namespace asmith { namespace gl {
 	*/
 	class object : public std::enable_shared_from_this<object> {
 	public:
-		enum id_t : GLuint{
+		enum id_t : GLuint {
 			INVALID_ID = 0
 		};
 	protected:

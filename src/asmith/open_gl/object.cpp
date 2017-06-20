@@ -22,17 +22,20 @@ namespace asmith { namespace gl {
 	{}
 	
 	object::~object() {
-		if(is_created()) destroy();
+		//if(is_created()) destroy();
+		//! \todo Destroy object
 	}
 	
-	id_t object::get_id() const throw() {
+	object::id_t object::get_id() const throw() {
 		return static_cast<id_t>(mID);
 	}
-	
-	operator object::bool() const throw() {
+
+	bool object::is_created() const throw() {
 		return mID != INVALID_ID;
+	}
+	
+	object::operator bool() const throw() {
+		return is_created();
 	}
 
 }}
-
-#endif

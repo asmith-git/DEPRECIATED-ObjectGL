@@ -36,11 +36,11 @@ namespace asmith { namespace gl {
 		
 		const char* const source = mSource;
 		mSource = nullptr;
-		const GLenum type = static_cast<GLenum>(GetType());
+		const GLenum type = static_cast<GLenum>(get_type());
 		const GLint length = strlen(source);
          
 		mID = glCreateShader(type);
-		if(mID == Object::INVALID_ID) throw std::runtime_error("asmith::gl::shader::create : glCreateShader returned 0");
+		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::shader::create : glCreateShader returned 0");
 		glShaderSource(mID, 1, &source, &length);
 		glCompileShader(mID);
          
@@ -68,7 +68,7 @@ namespace asmith { namespace gl {
 	
 	// fragment_shader
 		
-	type fragment_shader::get_type() const {
+	shader::type fragment_shader::get_type() const {
 		return FRAGMENT;
 	}
 	
@@ -94,7 +94,7 @@ namespace asmith { namespace gl {
 	
 	// vertex_shader
 		
-	type vertex_shader::get_type() const {
+	shader::type vertex_shader::get_type() const {
 		return VERTEX;
 	}
 	
@@ -120,7 +120,7 @@ namespace asmith { namespace gl {
 	
 	// geometry_shader
 		
-	type geometry_shader::get_type() const {
+	shader::type geometry_shader::get_type() const {
 		return GEOMETRY;
 	}
 	
@@ -143,12 +143,11 @@ namespace asmith { namespace gl {
 	GLuint geometry_shader::get_max_texture_image_units() const throw() {
 		return GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS;
 	}
-	
-#if OBJECT_GL_MAX_VERSION_MAJOR >= 4	
-#if OBJECT_GL_MAX_VERSION_MINOR >= 3 || OBJECT_GL_MAX_VERSION_MAJOR > 4
+
+#if ASMITH_GL_VERSION_GE(4,3)
 	// compute_shader
 		
-	type compute_shader::get_type() const {
+	shader::type compute_shader::get_type() const {
 		return COMPUTE;
 	}
 	
@@ -172,9 +171,10 @@ namespace asmith { namespace gl {
 		return GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS;
 	}
 #endif
+#if ASMITH_GL_VERSION_GE(4,0)
 	// tessellation_control_shader
 		
-	type tessellation_control_shader::get_type() const {
+	shader::type tessellation_control_shader::get_type() const {
 		return TESSELLATION_CONTROL;
 	}
 	
@@ -200,7 +200,7 @@ namespace asmith { namespace gl {
 	
 	// tessellation_evaluation_shader
 		
-	type tessellation_evaluation_shader::get_type() const {
+	shader::type tessellation_evaluation_shader::get_type() const {
 		return TESSELLATION_EVALUATION;
 	}
 	
@@ -226,5 +226,3 @@ namespace asmith { namespace gl {
 #endif
 
 }}
-
-#endif

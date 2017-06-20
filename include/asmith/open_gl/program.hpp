@@ -19,8 +19,6 @@
 
 namespace asmith { namespace gl {
 	
-	class shader;
-	
 	/*!
 		\brief OpenGL program
 		\author Adam Smith
@@ -52,6 +50,12 @@ namespace asmith { namespace gl {
 		void destroy() override;
 	};
 
+	static std::shared_ptr<program> link_program(const std::vector<std::shared_ptr<shader>>& aShaders) {
+		std::shared_ptr<program> tmp(new program());
+		for(const std::shared_ptr<shader>& i : aShaders) tmp->attach(i);
+		tmp->create();
+		return tmp;
+	}
 }}
 
 #endif

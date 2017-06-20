@@ -174,7 +174,7 @@ namespace asmith { namespace gl {
 	/*!
 		\brief OpenGL tessellation evaluation shader shader
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\date Created : 6th November 2015 Modified 20th June 2017
 		\version 2.0
 	*/
 	class tessellation_evaluation_shader : public shader {

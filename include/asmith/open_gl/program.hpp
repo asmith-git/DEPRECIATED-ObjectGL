@@ -22,7 +22,7 @@ namespace asmith { namespace gl {
 	/*!
 		\brief OpenGL program
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
+		\date Created : 6th November 2015 Modified 20th June 2017
 		\version 2.0
 	*/
 	class program : public object {

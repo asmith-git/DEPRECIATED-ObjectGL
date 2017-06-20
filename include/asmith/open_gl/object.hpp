@@ -22,7 +22,7 @@ namespace asmith { namespace gl {
 	/*!
 		\brief Base class for OpenGL objects
 		\author Adam Smith
-		\date Created : 4th November 2015 Modified 19th Jube 2017
+		\date Created : 4th November 2015 Modified 20th June 2017
 		\version 2.1
 	*/
 	class object : public std::enable_shared_from_this<object> {

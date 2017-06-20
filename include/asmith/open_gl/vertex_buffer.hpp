@@ -27,7 +27,6 @@ namespace asmith { namespace gl {
 	class vertex_buffer : public object {
 	private:
 		GLenum mTarget;
-		const GLvoid* mData;
 		GLsizeiptr mSize;
 		GLenum mUsage;
 	public:
@@ -35,12 +34,14 @@ namespace asmith { namespace gl {
 		vertex_buffer(GLenum);
 		~vertex_buffer();
 
-		void set_data(const GLvoid*, GLsizeiptr) throw();
+		void set_data(const GLvoid*, GLsizeiptr);
 		bool set_usage(GLenum) throw();
 		GLenum get_usage() const throw();
 
 		bool bind(GLenum) throw();
 		bool unbind(GLenum) throw();
+
+		GLsizeiptr size() const throw();
 
 		// Inherited from object 
 		

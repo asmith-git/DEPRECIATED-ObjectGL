@@ -82,7 +82,7 @@ namespace asmith { namespace gl {
 	{}
 
 	vertex_buffer::~vertex_buffer() {
-
+		//! \todo Unbuffer
 	}
 
 	GLsizeiptr vertex_buffer::size() const throw() {
@@ -117,13 +117,18 @@ namespace asmith { namespace gl {
 #else
 		glBindBuffer(aTarget, mID);
 #endif
+		mTarget = aTarget;
+
+		const std::shared_ptr<vertex_buffer> ptr = std::dynamic_pointer_cast<vertex_buffer>(shared_from_this());
+		//! \todo Push to stack
+		//VERTEX_BUFFER_STACK[buffer_target_to_index(aTarget)].push_back(ptr);
 		return true;
 	}
 
 	bool vertex_buffer::unbind(GLenum aTarget) throw() {
 		if(mTarget == GL_INVALID_ENUM) return false;
 		mTarget = GL_INVALID_ENUM;
-		//! \todo Implement
+		//! \todo Remove from stack
 		return true;
 	}
 

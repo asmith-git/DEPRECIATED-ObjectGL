@@ -126,10 +126,26 @@ namespace asmith { namespace gl {
 	GLenum vertex_buffer::get_usage() const throw() {
 		return mUsage;
 	}
+#if ASMITH_GL_VERSION_GE(4, 4)	
+	void vertex_buffer::buffer_storage(const GLvoid* aData, GLsizeiptr aSize) {
+		if(! is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::buffer_storage : Buffer does not exist");
+		if(mUsage == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::vertex_buffer::buffer_storage : Usage not set");
+
+		bool autoBind = false;
+		if(! is_bound()) {
+			bind(DEFAULT_BUFFER_TARGET);
+			autoBind = true;
+		}
+
+		mSize = aSize;
+		glBufferStorage(mTarget, aSize, aData, mUsage);
+		if(autoBind) unbind();
+	}
+#endif
 
 	void vertex_buffer::buffer(const GLvoid* aData, GLsizeiptr aSize) {
-		if(! is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Buffer does not exist");
-		if(mUsage == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Usage not set");
+		if(! is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::buffer : Buffer does not exist");
+		if(mUsage == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::vertex_buffer::buffer : Usage not set");
 
 		bool autoBind = false;
 		if(! is_bound()) {

@@ -38,6 +38,9 @@ namespace asmith { namespace gl {
 
 		void buffer(const GLvoid*, GLsizeiptr);
 		void sub_buffer(GLintptr, const GLvoid*, GLsizeiptr);
+#if ASMITH_GL_VERSION_GE(4, 4)	
+		void buffer_storage(const GLvoid*, GLsizeiptr);
+#endif
 		bool set_usage(GLenum) throw();
 		GLenum get_usage() const throw();
 

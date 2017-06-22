@@ -124,7 +124,7 @@ namespace asmith { namespace gl {
 		return mUsage;
 	}
 
-	void vertex_buffer::set_data(const GLvoid* aData, GLsizeiptr aSize) {
+	void vertex_buffer::buffer(const GLvoid* aData, GLsizeiptr aSize) {
 		if(! is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Buffer does not exist");
 		if(mUsage == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Usage not set");
 
@@ -139,6 +139,24 @@ namespace asmith { namespace gl {
 		glBufferDataARB(mTarget, aSize, aData, mUsage);
 #else
 		glBufferData(mTarget, aSize, aData, mUsage);
+#endif
+		if(autoBind) unbind();
+	}
+
+	void vertex_buffer::sub_buffer(GLsizeiptr aOffset, const GLvoid* aData, GLsizeiptr aSize) {
+		if(!is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Buffer does not exist");
+
+		bool autoBind = false;
+		if(! is_bound()) {
+			bind(DEFAULT_BUFFER_TARGET);
+			autoBind = true;
+		}
+
+		mSize = aSize;
+#if ASMITH_GL_VERSION_LE(2, 1)		
+		glBufferSubDataARB(mTarget, aOffset, aSize, aData);
+#else
+		glBufferSubData(mTarget, aOffset, aSize, aData);
 #endif
 		if(autoBind) unbind();
 	}

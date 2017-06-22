@@ -35,7 +35,8 @@ namespace asmith { namespace gl {
 		vertex_buffer(GLenum);
 		~vertex_buffer();
 
-		void set_data(const GLvoid*, GLsizeiptr);
+		void buffer(const GLvoid*, GLsizeiptr);
+		void sub_buffer(GLintptr, const GLvoid*, GLsizeiptr);
 		bool set_usage(GLenum) throw();
 		GLenum get_usage() const throw();
 

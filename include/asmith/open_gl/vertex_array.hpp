@@ -43,6 +43,8 @@ namespace asmith { namespace gl {
 
 		GLuint add_attribute(std::shared_ptr<vertex_buffer>, const vertex_attribute&);
 
+		void draw_arrays(GLenum, GLint, GLsizei) const throw();
+
 		// Inherited from object 
 		
 		void create() override;

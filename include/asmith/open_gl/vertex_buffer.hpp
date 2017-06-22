@@ -32,6 +32,8 @@ namespace asmith { namespace gl {
 		GLenum mUsage;
 		bool mIsMapped;
 	public:
+		static std::shared_ptr<vertex_buffer> get_buffer_bound_to(GLenum) throw();
+
 		vertex_buffer();
 		vertex_buffer(GLenum);
 		~vertex_buffer();

@@ -37,17 +37,20 @@ namespace asmith { namespace gl {
 		glGenVertexArrays(1, &mID);
 		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::vertex_array::create : glGenVertexArrays returned 0");
 
-		const size_t s = mAttributes.size();
+		const GLuint  s = mAttributes.size();
 		if(s > 0) {
-			//! \todo Check for buffer mappping, ect
-			GLenum previous = 0; //! \todo Get the buffer id currently bound to GL_ARRAY_BUFFER
-			for(size_t i = 0; i < s; ++i) {
+			const std::shared_ptr<vertex_buffer> previous = vertex_buffer::get_buffer_bound_to(GL_ARRAY_BUFFER);
+			if(previous && previous->is_mapped())  throw std::runtime_error("asmith::gl::vertex_array::create : VBO currently bound to GL_ARRAY_BUFFER is mapped");
+
+			glBindVertexArray(mID);
+			for(GLuint  i = 0; i < s; ++i) {
 				const vertex_attribute& a = mAttributes[i];
 				//glEnableVertexAttribArray(i);
 				glBindBuffer(GL_ARRAY_BUFFER, mBuffers[i]->get_id());
 				glVertexAttribPointer(i, a.size, a.type, a.normalised, a.stride, a.pointer);
 			}
-			glBindBuffer(GL_ARRAY_BUFFER, previous);
+			glBindBuffer(GL_ARRAY_BUFFER, previous ? previous->get_id() : 0);
+			glBindVertexArray(0); //! \todo Re-bind previous VAO
 		}
 	}
 
@@ -55,6 +58,17 @@ namespace asmith { namespace gl {
 		if(! is_created()) return;
 		glDeleteVertexArrays(1, &mID);
 		mID = 0;
+	}
+
+
+	void vertex_array::draw_arrays(GLenum aMode, GLint aFirst, GLsizei aCount) const throw() {
+		if(! is_created()) return;
+		glBindVertexArray(mID);
+		const GLuint  s = mAttributes.size();
+		for(GLuint  i = 0; i < s; ++i) glEnableVertexAttribArray(i);
+		glDrawArrays(aMode, aFirst, aCount);
+		for(GLuint  i = 0; i < s; ++i) glDisableVertexAttribArray(i);
+		glBindVertexArray(0); //! \todo Re-bind previous VAO
 	}
 
 }}

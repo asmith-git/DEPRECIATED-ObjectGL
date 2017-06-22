@@ -94,6 +94,10 @@ namespace asmith { namespace gl {
 	
 	// vertex_buffer
 
+	std::shared_ptr<vertex_buffer> vertex_buffer::get_buffer_bound_to(GLenum aTarget) throw() {
+		return VERTEX_BUFFER_TARGETS[buffer_target_to_index(aTarget)].lock();
+	}
+
 	vertex_buffer::vertex_buffer() :
 		mTarget(GL_INVALID_ENUM),
 		mSize(0),

@@ -180,6 +180,20 @@ namespace asmith { namespace gl {
 		if(autoBind) unbind();
 	}
 
+	void vertex_buffer::get_buffer(GLsizeiptr aOffset, GLvoid* aData, GLsizeiptr aSize) {
+		if(! is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::get_buffer : Buffer does not exist");
+
+		bool autoBind = false;
+		if (!is_bound()) {
+			bind(DEFAULT_BUFFER_TARGET);
+			autoBind = true;
+		}
+
+		mSize = aSize;
+		glGetBufferSubData(mTarget, aOffset, aSize, aData);
+		if(autoBind) unbind();
+	}
+
 	bool vertex_buffer::bind(GLenum aTarget) throw() {
 		if(is_bound()) return false;
 

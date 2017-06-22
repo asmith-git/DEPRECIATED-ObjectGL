@@ -38,6 +38,7 @@ namespace asmith { namespace gl {
 
 		void buffer(const GLvoid*, GLsizeiptr);
 		void sub_buffer(GLintptr, const GLvoid*, GLsizeiptr);
+		void get_buffer(GLintptr, GLvoid*, GLsizeiptr);
 #if ASMITH_GL_VERSION_GE(4, 4)	
 		void buffer_storage(const GLvoid*, GLsizeiptr);
 #endif
@@ -53,8 +54,8 @@ namespace asmith { namespace gl {
 		GLsizeiptr size() const throw();
 
 #if ASMITH_GL_VERSION_GE(3, 0)	
-		void* map(GLenum) throw();
-		void* map_range(GLsizeiptr, GLsizeiptr, GLenum) throw();
+		GLvoid* map(GLenum) throw();
+		GLvoid* map_range(GLsizeiptr, GLsizeiptr, GLenum) throw();
 		bool unmap() throw();
 		bool is_mapped() const throw();
 #endif

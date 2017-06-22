@@ -167,15 +167,18 @@ namespace asmith { namespace gl {
 	bool vertex_buffer::bind(GLenum aTarget) throw() {
 		if(is_bound()) return false;
 
+		const std::shared_ptr<vertex_buffer> ptr = std::dynamic_pointer_cast<vertex_buffer>(shared_from_this());
+		const uint8_t i = buffer_target_to_index(aTarget);
+
+		const std::shared_ptr<vertex_buffer> prev = VERTEX_BUFFER_TARGETS[i].lock();
+		if(prev && prev->is_mapped()) return false;
+
 #if ASMITH_GL_VERSION_LE(2,1)
 		glBindBufferARB(aTarget, mID);
 #else
 		glBindBuffer(aTarget, mID);
 #endif
-
-		const std::shared_ptr<vertex_buffer> ptr = std::dynamic_pointer_cast<vertex_buffer>(shared_from_this());
-		const uint8_t i = buffer_target_to_index(aTarget);
-		mPreviousBinding = VERTEX_BUFFER_TARGETS[i];
+		mPreviousBinding = prev;
 		VERTEX_BUFFER_TARGETS[i] = ptr;
 		mTarget = aTarget;
 		return true;

@@ -22,7 +22,7 @@ namespace asmith { namespace gl {
 		\brief Base class for OpenGL shader objects
 		\author Adam Smith
 		\date Created : 4th November 2015 Modified 22nd June 2017
-		\version 2.1
+		\version 2.2
 	*/
 	class vertex_buffer : public object {
 	private:

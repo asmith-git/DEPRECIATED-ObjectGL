@@ -145,6 +145,7 @@ namespace asmith { namespace gl {
 
 	bool vertex_buffer::bind(GLenum aTarget) throw() {
 		if(is_bound()) return false;
+
 #if ASMITH_GL_VERSION_LE(2,1)
 		glBindBufferARB(aTarget, mID);
 #else
@@ -154,7 +155,7 @@ namespace asmith { namespace gl {
 		const std::shared_ptr<vertex_buffer> ptr = std::dynamic_pointer_cast<vertex_buffer>(shared_from_this());
 		const uint8_t i = buffer_target_to_index(aTarget);
 		mPreviousBinding = VERTEX_BUFFER_TARGETS[i];
-		VERTEX_BUFFER_TARGETS[buffer_target_to_index(aTarget)] = ptr;
+		VERTEX_BUFFER_TARGETS[i] = ptr;
 		mTarget = aTarget;
 		return true;
 	}
@@ -163,20 +164,18 @@ namespace asmith { namespace gl {
 		if(! is_bound()) return false;
 		const uint8_t i = buffer_target_to_index(mTarget); 
 		std::shared_ptr<vertex_buffer> prev = mPreviousBinding.lock();
-		if(prev) {
 #if ASMITH_GL_VERSION_LE(2,1)
-			glBindBufferARB(mTarget, prev->get_id());
+		glBindBufferARB(mTarget, prev ? prev->get_id() : 0);
 #else
-			glBindBuffer(mTarget, prev->get_id());
+		glBindBuffer(mTarget, prev ? prev->get_id() : 0);
 #endif
-		}
 		VERTEX_BUFFER_TARGETS[i] = mPreviousBinding;
 		mTarget = GL_INVALID_ENUM;
 		return true;
 	}
 
 	bool vertex_buffer::is_bound() const throw() {
-		return mTarget != GLU_INVALID_ENUM;
+		return mTarget != GL_INVALID_ENUM;
 	}
 
 	GLenum vertex_buffer::get_bind_target() const throw() {

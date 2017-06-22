@@ -11,19 +11,31 @@
 //	See the License for the specific language governing permissions and
 //	limitations under the License.
 
+#include <vector>
 #include "asmith/open_gl/object.hpp"
 
 namespace asmith { namespace gl {
 	
-	// class object
+	// object
+
+	static std::vector<object*> OBJECT_LIST;
+
+	std::shared_ptr<object> object::get_object_with_id(id_t aID) throw() {
+		for(object* i : OBJECT_LIST) {
+			if(i->get_id() == aID) return i->shared_from_this();
+		}
+		return std::shared_ptr<object>();
+	}
 	
 	object::object() :
 		mID(INVALID_ID)
-	{}
+	{
+		OBJECT_LIST.push_back(this);
+	}
 	
 	object::~object() {
-		//if(is_created()) destroy();
-		//! \todo Destroy object
+		// if(is_created()) destroy();
+		OBJECT_LIST.erase(std::find(OBJECT_LIST.begin(), OBJECT_LIST.end(), this));
 	}
 	
 	object::id_t object::get_id() const throw() {

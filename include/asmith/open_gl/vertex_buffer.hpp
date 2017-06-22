@@ -42,6 +42,7 @@ namespace asmith { namespace gl {
 
 		bool bind(GLenum) throw();
 		bool unbind() throw();
+		bool is_currently_bound() const throw();
 		bool is_bound() const throw();
 		GLenum get_bind_target() const throw();
 

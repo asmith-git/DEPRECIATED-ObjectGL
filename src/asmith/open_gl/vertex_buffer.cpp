@@ -192,6 +192,14 @@ namespace asmith { namespace gl {
 		return true;
 	}
 
+	bool vertex_buffer::is_currently_bound() const throw() {
+		if(mTarget == GL_INVALID_ENUM) return false;
+		const uint8_t i = buffer_target_to_index(mTarget);
+		std::shared_ptr<vertex_buffer> prev = VERTEX_BUFFER_TARGETS[i].lock();
+		if(! prev) return false;
+		return prev->get_id() == mID;
+	}
+
 	bool vertex_buffer::is_bound() const throw() {
 		return mTarget != GL_INVALID_ENUM;
 	}

@@ -30,6 +30,7 @@ namespace asmith { namespace gl {
 		GLenum mTarget;
 		GLsizeiptr mSize;
 		GLenum mUsage;
+		bool mIsMapped;
 	public:
 		vertex_buffer();
 		vertex_buffer(GLenum);
@@ -47,6 +48,11 @@ namespace asmith { namespace gl {
 		GLenum get_bind_target() const throw();
 
 		GLsizeiptr size() const throw();
+
+		void* map(GLenum) throw();
+		void* map_range(GLsizeiptr, GLsizeiptr, GLenum) throw();
+		bool unmap() throw();
+		bool is_mapped() const throw();
 
 		// Inherited from object 
 		

@@ -97,17 +97,20 @@ namespace asmith { namespace gl {
 	vertex_buffer::vertex_buffer() :
 		mTarget(GL_INVALID_ENUM),
 		mSize(0),
-		mUsage(GL_INVALID_ENUM)
+		mUsage(GL_INVALID_ENUM),
+		mIsMapped(false)
 	{}
 
 	vertex_buffer::vertex_buffer(GLenum aUsage) :
 		mTarget(GL_INVALID_ENUM),
 		mSize(0),
-		mUsage(aUsage)
+		mUsage(aUsage),
+		mIsMapped(false)
 	{}
 
 	vertex_buffer::~vertex_buffer() {
-		//! \todo Unbuffer
+		if(is_mapped()) unmap();
+		if(is_bound()) unbind();
 	}
 
 	GLsizeiptr vertex_buffer::size() const throw() {
@@ -180,6 +183,8 @@ namespace asmith { namespace gl {
 
 	bool vertex_buffer::unbind() throw() {
 		if(! is_bound()) return false;
+		if(is_mapped()) unmap();
+
 		const uint8_t i = buffer_target_to_index(mTarget); 
 		std::shared_ptr<vertex_buffer> prev = mPreviousBinding.lock();
 #if ASMITH_GL_VERSION_LE(2,1)
@@ -229,6 +234,42 @@ namespace asmith { namespace gl {
 #endif
 		mID = 0;
 		mSize = 0;
+	}
+
+	void* vertex_buffer::map(GLenum aAccess) throw() {
+		if(is_mapped() || ! is_currently_bound()) return nullptr;
+
+		mIsMapped = true;
+#if ASMITH_GL_VERSION_LE(2,1)
+		return glMapBufferARB(mTarget, aAccess);
+#else
+		return glMapBuffer(mTarget, aAccess);
+#endif
+	}
+
+	void* vertex_buffer::map_range(GLsizeiptr aOffset, GLsizeiptr aLength, GLenum aAccess) throw() {
+		if(is_mapped() || ! is_currently_bound()) return nullptr;
+
+		mIsMapped = true;
+#if ASMITH_GL_VERSION_LE(2,1)
+		return glMapBufferRangeARB(mTarget, aOffset, aLength, aAccess);
+#else
+		return glMapBufferRange(mTarget, aOffset, aLength, aAccess);
+#endif
+	}
+
+	bool vertex_buffer::unmap() throw() {
+		if(! (is_mapped() && is_currently_bound())) return false;
+#if ASMITH_GL_VERSION_LE(2,1)
+		return glUnmapBufferARB(mTarget);
+#else
+		return glUnmapBuffer(mTarget);
+#endif
+		return true;
+	}
+
+	bool vertex_buffer::is_mapped() const throw() {
+		return mIsMapped;
 	}
 
 }}

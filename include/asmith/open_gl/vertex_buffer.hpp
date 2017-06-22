@@ -49,10 +49,12 @@ namespace asmith { namespace gl {
 
 		GLsizeiptr size() const throw();
 
+#if ASMITH_GL_VERSION_GE(3, 0)	
 		void* map(GLenum) throw();
 		void* map_range(GLsizeiptr, GLsizeiptr, GLenum) throw();
 		bool unmap() throw();
 		bool is_mapped() const throw();
+#endif
 
 		// Inherited from object 
 		

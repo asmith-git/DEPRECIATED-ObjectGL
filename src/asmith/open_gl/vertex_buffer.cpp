@@ -239,40 +239,29 @@ namespace asmith { namespace gl {
 		mSize = 0;
 	}
 
+#if ASMITH_GL_VERSION_GE(3, 0)	
 	void* vertex_buffer::map(GLenum aAccess) throw() {
 		if(is_mapped() || ! is_currently_bound()) return nullptr;
 
 		mIsMapped = true;
-#if ASMITH_GL_VERSION_LE(2,1)
-		return glMapBufferARB(mTarget, aAccess);
-#else
 		return glMapBuffer(mTarget, aAccess);
-#endif
 	}
 
 	void* vertex_buffer::map_range(GLsizeiptr aOffset, GLsizeiptr aLength, GLenum aAccess) throw() {
 		if(is_mapped() || ! is_currently_bound()) return nullptr;
 
 		mIsMapped = true;
-#if ASMITH_GL_VERSION_LE(2,1)
-		return glMapBufferRangeARB(mTarget, aOffset, aLength, aAccess);
-#else
 		return glMapBufferRange(mTarget, aOffset, aLength, aAccess);
-#endif
 	}
 
 	bool vertex_buffer::unmap() throw() {
 		if(! (is_mapped() && is_currently_bound())) return false;
-#if ASMITH_GL_VERSION_LE(2,1)
-		return glUnmapBufferARB(mTarget);
-#else
 		return glUnmapBuffer(mTarget);
-#endif
 		return true;
 	}
 
 	bool vertex_buffer::is_mapped() const throw() {
 		return mIsMapped;
 	}
-
+#endif
 }}

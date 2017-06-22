@@ -38,15 +38,6 @@ namespace asmith { namespace gl {
 		std::vector<vertex_attribute> mAttributes;
 		std::vector<std::shared_ptr<vertex_buffer>> mBuffers;
 	public:
-		struct vertex_attribute {
-			std::shared_ptr<vertex_buffer> buffer;
-			GLint size;
-			GLenum type;
-			GLboolean normalised;
-			GLsizei stride;
-			const GLvoid* pointer;
-		};
-
 		vertex_array();
 		~vertex_array();
 

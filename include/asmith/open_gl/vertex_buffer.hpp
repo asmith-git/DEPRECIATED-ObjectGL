@@ -21,11 +21,12 @@ namespace asmith { namespace gl {
 	/*!
 		\brief Base class for OpenGL shader objects
 		\author Adam Smith
-		\date Created : 4th November 2015 Modified 20th June 2017
-		\version 2.0
+		\date Created : 4th November 2015 Modified 22nd June 2017
+		\version 2.1
 	*/
 	class vertex_buffer : public object {
 	private:
+		std::weak_ptr<vertex_buffer> mPreviousBinding;
 		GLenum mTarget;
 		GLsizeiptr mSize;
 		GLenum mUsage;
@@ -39,7 +40,9 @@ namespace asmith { namespace gl {
 		GLenum get_usage() const throw();
 
 		bool bind(GLenum) throw();
-		bool unbind(GLenum) throw();
+		bool unbind() throw();
+		bool is_bound() const throw();
+		GLenum get_bind_target() const throw();
 
 		GLsizeiptr size() const throw();
 

@@ -81,7 +81,7 @@ namespace asmith { namespace gl {
 		}
 	}
 
-	static std::vector<std::weak_ptr<vertex_buffer>> VERTEX_BUFFER_STACK [BUFFER_TARGET_COUNT];
+	static std::weak_ptr<vertex_buffer> VERTEX_BUFFER_TARGETS[BUFFER_TARGET_COUNT];
 	
 	// vertex_buffer
 
@@ -134,24 +134,43 @@ namespace asmith { namespace gl {
 	}
 
 	bool vertex_buffer::bind(GLenum aTarget) throw() {
+		if(is_bound()) return false;
 #if ASMITH_GL_VERSION_LE(2,1)
 		glBindBufferARB(aTarget, mID);
 #else
 		glBindBuffer(aTarget, mID);
 #endif
-		mTarget = aTarget;
 
 		const std::shared_ptr<vertex_buffer> ptr = std::dynamic_pointer_cast<vertex_buffer>(shared_from_this());
-		//! \todo Push to stack
-		//VERTEX_BUFFER_STACK[buffer_target_to_index(aTarget)].push_back(ptr);
+		const uint8_t i = buffer_target_to_index(aTarget);
+		mPreviousBinding = VERTEX_BUFFER_TARGETS[i];
+		VERTEX_BUFFER_TARGETS[buffer_target_to_index(aTarget)] = ptr;
+		mTarget = aTarget;
 		return true;
 	}
 
-	bool vertex_buffer::unbind(GLenum aTarget) throw() {
-		if(mTarget == GL_INVALID_ENUM) return false;
+	bool vertex_buffer::unbind() throw() {
+		if(! is_bound()) return false;
+		const uint8_t i = buffer_target_to_index(mTarget); 
+		std::shared_ptr<vertex_buffer> prev = mPreviousBinding.lock();
+		if(prev) {
+#if ASMITH_GL_VERSION_LE(2,1)
+			glBindBufferARB(mTarget, prev->get_id());
+#else
+			glBindBuffer(mTarget, prev->get_id());
+#endif
+		}
+		VERTEX_BUFFER_TARGETS[i] = mPreviousBinding;
 		mTarget = GL_INVALID_ENUM;
-		//! \todo Remove from stack
 		return true;
+	}
+
+	bool vertex_buffer::is_bound() const throw() {
+		return mTarget != GLU_INVALID_ENUM;
+	}
+
+	GLenum vertex_buffer::get_bind_target() const throw() {
+		return mTarget;
 	}
 
 	void vertex_buffer::create() {

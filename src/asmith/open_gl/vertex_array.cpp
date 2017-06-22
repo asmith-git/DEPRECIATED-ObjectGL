@@ -45,12 +45,11 @@ namespace asmith { namespace gl {
 			glBindVertexArray(mID);
 			for(GLuint  i = 0; i < s; ++i) {
 				const vertex_attribute& a = mAttributes[i];
-				//glEnableVertexAttribArray(i);
 				glBindBuffer(GL_ARRAY_BUFFER, mBuffers[i]->get_id());
 				glVertexAttribPointer(i, a.size, a.type, a.normalised, a.stride, a.pointer);
 			}
 			glBindBuffer(GL_ARRAY_BUFFER, previous ? previous->get_id() : 0);
-			glBindVertexArray(0); //! \todo Re-bind previous VAO
+			glBindVertexArray(0);
 		}
 	}
 
@@ -68,7 +67,7 @@ namespace asmith { namespace gl {
 		for(GLuint  i = 0; i < s; ++i) glEnableVertexAttribArray(i);
 		glDrawArrays(aMode, aFirst, aCount);
 		for(GLuint  i = 0; i < s; ++i) glDisableVertexAttribArray(i);
-		glBindVertexArray(0); //! \todo Re-bind previous VAO
+		glBindVertexArray(0);
 	}
 
 }}

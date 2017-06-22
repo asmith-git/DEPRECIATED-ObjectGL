@@ -81,6 +81,15 @@ namespace asmith { namespace gl {
 		}
 	}
 
+	enum : GLenum {
+		DEFAULT_BUFFER_TARGET =
+#if ASMITH_GL_VERSION_GE(3,1)
+		GL_ARRAY_BUFFER
+#else
+		GL_COPY_WRITE_BUFFER
+#endif
+	};
+
 	static std::weak_ptr<vertex_buffer> VERTEX_BUFFER_TARGETS[BUFFER_TARGET_COUNT];
 	
 	// vertex_buffer
@@ -118,19 +127,20 @@ namespace asmith { namespace gl {
 	void vertex_buffer::set_data(const GLvoid* aData, GLsizeiptr aSize) {
 		if(! is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Buffer does not exist");
 		if(mUsage == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Usage not set");
-#if ASMITH_GL_VERSION_LE(4,4)
-		if(mTarget == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Buffer is not bound");
-#endif
+
+		bool autoBind = false;
+		if(! is_bound()) {
+			bind(DEFAULT_BUFFER_TARGET);
+			autoBind = true;
+		}
+
 		mSize = aSize;
 #if ASMITH_GL_VERSION_LE(2, 1)		
 		glBufferDataARB(mTarget, aSize, aData, mUsage);
 #else
-#if ASMITH_GL_VERSION_LE(4,4)
 		glBufferData(mTarget, aSize, aData, mUsage);
-#else
-		glNamedBufferData(mID, aSize, aData, mUsage);
 #endif
-#endif
+		if(autoBind) unbind();
 	}
 
 	bool vertex_buffer::bind(GLenum aTarget) throw() {

@@ -20,7 +20,7 @@
 namespace asmith { namespace gl {
 	
 	/*!
-		\brief Base class for OpenGL shader objects
+		\brief Base class for OpenGL vertex array objects (VAO)
 		\author Adam Smith
 		\date Created : 22nd June 2017 Modified 22nd June 2017
 		\version 1.0

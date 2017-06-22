@@ -154,11 +154,7 @@ namespace asmith { namespace gl {
 		}
 
 		mSize = aSize;
-#if ASMITH_GL_VERSION_LE(2, 1)		
-		glBufferDataARB(mTarget, aSize, aData, mUsage);
-#else
 		glBufferData(mTarget, aSize, aData, mUsage);
-#endif
 		if(autoBind) unbind();
 	}
 
@@ -172,11 +168,7 @@ namespace asmith { namespace gl {
 		}
 
 		mSize = aSize;
-#if ASMITH_GL_VERSION_LE(2, 1)		
-		glBufferSubDataARB(mTarget, aOffset, aSize, aData);
-#else
 		glBufferSubData(mTarget, aOffset, aSize, aData);
-#endif
 		if(autoBind) unbind();
 	}
 
@@ -203,11 +195,7 @@ namespace asmith { namespace gl {
 		const std::shared_ptr<vertex_buffer> prev = VERTEX_BUFFER_TARGETS[i].lock();
 		if(prev && prev->is_mapped()) return false;
 
-#if ASMITH_GL_VERSION_LE(2,1)
-		glBindBufferARB(aTarget, mID);
-#else
 		glBindBuffer(aTarget, mID);
-#endif
 		mPreviousBinding = prev;
 		VERTEX_BUFFER_TARGETS[i] = ptr;
 		mTarget = aTarget;
@@ -220,11 +208,8 @@ namespace asmith { namespace gl {
 
 		const uint8_t i = buffer_target_to_index(mTarget); 
 		std::shared_ptr<vertex_buffer> prev = mPreviousBinding.lock();
-#if ASMITH_GL_VERSION_LE(2,1)
-		glBindBufferARB(mTarget, prev ? prev->get_id() : 0);
-#else
+
 		glBindBuffer(mTarget, prev ? prev->get_id() : 0);
-#endif
 		VERTEX_BUFFER_TARGETS[i] = mPreviousBinding;
 		mTarget = GL_INVALID_ENUM;
 		return true;
@@ -249,22 +234,14 @@ namespace asmith { namespace gl {
 	void vertex_buffer::create() {
 		if(is_created()) destroy();
 
-#if ASMITH_GL_VERSION_LE(2,1)
-		glGenBuffersARB(1, &mID);
-#else
 		glGenBuffers(1, &mID);
-#endif
 		mSize = 0;
 		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::vertex_buffer::create : glGenBuffers returned 0");
 	}
 
 	void vertex_buffer::destroy() {
 		if(! is_created()) return;
-#if ASMITH_GL_VERSION_LE(2,1)
-		glDeleteBuffersARB(1, &mID);
-#else
 		glDeleteBuffers(1, &mID);
-#endif
 		mID = 0;
 		mSize = 0;
 	}

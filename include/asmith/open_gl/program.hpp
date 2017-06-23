@@ -99,6 +99,44 @@ namespace asmith { namespace gl {
 		tmp->create();
 		return tmp;
 	}
+
+	template<class T>
+	class uniform {
+	private:
+		std::shared_ptr<program> mProgram;
+		T mValue;
+		GLint mLocation;
+	public:
+		uniform(std::shared_ptr<program> aProgram, const GLchar* aName) :
+			mProgram(aProgram),
+			mLocation(-1)
+		{
+			mLocation = mProgram->get_uniform_location(aName);
+			if(mLocation != -1) {
+				mProgram->get_uniform(mLocation, mValue);
+			}
+		}
+
+		inline T get() const throw() {
+			return mValue;
+		}
+
+		inline bool set(const T& aValue) throw() {
+			if(mLocation == -1) return false;
+			mValue = aValue;
+			mProgram->set_uniform(mLocation, aValue);
+			return true;
+		}
+
+		inline uniform<T>& operator=(const T& aValue) throw() {
+			set(aValue);
+			return *this;
+		}
+
+		inline operator T() const throw() {
+			return get();
+		}
+	};
 }}
 
 #endif

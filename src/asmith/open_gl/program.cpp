@@ -215,6 +215,66 @@ namespace asmith { namespace gl {
 		glUniformMatrix4fv(aLocation, 1, aTranspose, &aValue[0][0]);
 	}
 
+	void program::get_uniform(GLint aLocation, GLfloat& aValue) const {
+		glGetUniformfv(mID, 1, &aValue);
+	}
+
+	void program::get_uniform(GLint aLocation, GLint& aValue) const {
+		glGetUniformiv(mID, 1, &aValue);
+	}
+
+	void program::get_uniform(GLint aLocation, GLuint& aValue) const {
+		glGetUniformuiv(mID, 1, &aValue);
+	}
+
+	void program::get_uniform(GLint aLocation, vec2f& aValue) const {
+		glGetUniformfv(mID, 2, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, vec3f& aValue) const {
+		glGetUniformfv(mID, 3, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, vec4f& aValue) const {
+		glGetUniformfv(mID, 4, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, vec2i& aValue) const {
+		glGetUniformiv(mID, 2, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, vec3i& aValue) const {
+		glGetUniformiv(mID, 3, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, vec4i& aValue) const {
+		glGetUniformiv(mID, 4, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, vec2u& aValue) const {
+		glGetUniformuiv(mID, 2, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, vec3u& aValue) const {
+		glGetUniformuiv(mID, 3, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, vec4u& aValue) const {
+		glGetUniformuiv(mID, 4, &aValue[0]);
+	}
+
+	void program::get_uniform(GLint aLocation, mat2& aValue) const {
+		glGetUniformfv(mID, 2*2, &aValue[0][0]);
+	}
+
+	void program::get_uniform(GLint aLocation, mat3& aValue) const {
+		glGetUniformfv(mID, 3*3, &aValue[0][0]);
+	}
+
+	void program::get_uniform(GLint aLocation, mat4& aValue) const {
+		glGetUniformfv(mID, 4*4, &aValue[0][0]);
+	}
+
 	//! \todo 2x3, 3x2, 2x4, 4x2, 3x4 and 4x3 matrix support
 
 }}

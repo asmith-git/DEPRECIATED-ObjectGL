@@ -46,6 +46,7 @@ namespace asmith { namespace gl {
 		bool is_currently_bound() const throw();
 
 		GLint get_uniform_location(const GLchar*) const;
+
 		void set_uniform(GLint, GLfloat);
 		void set_uniform(GLint, GLfloat, GLfloat);
 		void set_uniform(GLint, GLfloat, GLfloat, GLfloat);
@@ -70,6 +71,22 @@ namespace asmith { namespace gl {
 		void set_uniform(GLint, const mat2&, GLboolean aTranspose = GL_FALSE);
 		void set_uniform(GLint, const mat3&, GLboolean aTranspose = GL_FALSE);
 		void set_uniform(GLint, const mat4&, GLboolean aTranspose = GL_FALSE);
+
+		void get_uniform(GLint, GLfloat&) const;
+		void get_uniform(GLint, GLint&) const;
+		void get_uniform(GLint, GLuint&) const;
+		void get_uniform(GLint, vec2f&) const;
+		void get_uniform(GLint, vec3f&) const;
+		void get_uniform(GLint, vec4f&) const;
+		void get_uniform(GLint, vec2i&) const;
+		void get_uniform(GLint, vec3i&) const;
+		void get_uniform(GLint, vec4i&) const;
+		void get_uniform(GLint, vec2u&) const;
+		void get_uniform(GLint, vec3u&) const;
+		void get_uniform(GLint, vec4u&) const;
+		void get_uniform(GLint, mat2&) const;
+		void get_uniform(GLint, mat3&) const;
+		void get_uniform(GLint, mat4&) const;
 		
 		// Inherited from object
 		void create() override;

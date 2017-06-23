@@ -22,8 +22,8 @@ namespace asmith { namespace gl {
 	/*!
 		\brief OpenGL program
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 20th June 2017
-		\version 2.0
+		\date Created : 6th November 2015 Modified 23rd June 2017
+		\version 2.1
 	*/
 	class program : public object {
 	public:
@@ -100,6 +100,12 @@ namespace asmith { namespace gl {
 		return tmp;
 	}
 
+	/*!
+		\brief OpenGL uniform value helper
+		\author Adam Smith
+		\date Created :  23rd June 2017 Modified 23rd June 2017
+		\version 1.0
+	*/
 	template<class T>
 	class uniform {
 	private:

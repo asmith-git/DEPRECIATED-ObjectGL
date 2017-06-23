@@ -67,6 +67,9 @@ namespace asmith { namespace gl {
 		void set_uniform(GLint, const vec2u&);
 		void set_uniform(GLint, const vec3u&);
 		void set_uniform(GLint, const vec4u&);
+		void set_uniform(GLint, const mat2&, GLboolean aTranspose = GL_FALSE);
+		void set_uniform(GLint, const mat3&, GLboolean aTranspose = GL_FALSE);
+		void set_uniform(GLint, const mat4&, GLboolean aTranspose = GL_FALSE);
 		
 		// Inherited from object
 		void create() override;

@@ -203,4 +203,18 @@ namespace asmith { namespace gl {
 		glUniform4uiv(aLocation, 1, &aValue[0]);
 	}
 
+	void program::set_uniform(GLint aLocation, const mat2& aValue, GLboolean aTranspose) {
+		glUniformMatrix2fv(aLocation, 1, aTranspose, &aValue[0][0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const mat3& aValue, GLboolean aTranspose) {
+		glUniformMatrix3fv(aLocation, 1, aTranspose, &aValue[0][0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const mat4& aValue, GLboolean aTranspose) {
+		glUniformMatrix4fv(aLocation, 1, aTranspose, &aValue[0][0]);
+	}
+
+	//! \todo 2x3, 3x2, 2x4, 4x2, 3x4 and 4x3 matrix support
+
 }}

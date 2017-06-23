@@ -113,4 +113,58 @@ namespace asmith { namespace gl {
 		mID = 0;
 	}
 
+	GLint program::get_uniform_location(const GLchar* aName) const {
+		if(! is_created()) throw std::runtime_error("asmith::gl::program::get_uniform_location : Program has not been linked");
+		return glGetUniformLocation(mID, aName);
+	}
+
+
+	void program::set_uniform(GLint aLocation, GLfloat a) {
+		glUniform1f(aLocation, a);
+	}
+
+	void program::set_uniform(GLint aLocation, GLfloat a, GLfloat b) {
+		glUniform2f(aLocation, a, b);
+	}
+
+	void program::set_uniform(GLint aLocation, GLfloat a, GLfloat b, GLfloat c) {
+		glUniform3f(aLocation, a, b, c);
+	}
+
+	void program::set_uniform(GLint aLocation, GLfloat a, GLfloat b, GLfloat c, GLfloat d) {
+		glUniform4f(aLocation, a, b, c, d);
+	}
+
+	void program::set_uniform(GLint aLocation, GLint a) {
+		glUniform1i(aLocation, a);
+	}
+
+	void program::set_uniform(GLint aLocation, GLint a, GLint b) {
+		glUniform2i(aLocation, a, b);
+	}
+
+	void program::set_uniform(GLint aLocation, GLint a, GLint b, GLint c) {
+		glUniform3i(aLocation, a, b, c);
+	}
+
+	void program::set_uniform(GLint aLocation, GLint a, GLint b, GLint c, GLint d) {
+		glUniform4i(aLocation, a, b, c, d);
+	}
+
+	void program::set_uniform(GLint aLocation, GLuint a) {
+		glUniform1ui(aLocation, a);
+	}
+
+	void program::set_uniform(GLint aLocation, GLuint a, GLuint b) {
+		glUniform2ui(aLocation, a, b);
+	}
+
+	void program::set_uniform(GLint aLocation, GLuint a, GLuint b, GLuint c) {
+		glUniform3ui(aLocation, a, b, c);
+	}
+
+	void program::set_uniform(GLint aLocation, GLuint a, GLuint b, GLuint c, GLuint d) {
+		glUniform4ui(aLocation, a, b, c, d);
+	}
+
 }}

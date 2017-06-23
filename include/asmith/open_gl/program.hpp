@@ -44,6 +44,20 @@ namespace asmith { namespace gl {
 		void unbind();
 		bool is_bound() const throw();
 		bool is_currently_bound() const throw();
+
+		GLint get_uniform_location(const GLchar*) const;
+		void set_uniform(GLint, GLfloat);
+		void set_uniform(GLint, GLfloat, GLfloat);
+		void set_uniform(GLint, GLfloat, GLfloat, GLfloat);
+		void set_uniform(GLint, GLfloat, GLfloat, GLfloat, GLfloat);
+		void set_uniform(GLint, GLint);
+		void set_uniform(GLint, GLint, GLint);
+		void set_uniform(GLint, GLint, GLint, GLint);
+		void set_uniform(GLint, GLint, GLint, GLint, GLint);
+		void set_uniform(GLint, GLuint);
+		void set_uniform(GLint, GLuint, GLuint);
+		void set_uniform(GLint, GLuint, GLuint, GLuint);
+		void set_uniform(GLint, GLuint, GLuint, GLuint, GLuint);
 		
 		// Inherited from object
 		void create() override;

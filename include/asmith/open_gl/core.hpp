@@ -36,11 +36,11 @@ namespace asmith { namespace gl {
 	typedef glm::vec3 vec3f;
 	typedef glm::vec4 vec4f;
 	typedef glm::ivec2 vec2i;
-	typedef glm::ivec2 vec3i;
-	typedef glm::ivec2 vec4i;
+	typedef glm::ivec3 vec3i;
+	typedef glm::ivec4 vec4i;
 	typedef glm::uvec2 vec2u;
-	typedef glm::uvec2 vec3u;
-	typedef glm::uvec2 vec4u;
+	typedef glm::uvec3 vec3u;
+	typedef glm::uvec4 vec4u;
 	typedef glm::mat2 mat2;
 	typedef glm::mat3 mat3;
 	typedef glm::mat4 mat4;

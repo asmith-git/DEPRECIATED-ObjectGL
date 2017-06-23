@@ -167,4 +167,40 @@ namespace asmith { namespace gl {
 		glUniform4ui(aLocation, a, b, c, d);
 	}
 
+	void program::set_uniform(GLint aLocation, const vec2f& aValue) {
+		glUniform2fv(aLocation, 1, &aValue[0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const vec3f& aValue) {
+		glUniform3fv(aLocation, 1, &aValue[0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const vec4f& aValue) {
+		glUniform4fv(aLocation, 1, &aValue[0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const vec2i& aValue) {
+		glUniform2iv(aLocation, 1, &aValue[0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const vec3i& aValue) {
+		glUniform3iv(aLocation, 1, &aValue[0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const vec4i& aValue) {
+		glUniform4iv(aLocation, 1, &aValue[0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const vec2u& aValue) {
+		glUniform2uiv(aLocation, 1, &aValue[0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const vec3u& aValue) {
+		glUniform3uiv(aLocation, 1, &aValue[0]);
+	}
+
+	void program::set_uniform(GLint aLocation, const vec4u& aValue) {
+		glUniform4uiv(aLocation, 1, &aValue[0]);
+	}
+
 }}

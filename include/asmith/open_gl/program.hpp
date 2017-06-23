@@ -58,6 +58,15 @@ namespace asmith { namespace gl {
 		void set_uniform(GLint, GLuint, GLuint);
 		void set_uniform(GLint, GLuint, GLuint, GLuint);
 		void set_uniform(GLint, GLuint, GLuint, GLuint, GLuint);
+		void set_uniform(GLint, const vec2f&);
+		void set_uniform(GLint, const vec3f&);
+		void set_uniform(GLint, const vec4f&);
+		void set_uniform(GLint, const vec2i&);
+		void set_uniform(GLint, const vec3i&);
+		void set_uniform(GLint, const vec4i&);
+		void set_uniform(GLint, const vec2u&);
+		void set_uniform(GLint, const vec3u&);
+		void set_uniform(GLint, const vec4u&);
 		
 		// Inherited from object
 		void create() override;

@@ -46,21 +46,19 @@ namespace asmith { namespace gl {
 	typedef glm::mat4 mat4;
 }}
 #else
-#include <array>
-
 namespace asmith { namespace gl {
-	typedef std::array<GLfloat, 2> vec2f;
-	typedef std::array<GLfloat, 3> vec3f;
-	typedef std::array<GLfloat, 4> vec4f;
-	typedef std::array<GLint, 2> vec2i;
-	typedef std::array<GLint, 3> vec3i;
-	typedef std::array<GLint, 4> vec4i;
-	typedef std::array<GLuint, 2> vec2u;
-	typedef std::array<GLuint, 3> vec3u;
-	typedef std::array<GLuint, 4> vec4u;
-	typedef std::array<std::array<GLfloat, 2>, 2> mat2;
-	typedef std::array<std::array<GLfloat, 3>, 3> mat3;
-	typedef std::array<std::array<GLfloat, 4>, 4> mat4;
+	typedef GLfloat vec2f[2];
+	typedef GLfloat vec3f[3];
+	typedef GLfloat vec4f[4];
+	typedef GLint vec2i[2];
+	typedef GLint vec3i[3];
+	typedef GLint vec4i[4];
+	typedef GLuint vec2u[2];
+	typedef GLuint vec3u[3];
+	typedef GLuint vec4u[4];
+	typedef GLfloat mat2[2][2];
+	typedef GLfloat mat3[3][3];
+	typedef GLfloat mat4[4][4];
 }}
 #endif
 

@@ -48,6 +48,9 @@ namespace asmith { namespace gl {
 		light(GLenum);
 	public:
 		static std::shared_ptr<light> get_light(GLenum) throw();
+		static void enable_lighting() throw();
+		static void disable_lighting() throw();
+		static bool is_lighting_enabled() throw();
 
 		~light();
 

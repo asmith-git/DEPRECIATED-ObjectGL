@@ -16,6 +16,7 @@
 namespace asmith { namespace gl {
 
 	static std::shared_ptr<light> LIGHTS[GL_MAX_LIGHTS];
+	static bool LIGHTING_ENABLED = false;
 	
 	// light
 
@@ -23,6 +24,22 @@ namespace asmith { namespace gl {
 		if(aID < GL_LIGHT0 || aID >= (GL_LIGHT0 + GL_MAX_LIGHTS)) return std::shared_ptr<light>();
 		if(! LIGHTS[aID]) LIGHTS[aID].reset(new light(aID));
 		return LIGHTS[aID];
+	}
+
+	void light::enable_lighting() throw() {
+		if(LIGHTING_ENABLED) return;
+		LIGHTING_ENABLED = true;
+		glEnable(GL_LIGHTING);
+	}
+
+	void light::disable_lighting() throw() {
+		if(! LIGHTING_ENABLED) return;
+		LIGHTING_ENABLED = false;
+		glDisable(GL_LIGHTING);
+	}
+
+	bool light::is_lighting_enabled() throw() {
+		return LIGHTING_ENABLED;
 	}
 
 

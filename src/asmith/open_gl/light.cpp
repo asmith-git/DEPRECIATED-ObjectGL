@@ -22,8 +22,9 @@ namespace asmith { namespace gl {
 
 	std::shared_ptr<light> light::get_light(GLenum aID) throw() {
 		if(aID < GL_LIGHT0 || aID >= (GL_LIGHT0 + GL_MAX_LIGHTS)) return std::shared_ptr<light>();
-		if(! LIGHTS[aID]) LIGHTS[aID].reset(new light(aID));
-		return LIGHTS[aID];
+		std::shared_ptr<light>& l = LIGHTS[aID - GL_LIGHT0];
+		if(! l) l.reset(new light(aID));
+		return l;
 	}
 
 	void light::enable_lighting() throw() {
@@ -43,7 +44,7 @@ namespace asmith { namespace gl {
 	}
 
 
-	light::light(GLenum aID) :
+	light::light(GLenum aID) throw() :
 		mPosition(0.f, 0.f, 0.f, 1.f),
 		mAmbient(0.f, 0.f, 0.f, 1.f),
 		mDiffuse(1.f, 1.f, 1.f, 1.f),
@@ -58,7 +59,7 @@ namespace asmith { namespace gl {
 		mEnabled(false)
 	{}
 
-	light::~light() {
+	light::~light() throw() {
 
 	}
 

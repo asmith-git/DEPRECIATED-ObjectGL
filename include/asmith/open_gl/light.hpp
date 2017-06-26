@@ -45,14 +45,14 @@ namespace asmith { namespace gl {
 		light& operator=(const light&) = delete;
 		light& operator=(light&&) = delete;
 
-		light(GLenum);
+		light(GLenum) throw();
 	public:
 		static std::shared_ptr<light> get_light(GLenum) throw();
 		static void enable_lighting() throw();
 		static void disable_lighting() throw();
 		static bool is_lighting_enabled() throw();
 
-		~light();
+		~light() throw();
 
 		void enable() throw();
 		void disable() throw();

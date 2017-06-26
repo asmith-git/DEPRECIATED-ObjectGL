@@ -16,6 +16,7 @@
 namespace asmith { namespace gl {
 
 	static std::shared_ptr<light> LIGHTS[GL_MAX_LIGHTS];
+	static vec4f SCENE_AMBIENT;
 	static bool LIGHTING_ENABLED = false;
 	
 	// light
@@ -43,6 +44,14 @@ namespace asmith { namespace gl {
 		return LIGHTING_ENABLED;
 	}
 
+	void light::set_scene_ambient(const vec4f& aValue) throw() {
+		SCENE_AMBIENT = aValue;
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, &SCENE_AMBIENT[0]);
+	}
+
+	const vec4f& light::get_scene_ambient() throw() {
+		return SCENE_AMBIENT;
+	}
 
 	light::light(GLenum aID) throw() :
 		mPosition(0.f, 0.f, 0.f, 1.f),

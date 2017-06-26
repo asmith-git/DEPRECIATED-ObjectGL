@@ -51,6 +51,8 @@ namespace asmith { namespace gl {
 		static void enable_lighting() throw();
 		static void disable_lighting() throw();
 		static bool is_lighting_enabled() throw();
+		static void set_scene_ambient(const vec4f&) throw();
+		static const vec4f& get_scene_ambient() throw();
 
 		~light() throw();
 

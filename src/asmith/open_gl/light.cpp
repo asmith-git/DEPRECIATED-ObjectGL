@@ -27,6 +27,16 @@ namespace asmith { namespace gl {
 
 
 	light::light(GLenum aID) :
+		mPosition(0.f, 0.f, 0.f, 1.f),
+		mAmbient(0.f, 0.f, 0.f, 1.f),
+		mDiffuse(1.f, 1.f, 1.f, 1.f),
+		mSpecular(1.f, 1.f, 1.f, 1.f),
+		mDirection(1.f, -1.f, -1.f),
+		mConstantAttenuation(1.f),
+		mLinearAttenuation(0.f),
+		mQuadraticAttenuation(0.f),
+		mExponent(30),
+		mCutoff(180),
 		mID(aID),
 		mEnabled(false)
 	{}
@@ -38,6 +48,16 @@ namespace asmith { namespace gl {
 	void light::enable() throw() {
 		if(mEnabled) return;
 		glEnable(mID);
+		set_position(get_position());
+		set_ambient(get_ambient());
+		set_diffuse(get_diffuse());
+		set_specular(get_specular());
+		set_spot_direction(get_spot_direction());
+		set_spot_exponent(get_spot_exponent());
+		set_spot_cutoff(get_spot_cutoff());
+		set_constant_attenuation(get_constant_attenuation());
+		set_linear_attenuation(get_linear_attenuation());
+		set_quadratic_attenuation(get_quadratic_attenuation());
 		mEnabled = true;
 	}
 

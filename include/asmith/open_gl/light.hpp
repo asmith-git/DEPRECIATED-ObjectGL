@@ -32,6 +32,9 @@ namespace asmith { namespace gl {
 		vec4f mDiffuse;
 		vec4f mSpecular;
 		vec3f mDirection;
+		GLfloat mConstantAttenuation;
+		GLfloat mLinearAttenuation;
+		GLfloat mQuadraticAttenuation;
 		GLint mExponent;
 		GLint mCutoff;
 		const GLenum mID;
@@ -59,6 +62,9 @@ namespace asmith { namespace gl {
 		const vec3f& get_spot_direction() const throw();
 		GLint get_spot_exponent() const throw();
 		GLint get_spot_cutoff() const throw();
+		GLfloat get_constant_attenuation() const throw();
+		GLfloat get_linear_attenuation() const throw();
+		GLfloat get_quadratic_attenuation() const throw();
 
 		void set_position(const vec4f&) throw();
 		void set_ambient(const vec4f&) throw();
@@ -67,6 +73,9 @@ namespace asmith { namespace gl {
 		void set_spot_direction(const vec3f&) throw();
 		void set_spot_exponent(GLint) throw();
 		void set_spot_cutoff(GLint) throw();
+		void set_constant_attenuation(GLfloat) throw();
+		void set_linear_attenuation(GLfloat) throw();
+		void set_quadratic_attenuation(GLfloat) throw();
 	};
 
 }}

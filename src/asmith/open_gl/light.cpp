@@ -79,6 +79,18 @@ namespace asmith { namespace gl {
 		return mCutoff;
 	}
 
+	GLfloat light::get_constant_attenuation() const throw() {
+		return mConstantAttenuation;
+	}
+
+	GLfloat light::get_linear_attenuation() const throw() {
+		return mLinearAttenuation;
+	}
+
+	GLfloat light::get_quadratic_attenuation() const throw() {
+		return mQuadraticAttenuation;
+	}
+
 	void light::set_position(const vec4f& aValue) throw() {
 		mPosition = aValue;
 		glLightfv(mID, GL_POSITION, &mPosition[0]);
@@ -112,6 +124,21 @@ namespace asmith { namespace gl {
 	void light::set_spot_cutoff(GLint aValue) throw() {
 		mCutoff = aValue;
 		glLighti(mID, GL_SPOT_CUTOFF, mCutoff);
+	}
+
+	void light::set_constant_attenuation(GLfloat aValue) throw() {
+		mConstantAttenuation = aValue;
+		glLightf(mID, GL_CONSTANT_ATTENUATION, mConstantAttenuation);
+	}
+
+	void light::set_linear_attenuation(GLfloat aValue) throw() {
+		mLinearAttenuation = aValue;
+		glLightf(mID, GL_LINEAR_ATTENUATION, mLinearAttenuation);
+	}
+
+	void light::set_quadratic_attenuation(GLfloat aValue) throw() {
+		mQuadraticAttenuation = aValue;
+		glLightf(mID, GL_QUADRATIC_ATTENUATION, mQuadraticAttenuation);
 	}
 
 }}

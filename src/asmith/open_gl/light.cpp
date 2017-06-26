@@ -67,6 +67,18 @@ namespace asmith { namespace gl {
 		return mSpecular;
 	}
 
+	const vec3f& light::get_spot_direction() const throw() {
+		return mDirection;
+	}
+
+	GLfloat light::get_spot_exponent() const throw() {
+		return mExponent;
+	}
+
+	GLfloat light::get_spot_cutoff() const throw() {
+		return mCutoff;
+	}
+
 	void light::set_position(const vec4f& aValue) throw() {
 		mPosition = aValue;
 		glLightfv(mID, GL_POSITION, &mPosition[0]);
@@ -85,6 +97,21 @@ namespace asmith { namespace gl {
 	void light::set_specular(const vec4f& aValue) throw() {
 		mSpecular = aValue;
 		glLightfv(mID, GL_SPECULAR, &mSpecular[0]);
+	}
+
+	void light::set_spot_direction(const vec3f& aValue) throw() {
+		mDirection = aValue;
+		glLightfv(mID, GL_SPOT_DIRECTION, &mDirection[0]);
+	}
+
+	void light::set_spot_exponent(GLfloat aValue) throw() {
+		mExponent = aValue;
+		glLightfv(mID, GL_SPOT_EXPONENT, &mExponent);
+	}
+
+	void light::set_spot_cutoff(GLfloat aValue) throw() {
+		mCutoff = aValue;
+		glLightfv(mID, GL_SPOT_CUTOFF, &mCutoff);
 	}
 
 }}

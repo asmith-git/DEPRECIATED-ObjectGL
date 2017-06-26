@@ -51,6 +51,40 @@ namespace asmith { namespace gl {
 		return mEnabled;
 	}
 
+	const vec4f& light::get_position() const throw() {
+		return mPosition;
+	}
 
+	const vec4f& light::get_ambient() const throw() {
+		return mAmbient;
+	}
+
+	const vec4f& light::get_diffuse() const throw() {
+		return mDiffuse;
+	}
+
+	const vec4f& light::get_specular() const throw() {
+		return mSpecular;
+	}
+
+	void light::set_position(const vec4f& aValue) throw() {
+		mPosition = aValue;
+		glLightfv(mID, GL_POSITION, &mPosition[0]);
+	}
+
+	void light::set_ambient(const vec4f& aValue) throw() {
+		mAmbient = aValue;
+		glLightfv(mID, GL_AMBIENT, &mAmbient[0]);
+	}
+
+	void light::set_diffuse(const vec4f& aValue) throw() {
+		mDiffuse = aValue;
+		glLightfv(mID, GL_DIFFUSE, &mDiffuse[0]);
+	}
+
+	void light::set_specular(const vec4f& aValue) throw() {
+		mSpecular = aValue;
+		glLightfv(mID, GL_SPECULAR, &mSpecular[0]);
+	}
 
 }}

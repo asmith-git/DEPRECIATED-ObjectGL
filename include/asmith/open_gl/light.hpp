@@ -27,6 +27,10 @@ namespace asmith { namespace gl {
 	*/
 	class light : public std::enable_shared_from_this<light> {
 	private:
+		vec4f mPosition;
+		vec4f mAmbient;
+		vec4f mDiffuse;
+		vec4f mSpecular;
 		const GLenum mID;
 		bool mEnabled;
 	private:
@@ -44,6 +48,16 @@ namespace asmith { namespace gl {
 		void enable() throw();
 		void disable() throw();
 		bool is_enabled() const throw();
+
+		const vec4f& get_position() const throw();
+		const vec4f& get_ambient() const throw();
+		const vec4f& get_diffuse() const throw();
+		const vec4f& get_specular() const throw();
+
+		void set_position(const vec4f&) throw();
+		void set_ambient(const vec4f&) throw();
+		void set_diffuse(const vec4f&) throw();
+		void set_specular(const vec4f&) throw();
 	};
 
 }}

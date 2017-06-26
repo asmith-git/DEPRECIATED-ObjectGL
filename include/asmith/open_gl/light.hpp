@@ -32,8 +32,8 @@ namespace asmith { namespace gl {
 		vec4f mDiffuse;
 		vec4f mSpecular;
 		vec3f mDirection;
-		GLfloat mExponent;
-		GLfloat mCutoff;
+		GLint mExponent;
+		GLint mCutoff;
 		const GLenum mID;
 		bool mEnabled;
 	private:
@@ -57,16 +57,16 @@ namespace asmith { namespace gl {
 		const vec4f& get_diffuse() const throw();
 		const vec4f& get_specular() const throw();
 		const vec3f& get_spot_direction() const throw();
-		GLfloat get_spot_exponent() const throw();
-		GLfloat get_spot_cutoff() const throw();
+		GLint get_spot_exponent() const throw();
+		GLint get_spot_cutoff() const throw();
 
 		void set_position(const vec4f&) throw();
 		void set_ambient(const vec4f&) throw();
 		void set_diffuse(const vec4f&) throw();
 		void set_specular(const vec4f&) throw();
 		void set_spot_direction(const vec3f&) throw();
-		void set_spot_exponent(GLfloat) throw();
-		void set_spot_cutoff(GLfloat) throw();
+		void set_spot_exponent(GLint) throw();
+		void set_spot_cutoff(GLint) throw();
 	};
 
 }}

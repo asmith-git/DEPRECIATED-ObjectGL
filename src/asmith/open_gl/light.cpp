@@ -71,11 +71,11 @@ namespace asmith { namespace gl {
 		return mDirection;
 	}
 
-	GLfloat light::get_spot_exponent() const throw() {
+	GLint light::get_spot_exponent() const throw() {
 		return mExponent;
 	}
 
-	GLfloat light::get_spot_cutoff() const throw() {
+	GLint light::get_spot_cutoff() const throw() {
 		return mCutoff;
 	}
 
@@ -104,14 +104,14 @@ namespace asmith { namespace gl {
 		glLightfv(mID, GL_SPOT_DIRECTION, &mDirection[0]);
 	}
 
-	void light::set_spot_exponent(GLfloat aValue) throw() {
+	void light::set_spot_exponent(GLint aValue) throw() {
 		mExponent = aValue;
-		glLightfv(mID, GL_SPOT_EXPONENT, &mExponent);
+		glLighti(mID, GL_SPOT_EXPONENT, mExponent);
 	}
 
-	void light::set_spot_cutoff(GLfloat aValue) throw() {
+	void light::set_spot_cutoff(GLint aValue) throw() {
 		mCutoff = aValue;
-		glLightfv(mID, GL_SPOT_CUTOFF, &mCutoff);
+		glLighti(mID, GL_SPOT_CUTOFF, mCutoff);
 	}
 
 }}

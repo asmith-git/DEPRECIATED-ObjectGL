@@ -11,8 +11,8 @@
 //	See the License for the specific language governing permissions and
 //	limitations under the License.
 
-#ifndef ASMITH_OPENGL_LIGHT_HPP
-#define ASMITH_OPENGL_LIGHT_HPP
+#ifndef ASMITH_OPENGL_TEXTURE_2D_HPP
+#define ASMITH_OPENGL_TEXTURE_2D_HPP
 
 #include <memory>
 #include "object.hpp"

@@ -441,6 +441,13 @@ namespace asmith { namespace gl {
 		}
 	};
 
+	template<const GLenum T> using colour_r = colour<GL_RED, T>;
+	template<const GLenum T> using colour_rg = colour<GL_RG, T>;
+	template<const GLenum T> using colour_rgb = colour<GL_RGB, T>;
+	template<const GLenum T> using colour_rgba = colour<GL_RGBA, T>;
+	template<const GLenum T> using colour_bgr = colour<GL_BGR, T>;
+	template<const GLenum T> using colour_bgra = colour<GL_BGRA, T>;
+
 	// Colour values taken from http://cloford.com/resources/colours/500col.htm
 
 	static constexpr colour<GL_RGB, GL_UNSIGNED_BYTE> INDIAN_RED(176, 23,	31);

@@ -18,6 +18,32 @@
 
 namespace asmith { namespace gl {
 
+
+	static constexpr int64_t colour_min(const GLenum aType) throw() {
+		return
+			aType == GL_UNSIGNED_BYTE ? 0 :
+			aType == GL_UNSIGNED_SHORT ? 0 :
+			aType == GL_UNSIGNED_INT ? 0 :
+			aType == GL_BYTE ? INT8_MIN :
+			aType == GL_SHORT ? INT16_MIN :
+			aType == GL_INT ? INT32_MIN :
+			aType == GL_FLOAT ? 0 :
+			aType == GL_DOUBLE ? 0 :
+			0;
+	}
+
+	static constexpr size_t colour_max(const GLenum aType) throw() {
+		return
+			aType == GL_UNSIGNED_BYTE ? UINT8_MAX :
+			aType == GL_UNSIGNED_SHORT ? UINT16_MAX :
+			aType == GL_UNSIGNED_INT ? UINT32_MAX :
+			aType == GL_BYTE ? INT8_MAX :
+			aType == GL_SHORT ? INT16_MAX :
+			aType == GL_INT ? INT32_MAX :
+			aType == GL_FLOAT ? 1 :
+			aType == GL_DOUBLE ? 1 :
+			0;
+	}
 	
 	template<const GLenum F, const GLenum T, class ENABLE = void>
 	struct colour {
@@ -25,6 +51,30 @@ namespace asmith { namespace gl {
 			FORMAT = F,
 			TYPE = T,
 			INTERNAL_FORMAT = T,
+		};
+
+		enum : int64_t {
+			MIN_RED		= 0,
+			MIN_GREEN	= 0,
+			MIN_BLUE	= 0,
+			MIN_ALPHA	= 0,
+
+			MAX_RED		= 0,
+			MAX_GREEN	= 0,
+			MAX_BLUE	= 0,
+			MAX_ALPHA	= 0
+		};
+
+		enum {
+			RED_CHANNEL		= -1,
+			GREEN_CHANNEL	= -1,
+			BLUE_CHANNEL	= -1,
+			ALPHA_CHANNEL	= -1,
+
+			RED_BITS		= 0,
+			GREEN_BITS		= 0,
+			BLUEED_BITS		= 0,
+			ALPHA_BITS		= 0
 		};
 	};
 
@@ -37,6 +87,30 @@ namespace asmith { namespace gl {
 			INTERNAL_FORMAT = GL_RED
 		};
 
+		enum : int64_t {
+			MIN_RED		= colour_min(T),
+			MIN_GREEN	= 0,
+			MIN_BLUE	= 0,
+			MIN_ALPHA	= 0,
+
+			MAX_RED		= colour_max(T),
+			MAX_GREEN	= 0,
+			MAX_BLUE	= 0,
+			MAX_ALPHA	= 0
+		};
+
+		enum {
+			RED_CHANNEL = 0,
+			GREEN_CHANNEL = -1,
+			BLUE_CHANNEL = -1,
+			ALPHA_CHANNEL = -1,
+
+			RED_BITS = sizeof(type) * 8,
+			GREEN_BITS = 0,
+			BLUEED_BITS = 0,
+			ALPHA_BITS = 0
+		};
+
 		type r;
 	};
 
@@ -47,6 +121,30 @@ namespace asmith { namespace gl {
 			FORMAT = GL_RG,
 			TYPE = T,
 			INTERNAL_FORMAT = GL_RG
+		};
+
+		enum : int64_t {
+			MIN_RED		= colour_min(T),
+			MIN_GREEN	= colour_min(T),
+			MIN_BLUE	= 0,
+			MIN_ALPHA	= 0,
+
+			MAX_RED		= colour_max(T),
+			MAX_GREEN	= colour_max(T),
+			MAX_BLUE	= 0,
+			MAX_ALPHA	= 0
+		};
+
+		enum {
+			RED_CHANNEL = 0,
+			GREEN_CHANNEL = 1,
+			BLUE_CHANNEL = -1,
+			ALPHA_CHANNEL = -1,
+
+			RED_BITS = sizeof(type) * 8,
+			GREEN_BITS = sizeof(type) * 8,
+			BLUEED_BITS = 0,
+			ALPHA_BITS = 0
 		};
 
 		type r;
@@ -62,6 +160,30 @@ namespace asmith { namespace gl {
 			INTERNAL_FORMAT = GL_RGB
 		};
 
+		enum : int64_t {
+			MIN_RED		= colour_min(T),
+			MIN_GREEN	= colour_min(T),
+			MIN_BLUE	= colour_min(T),
+			MIN_ALPHA	= 0,
+
+			MAX_RED		= colour_max(T),
+			MAX_GREEN	= colour_max(T),
+			MAX_BLUE	= colour_max(T),
+			MAX_ALPHA	= 0
+		};
+
+		enum {
+			RED_CHANNEL = 0,
+			GREEN_CHANNEL = 1,
+			BLUE_CHANNEL = 2,
+			ALPHA_CHANNEL = -1,
+
+			RED_BITS = sizeof(type) * 8,
+			GREEN_BITS = sizeof(type) * 8,
+			BLUEED_BITS = sizeof(type) * 8,
+			ALPHA_BITS = 0
+		};
+
 		type r;
 		type g;
 		type b;
@@ -74,6 +196,30 @@ namespace asmith { namespace gl {
 			FORMAT = GL_RGBA,
 			TYPE = T,
 			INTERNAL_FORMAT = GL_RGBA
+		};
+
+		enum : int64_t {
+			MIN_RED		= colour_min(T),
+			MIN_GREEN	= colour_min(T),
+			MIN_BLUE	= colour_min(T),
+			MIN_ALPHA	= colour_min(T),
+
+			MAX_RED		= colour_max(T),
+			MAX_GREEN	= colour_max(T),
+			MAX_BLUE	= colour_max(T),
+			MAX_ALPHA	= colour_max(T)
+		};
+
+		enum {
+			RED_CHANNEL = 0,
+			GREEN_CHANNEL = 1,
+			BLUE_CHANNEL = 2,
+			ALPHA_CHANNEL = 3,
+
+			RED_BITS = sizeof(type) * 8,
+			GREEN_BITS = sizeof(type) * 8,
+			BLUEED_BITS = sizeof(type) * 8,
+			ALPHA_BITS = sizeof(type) * 8
 		};
 
 		type r;
@@ -91,6 +237,30 @@ namespace asmith { namespace gl {
 			INTERNAL_FORMAT = GL_RGB
 		};
 
+		enum : int64_t {
+			MIN_RED		= colour_min(T),
+			MIN_GREEN	= colour_min(T),
+			MIN_BLUE	= colour_min(T),
+			MIN_ALPHA	= 0,
+
+			MAX_RED		= colour_max(T),
+			MAX_GREEN	= colour_max(T),
+			MAX_BLUE	= colour_max(T),
+			MAX_ALPHA	= 0
+		};
+
+		enum {
+			RED_CHANNEL = 2,
+			GREEN_CHANNEL = 1,
+			BLUE_CHANNEL = 0,
+			ALPHA_CHANNEL = -1,
+
+			RED_BITS = sizeof(type) * 8,
+			GREEN_BITS = sizeof(type) * 8,
+			BLUEED_BITS = sizeof(type) * 8,
+			ALPHA_BITS = 0
+		};
+
 		type b;
 		type g;
 		type r;
@@ -103,6 +273,30 @@ namespace asmith { namespace gl {
 			FORMAT = GL_BGRA,
 			TYPE = T,
 			INTERNAL_FORMAT = GL_RGBA
+		};
+
+		enum : int64_t {
+			MIN_RED		= colour_min(T),
+			MIN_GREEN	= colour_min(T),
+			MIN_BLUE	= colour_min(T),
+			MIN_ALPHA	= colour_min(T),
+
+			MAX_RED		= colour_max(T),
+			MAX_GREEN	= colour_max(T),
+			MAX_BLUE	= colour_max(T),
+			MAX_ALPHA	= colour_max(T)
+		};
+
+		enum {
+			RED_CHANNEL = 2,
+			GREEN_CHANNEL = 1,
+			BLUE_CHANNEL = 0,
+			ALPHA_CHANNEL = 3,
+
+			RED_BITS		= sizeof(type) * 8,
+			GREEN_BITS		= sizeof(type) * 8,
+			BLUEED_BITS		= sizeof(type) * 8,
+			ALPHA_BITS		= sizeof(type) * 8
 		};
 
 		type b;

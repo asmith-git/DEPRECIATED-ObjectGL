@@ -18,6 +18,14 @@
 
 namespace asmith { namespace gl {
 
+	template<class A, class B>
+	static inline A colour_cast(const B& aColour) throw() {
+		vec4f tmp;
+		aColour.get_rgba(tmp);
+		A result;
+		result.set_rgba(tmp);
+		return result;
+	}
 
 	static constexpr int64_t colour_min(const GLenum aType) throw() {
 		return
@@ -76,6 +84,9 @@ namespace asmith { namespace gl {
 			BLUEED_BITS		= 0,
 			ALPHA_BITS		= 0
 		};
+
+		void get_rgba(vec4f&) const throw();
+		void set_rgba(const vec4f&) throw();
 	};
 
 	template<const GLenum T>
@@ -110,6 +121,17 @@ namespace asmith { namespace gl {
 			BLUEED_BITS = 0,
 			ALPHA_BITS = 0
 		};
+
+		void get_rgba(vec4f& aValue) const throw() {
+			aValue[0] = static_cast<GLfloat>(r) / static_cast<GLfloat>(MAX_RED);
+			aValue[1] = 0.f;
+			aValue[2] = 0.f;
+			aValue[3] = 1.f;
+		}
+
+		void set_rgba(const vec4f& aValue) throw() {
+			r = static_cast<type>(aValue[0] * static_cast<GLfloat>(MAX_RED));
+		}
 
 		type r;
 	};
@@ -149,6 +171,18 @@ namespace asmith { namespace gl {
 
 		type r;
 		type g;
+
+		void get_rgba(vec4f& aValue) const throw() {
+			aValue[0] = static_cast<GLfloat>(r) / static_cast<GLfloat>(MAX_RED);
+			aValue[1] = static_cast<GLfloat>(g) / static_cast<GLfloat>(MAX_GREEN);
+			aValue[2] = 0.f;
+			aValue[3] = 1.f;
+		}
+
+		void set_rgba(const vec4f& aValue) throw() {
+			r = static_cast<type>(aValue[0] * static_cast<GLfloat>(MAX_RED));
+			g = static_cast<type>(aValue[1] * static_cast<GLfloat>(MAX_GREEN));
+		}
 	};
 
 	template<const GLenum T>
@@ -187,6 +221,19 @@ namespace asmith { namespace gl {
 		type r;
 		type g;
 		type b;
+
+		void get_rgba(vec4f& aValue) const throw() {
+			aValue[0] = static_cast<GLfloat>(r) / static_cast<GLfloat>(MAX_RED);
+			aValue[1] = static_cast<GLfloat>(g) / static_cast<GLfloat>(MAX_GREEN);
+			aValue[2] = static_cast<GLfloat>(b) / static_cast<GLfloat>(MAX_BLUE);
+			aValue[3] = 1.f;
+		}
+
+		void set_rgba(const vec4f& aValue) throw() {
+			r = static_cast<type>(aValue[0] * static_cast<GLfloat>(MAX_RED));
+			g = static_cast<type>(aValue[1] * static_cast<GLfloat>(MAX_GREEN));
+			b = static_cast<type>(aValue[2] * static_cast<GLfloat>(MAX_BLUE));
+		}
 	};
 
 	template<const GLenum T>
@@ -226,6 +273,20 @@ namespace asmith { namespace gl {
 		type g;
 		type b;
 		type a;
+
+		void get_rgba(vec4f& aValue) const throw() {
+			aValue[0] = static_cast<GLfloat>(r) / static_cast<GLfloat>(MAX_RED);
+			aValue[1] = static_cast<GLfloat>(g) / static_cast<GLfloat>(MAX_GREEN);
+			aValue[2] = static_cast<GLfloat>(b) / static_cast<GLfloat>(MAX_BLUE);
+			aValue[3] = static_cast<GLfloat>(a) / static_cast<GLfloat>(MAX_ALPHA);
+		}
+
+		void set_rgba(const vec4f& aValue) throw() {
+			r = static_cast<type>(aValue[0] * static_cast<GLfloat>(MAX_RED));
+			g = static_cast<type>(aValue[1] * static_cast<GLfloat>(MAX_GREEN));
+			b = static_cast<type>(aValue[2] * static_cast<GLfloat>(MAX_BLUE));
+			a = static_cast<type>(aValue[3] * static_cast<GLfloat>(MAX_ALPHA));
+		}
 	};
 
 	template<const GLenum T>
@@ -264,6 +325,19 @@ namespace asmith { namespace gl {
 		type b;
 		type g;
 		type r;
+
+		void get_rgba(vec4f& aValue) const throw() {
+			aValue[0] = static_cast<GLfloat>(r) / static_cast<GLfloat>(MAX_RED);
+			aValue[1] = static_cast<GLfloat>(g) / static_cast<GLfloat>(MAX_GREEN);
+			aValue[2] = static_cast<GLfloat>(b) / static_cast<GLfloat>(MAX_BLUE);
+			aValue[3] = 1.f;
+		}
+
+		void set_rgba(const vec4f& aValue) throw() {
+			r = static_cast<type>(aValue[0] * static_cast<GLfloat>(MAX_RED));
+			g = static_cast<type>(aValue[1] * static_cast<GLfloat>(MAX_GREEN));
+			b = static_cast<type>(aValue[2] * static_cast<GLfloat>(MAX_BLUE));
+		}
 	};
 
 	template<const GLenum T>
@@ -303,6 +377,20 @@ namespace asmith { namespace gl {
 		type g;
 		type r;
 		type a;
+
+		void get_rgba(vec4f& aValue) const throw() {
+			aValue[0] = static_cast<GLfloat>(r) / static_cast<GLfloat>(MAX_RED);
+			aValue[1] = static_cast<GLfloat>(g) / static_cast<GLfloat>(MAX_GREEN);
+			aValue[2] = static_cast<GLfloat>(b) / static_cast<GLfloat>(MAX_BLUE);
+			aValue[3] = static_cast<GLfloat>(a) / static_cast<GLfloat>(MAX_ALPHA);
+		}
+
+		void set_rgba(const vec4f& aValue) throw() {
+			r = static_cast<type>(aValue[0] * static_cast<GLfloat>(MAX_RED));
+			g = static_cast<type>(aValue[1] * static_cast<GLfloat>(MAX_GREEN));
+			b = static_cast<type>(aValue[2] * static_cast<GLfloat>(MAX_BLUE));
+			a = static_cast<type>(aValue[3] * static_cast<GLfloat>(MAX_ALPHA));
+		}
 	};
 }}
 

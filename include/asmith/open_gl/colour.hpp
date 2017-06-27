@@ -23,7 +23,8 @@ namespace asmith { namespace gl {
 	struct colour {
 		enum : GLenum {
 			FORMAT = F,
-			TYPE = T
+			TYPE = T,
+			INTERNAL_FORMAT = T,
 		};
 	};
 
@@ -32,7 +33,8 @@ namespace asmith { namespace gl {
 		typedef enum_to_type<T> type;
 		enum : GLenum {
 			FORMAT = GL_RED,
-			TYPE = T
+			TYPE = T,
+			INTERNAL_FORMAT = GL_RED
 		};
 
 		type r;
@@ -43,7 +45,8 @@ namespace asmith { namespace gl {
 		typedef enum_to_type<T> type;
 		enum : GLenum {
 			FORMAT = GL_RG,
-			TYPE = T
+			TYPE = T,
+			INTERNAL_FORMAT = GL_RG
 		};
 
 		type r;
@@ -55,7 +58,8 @@ namespace asmith { namespace gl {
 		typedef enum_to_type<T> type;
 		enum : GLenum {
 			FORMAT = GL_RGB,
-			TYPE = T
+			TYPE = T,
+			INTERNAL_FORMAT = GL_RGB
 		};
 
 		type r;
@@ -68,7 +72,8 @@ namespace asmith { namespace gl {
 		typedef enum_to_type<T> type;
 		enum : GLenum {
 			FORMAT = GL_RGBA,
-			TYPE = T
+			TYPE = T,
+			INTERNAL_FORMAT = GL_RGBA
 		};
 
 		type r;
@@ -82,7 +87,8 @@ namespace asmith { namespace gl {
 		typedef enum_to_type<T> type;
 		enum : GLenum {
 			FORMAT = GL_BGR,
-			TYPE = T
+			TYPE = T,
+			INTERNAL_FORMAT = GL_RGB
 		};
 
 		type b;
@@ -95,7 +101,8 @@ namespace asmith { namespace gl {
 		typedef enum_to_type<T> type;
 		enum : GLenum {
 			FORMAT = GL_BGRA,
-			TYPE = T
+			TYPE = T,
+			INTERNAL_FORMAT = GL_RGBA
 		};
 
 		type b;

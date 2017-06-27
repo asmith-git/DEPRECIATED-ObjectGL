@@ -68,7 +68,15 @@ namespace asmith { namespace gl {
 		void set_mipmaps(bool) throw();
 
 		void bind() throw();
-		void load(const void*, GLsizei, GLsizei) throw();
+		void load_raw(const void*, GLsizei, GLsizei) throw();
+
+		template<class C>
+		inline void load(const C* aData, GLsizei aWidth, GLsizei aHeight) {
+			set_format(C::FORMAT);
+			set_type(C::TYPE);
+			set_internal_format(C::INTERNAL_FORMAT);
+			load_raw(aData);
+		}
 
 		// Inherited from object 
 

@@ -19,6 +19,7 @@ namespace asmith { namespace gl {
 	texture_2d::texture_2d() throw() :
 		mBorderColour(0.f, 0.f, 0.f, 1.f),
 		mTarget(GL_TEXTURE_2D),
+		mInternalFormat(GL_RGB),
 		mLevel(0),
 		mWidth(0),
 		mHeight(0),
@@ -74,6 +75,10 @@ namespace asmith { namespace gl {
 		return mMipmaps;
 	}
 
+	GLint texture_2d::get_internal_format() const throw() {
+		return mInternalFormat;
+	}
+
 	void texture_2d::set_target(GLenum aValue) throw() {
 		mTarget = aValue;
 	}
@@ -106,6 +111,10 @@ namespace asmith { namespace gl {
 		mMipmaps = aValue;
 	}
 
+	void texture_2d::set_internal_format(GLint aValue) throw() {
+		mInternalFormat = aValue;
+	}
+
 	void texture_2d::create() {
 		if(is_created()) destroy();
 		glGenTextures(1, &mID);
@@ -129,7 +138,7 @@ namespace asmith { namespace gl {
 		glBindTexture(mTarget, mID);
 	}
 
-	void texture_2d::load(const void* aValue, GLsizei aWidth, GLsizei aHeight) throw() {
+	void texture_2d::load_raw(const void* aValue, GLsizei aWidth, GLsizei aHeight) throw() {
 		mWidth = aWidth;
 		mHeight = aHeight;
 		glTexImage2D(mTarget, mLevel, mInternalFormat, aWidth, aHeight, mBorder, mFormat, mType, aValue);

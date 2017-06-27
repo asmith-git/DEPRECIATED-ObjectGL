@@ -448,6 +448,27 @@ namespace asmith { namespace gl {
 	template<const GLenum T> using colour_bgr = colour<GL_BGR, T>;
 	template<const GLenum T> using colour_bgra = colour<GL_BGRA, T>;
 
+	typedef colour_r<GL_UNSIGNED_BYTE> colour_r_8u;
+	typedef colour_rg<GL_UNSIGNED_BYTE> colour_rg_8u;
+	typedef colour_rgb<GL_UNSIGNED_BYTE> colour_rgb_8u;
+	typedef colour_rgba<GL_UNSIGNED_BYTE> colour_rgba_8u;
+	typedef colour_bgr<GL_UNSIGNED_BYTE> colour_bgr_8u;
+	typedef colour_bgra<GL_UNSIGNED_BYTE> colour_bgra_8u;
+
+	typedef colour_r<GL_BYTE> colour_r_8i;
+	typedef colour_rg<GL_BYTE> colour_rg_8i;
+	typedef colour_rgb<GL_BYTE> colour_rgb_8i;
+	typedef colour_rgba<GL_BYTE> colour_rgba_8i;
+	typedef colour_bgr<GL_BYTE> colour_bgr_8i;
+	typedef colour_bgra<GL_BYTE> colour_bgra_8i;
+
+	typedef colour_r<GL_FLOAT> colour_r_f;
+	typedef colour_rg<GL_FLOAT> colour_rg_f;
+	typedef colour_rgb<GL_FLOAT> colour_rgb_f;
+	typedef colour_rgba<GL_FLOAT> colour_rgba_f;
+	typedef colour_bgr<GL_FLOAT> colour_bgr_f;
+	typedef colour_bgra<GL_FLOAT> colour_bgra_f;
+
 	// Colour values taken from http://cloford.com/resources/colours/500col.htm
 
 	static constexpr colour<GL_RGB, GL_UNSIGNED_BYTE> INDIAN_RED(176, 23,	31);

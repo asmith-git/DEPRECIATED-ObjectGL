@@ -760,11 +760,11 @@ namespace asmith { namespace gl {
 	static constexpr colour_rgb_8u GOLDENROD_2(238, 180, 34);
 	static constexpr colour_rgb_8u GOLDENROD_3(205, 155, 29);
 	static constexpr colour_rgb_8u GOLDENROD_4(139, 105, 20);
-	static constexpr colour_rgb_8u DARKGOLDENROD(184, 134, 11);
-	static constexpr colour_rgb_8u DARKGOLDENROD_1(255, 185, 15);
-	static constexpr colour_rgb_8u DARKGOLDENROD_2(238, 173, 14);
-	static constexpr colour_rgb_8u DARKGOLDENROD_3(205, 149, 12);
-	static constexpr colour_rgb_8u DARKGOLDENROD_4(139, 101, 8);
+	static constexpr colour_rgb_8u DARK_GOLDENROD(184, 134, 11);
+	static constexpr colour_rgb_8u DARK_GOLDENROD_1(255, 185, 15);
+	static constexpr colour_rgb_8u DARK_GOLDENROD_2(238, 173, 14);
+	static constexpr colour_rgb_8u DARK_GOLDENROD_3(205, 149, 12);
+	static constexpr colour_rgb_8u DARK_GOLDENROD_4(139, 101, 8);
 	static constexpr colour_rgb_8u ORANGE_1(255, 165, 0);
 	static constexpr colour_rgb_8u ORANGE_2(238, 154, 0);
 	static constexpr colour_rgb_8u ORANGE_3(205, 133, 0);

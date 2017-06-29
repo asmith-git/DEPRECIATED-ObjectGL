@@ -105,7 +105,6 @@ namespace asmith { namespace gl {
 		v.points[2] = obj_read_face(aStream);
 
 
-		//! \todo Implement
 		return v;
 	};
 	

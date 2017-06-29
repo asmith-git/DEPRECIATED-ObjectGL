@@ -32,10 +32,10 @@ namespace asmith { namespace gl {
 		GLfloat shineiness;
 
 		material() throw();
-		void use(GLenum) throw();
-		void use_front() throw();
-		void use_back() throw();
-		void use_front_and_back() throw();
+		void use(GLenum) const throw();
+		void use_front() const throw();
+		void use_back() const throw();
+		void use_front_and_back() const throw();
 	};
 
 }}

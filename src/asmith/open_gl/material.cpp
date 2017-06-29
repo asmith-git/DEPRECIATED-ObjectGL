@@ -25,7 +25,7 @@ namespace asmith { namespace gl {
 		shineiness(20.f)
 	{}
 
-	void material::use(GLenum aFace) throw() {
+	void material::use(GLenum aFace) const throw() {
 		glMaterialfv(aFace, GL_AMBIENT, &ambient[0]);
 		glMaterialfv(aFace, GL_DIFFUSE, &diffuse[0]);
 		glMaterialfv(aFace, GL_SPECULAR, &specular[0]);
@@ -33,15 +33,15 @@ namespace asmith { namespace gl {
 		glMaterialf(aFace, GL_SHININESS, shineiness);
 	}
 
-	void material::use_front() throw() {
+	void material::use_front() const throw() {
 		use(GL_FRONT);
 	}
 
-	void material::use_back() throw() {
+	void material::use_back() const throw() {
 		use(GL_BACK);
 	}
 
-	void material::use_front_and_back() throw() {
+	void material::use_front_and_back() const throw() {
 		use(GL_FRONT_AND_BACK);
 	}
 

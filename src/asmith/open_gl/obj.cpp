@@ -12,14 +12,28 @@
 //	limitations under the License.
 
 #include "asmith/open_gl/obj.hpp"
+#include <cctype>
 
 namespace asmith { namespace gl {
 
 	static void obj_end_line(std::istream& aStream) throw() {
-		char buf;
 		if(aStream.eof()) return;
-		aStream.read(&buf, 1);
-		while(aStream.eof() || buf != '\n') aStream.read(&buf, 1);
+		char buf = aStream.peek();
+		while(buf != '\n') {
+			aStream.read(&buf, 1);
+			if(aStream.eof()) return;
+			buf = aStream.peek();
+		}
+	}
+
+	static void obj_skip_whitespace(std::istream& aStream) throw() {
+		//if(aStream.eof()) return;
+		//char buf = aStream.peek();
+		//while(std::isspace(buf)) {
+		//	aStream.read(&buf, 1);
+		//	if(aStream.eof()) return;
+		//	buf = aStream.peek();
+		//}
 	}
 
 	static void obj_read_v2(std::istream& aStream, vec2f& aValue) {
@@ -33,7 +47,44 @@ namespace asmith { namespace gl {
 		aStream >> aValue[2];
 	}
 
-	const obj::triangle obj_read_triangle(std::istream& aStream) {
+	static obj::face obj_read_face(std::istream& aStream) {
+		char c;
+		obj::face f;
+		
+		aStream >> f.vertex;
+		obj_skip_whitespace(aStream);
+		if(aStream.peek() != '/') {
+			f.texture_coordinate = 1;
+			f.normal = 1;
+			return f;
+		}
+		aStream.read(&c, 1);
+		obj_skip_whitespace(aStream);
+
+		if(aStream.peek() == '/') {
+			aStream.read(&c, 1);
+			obj_skip_whitespace(aStream);
+			aStream >> f.normal;
+			obj_skip_whitespace(aStream);
+			f.texture_coordinate = 1;
+			return f;
+		}
+			
+		aStream >> f.texture_coordinate;
+		obj_skip_whitespace(aStream);
+		if(aStream.peek() != '/') {
+			f.normal = 1;
+			return f;
+		}
+		aStream.read(&c, 1);
+		obj_skip_whitespace(aStream);
+
+		aStream >> f.normal;
+
+		return f;
+	}
+
+	static const obj::triangle obj_read_triangle(std::istream& aStream) {
 		const auto pos = aStream.tellg();
 		uint32_t count = 0;
 
@@ -48,75 +99,10 @@ namespace asmith { namespace gl {
 
 		obj::triangle v;
 
-		//! \todo Handle different face formats
 		//! \todo Break larger faces into triangles
-		//! \todo Handle materials
-		//! \todo Handle smooth shading (s 1) 
-
-		//switch(count) {
-		//case 0:	// v v v
-		//	aStream >> v[0][0];
-		//	v[0][1] = 0;
-		//	v[0][2] = 0;
-
-		//	aStream >> v[1][0];
-		//	v[1][1] = 0;
-		//	v[1][2] = 0;
-
-		//	aStream >> v[2][0];
-		//	v[2][1] = 0;
-		//	v[2][2] = 0;
-		//	break;
-		//case 3:	// v/n v/n v/n
-		//	aStream >> v[0][0];
-		//	aStream >> c;
-		//	aStream >> v[0][1];
-		//	v[0][2] = 0;
-
-		//	aStream >> v[1][0];
-		//	aStream >> c;
-		//	aStream >> v[1][1];
-		//	v[1][2] = 0;
-
-		//	aStream >> v[2][0];
-		//	aStream >> c;
-		//	aStream >> v[2][1];
-		//	v[2][2] = 0;
-		//	break;
-		//case 9:	// v/n/t v/n/t v/n/t
-			aStream >> v.points[0].vertex;
-			aStream >> c;
-			if(aStream.peek() == '/') {
-				v.points[0].texture_coordinate = 1;
-			}else {
-				aStream >> v.points[0].texture_coordinate;
-			}
-			aStream >> c;
-			aStream >> v.points[0].normal;
-
-			aStream >> v.points[1].vertex;
-			aStream >> c;
-			if (aStream.peek() == '/') {
-				v.points[1].texture_coordinate = 1;
-			}else {
-				aStream >> v.points[1].texture_coordinate;
-			}
-			aStream >> c;
-			aStream >> v.points[1].normal;
-
-			aStream >> v.points[2].vertex;
-			aStream >> c;
-			if (aStream.peek() == '/') {
-				v.points[2].texture_coordinate = 1;
-			}else {
-				aStream >> v.points[2].texture_coordinate;
-			}
-			aStream >> c;
-			aStream >> v.points[2].normal;
-		//	break;
-		//default:
-		//	throw std::runtime_error("asmith::gl::read_obj : Unexpected face format detected");
-		//}
+		v.points[0]  = obj_read_face(aStream);
+		v.points[1] = obj_read_face(aStream);
+		v.points[2] = obj_read_face(aStream);
 
 
 		//! \todo Implement

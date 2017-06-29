@@ -14,154 +14,155 @@
 #include "asmith/open_gl/obj.hpp"
 
 namespace asmith { namespace gl {
+
+	static void obj_end_line(std::istream& aStream) throw() {
+		char buf;
+		if(aStream.eof()) return;
+		aStream.read(&buf, 1);
+		while(aStream.eof() || buf != '\n') aStream.read(&buf, 1);
+	}
+
+	static void obj_read_v2(std::istream& aStream, vec2f& aValue) {
+		aStream >> aValue[0];
+		aStream >> aValue[1];
+	}
+
+	static void obj_read_v3(std::istream& aStream, vec3f& aValue) {
+		aStream >> aValue[0];
+		aStream >> aValue[1];
+		aStream >> aValue[2];
+	}
+
+	const obj::triangle obj_read_triangle(std::istream& aStream) {
+		const auto pos = aStream.tellg();
+		uint32_t count = 0;
+
+		char c;
+		//aStream.read(&c, 1);
+		//while(aStream.peek() != '\n') {
+		//	aStream.read(&c, 1);
+		//	if(c == '/') ++count;
+		//}
+
+		aStream.seekg(pos);
+
+		obj::triangle v;
+
+		//! \todo Handle different face formats
+		//! \todo Break larger faces into triangles
+		//! \todo Handle materials
+		//! \todo Handle smooth shading (s 1) 
+
+		//switch(count) {
+		//case 0:	// v v v
+		//	aStream >> v[0][0];
+		//	v[0][1] = 0;
+		//	v[0][2] = 0;
+
+		//	aStream >> v[1][0];
+		//	v[1][1] = 0;
+		//	v[1][2] = 0;
+
+		//	aStream >> v[2][0];
+		//	v[2][1] = 0;
+		//	v[2][2] = 0;
+		//	break;
+		//case 3:	// v/n v/n v/n
+		//	aStream >> v[0][0];
+		//	aStream >> c;
+		//	aStream >> v[0][1];
+		//	v[0][2] = 0;
+
+		//	aStream >> v[1][0];
+		//	aStream >> c;
+		//	aStream >> v[1][1];
+		//	v[1][2] = 0;
+
+		//	aStream >> v[2][0];
+		//	aStream >> c;
+		//	aStream >> v[2][1];
+		//	v[2][2] = 0;
+		//	break;
+		//case 9:	// v/n/t v/n/t v/n/t
+			aStream >> v.points[0].vertex;
+			aStream >> c;
+			if(aStream.peek() == '/') {
+				v.points[0].texture_coordinate = 1;
+			}else {
+				aStream >> v.points[0].texture_coordinate;
+			}
+			aStream >> c;
+			aStream >> v.points[0].normal;
+
+			aStream >> v.points[1].vertex;
+			aStream >> c;
+			if (aStream.peek() == '/') {
+				v.points[1].texture_coordinate = 1;
+			}else {
+				aStream >> v.points[1].texture_coordinate;
+			}
+			aStream >> c;
+			aStream >> v.points[1].normal;
+
+			aStream >> v.points[2].vertex;
+			aStream >> c;
+			if (aStream.peek() == '/') {
+				v.points[2].texture_coordinate = 1;
+			}else {
+				aStream >> v.points[2].texture_coordinate;
+			}
+			aStream >> c;
+			aStream >> v.points[2].normal;
+		//	break;
+		//default:
+		//	throw std::runtime_error("asmith::gl::read_obj : Unexpected face format detected");
+		//}
+
+
+		//! \todo Implement
+		return v;
+	};
 	
 	// obj
 
 	void obj::load(std::istream& aStream) {
-
-		const auto end_line = [&]()->void {
-			char buf;
-			if(aStream.eof()) return;
-			aStream.read(&buf, 1);
-			while(aStream.eof() || buf != '\n') aStream.read(&buf, 1);
-		};
-
-		const auto read_v2 = [&]()->vec2f {
-			vec2f v;
-			aStream >> v[0];
-			aStream >> v[1];
-			return v;
-		};
-
-		const auto read_v3 = [&]()->vec3f {
-			vec3f v;
-			aStream >> v[0];
-			aStream >> v[1];
-			aStream >> v[2]; 
-			return v;
-		};
-
-		const auto read_read_triangle = [&]()->triangle {
-			const auto pos = aStream.tellg();
-			uint32_t count = 0;
-
-			char c;
-			//aStream.read(&c, 1);
-			//while(aStream.peek() != '\n') {
-			//	aStream.read(&c, 1);
-			//	if(c == '/') ++count;
-			//}
-
-			aStream.seekg(pos);
-
-			triangle v;
-
-			//! \todo Handle different face formats
-			//! \todo Break larger faces into triangles
-			//! \todo Handle materials
-			//! \todo Handle smooth shading (s 1) 
-
-			//switch(count) {
-			//case 0:	// v v v
-			//	aStream >> v[0][0];
-			//	v[0][1] = 0;
-			//	v[0][2] = 0;
-
-			//	aStream >> v[1][0];
-			//	v[1][1] = 0;
-			//	v[1][2] = 0;
-
-			//	aStream >> v[2][0];
-			//	v[2][1] = 0;
-			//	v[2][2] = 0;
-			//	break;
-			//case 3:	// v/n v/n v/n
-			//	aStream >> v[0][0];
-			//	aStream >> c;
-			//	aStream >> v[0][1];
-			//	v[0][2] = 0;
-
-			//	aStream >> v[1][0];
-			//	aStream >> c;
-			//	aStream >> v[1][1];
-			//	v[1][2] = 0;
-
-			//	aStream >> v[2][0];
-			//	aStream >> c;
-			//	aStream >> v[2][1];
-			//	v[2][2] = 0;
-			//	break;
-			//case 9:	// v/n/t v/n/t v/n/t
-				aStream >> v.points[0].vertex;
-				aStream >> c;
-				if(aStream.peek() == '/') {
-					v.points[0].texture_coordinate = 1;
-				}else {
-					aStream >> v.points[0].texture_coordinate;
-				}
-				aStream >> c;
-				aStream >> v.points[0].normal;
-
-				aStream >> v.points[1].vertex;
-				aStream >> c;
-				if (aStream.peek() == '/') {
-					v.points[1].texture_coordinate = 1;
-				}else {
-					aStream >> v.points[1].texture_coordinate;
-				}
-				aStream >> c;
-				aStream >> v.points[1].normal;
-
-				aStream >> v.points[2].vertex;
-				aStream >> c;
-				if (aStream.peek() == '/') {
-					v.points[2].texture_coordinate = 1;
-				}else {
-					aStream >> v.points[2].texture_coordinate;
-				}
-				aStream >> c;
-				aStream >> v.points[2].normal;
-			//	break;
-			//default:
-			//	throw std::runtime_error("asmith::gl::read_obj : Unexpected face format detected");
-			//}
-
-
-			//! \todo Implement
-			return v;
-		};
-
 		vertices.clear();
 		texture_coordinates.clear();
 		normals.clear();
 		faces.clear();
+
+		vec2f buf2;
+		vec3f buf3;
 
 		char c;
 		while(! aStream.eof()) {
 			aStream >> c;
 			switch (c) {
 			case 'f':
-				faces.push_back(read_read_triangle());
+				faces.push_back(obj_read_triangle(aStream));
 				break;
 			case 'v':
 				switch(aStream.peek()) {
 				case 't':
 					aStream.read(&c, 1);
-					texture_coordinates.push_back(read_v2());
+					obj_read_v2(aStream, buf2);
+					texture_coordinates.push_back(buf2);
 					break;
 				case 'n':
 					aStream.read(&c, 1);
-					normals.push_back(read_v3());
+					obj_read_v3(aStream, buf3);
+					normals.push_back(buf3);
 					break;
 				default:
-					vertices.push_back(read_v3());
+					obj_read_v3(aStream, buf3);
+					vertices.push_back(buf3);
 					break;
 				}
 				break;
 			default:
 				throw std::runtime_error("asmith::gl::read_obj : Unexpected character found");
 			}
-			end_line();
+			obj_end_line(aStream);
 		}
 
 		if(vertices.empty()) vertices.push_back({0.f, 0.f, 0.f});

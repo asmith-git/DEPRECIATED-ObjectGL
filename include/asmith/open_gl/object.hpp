@@ -23,7 +23,7 @@ namespace asmith { namespace gl {
 		\brief Base class for OpenGL objects
 		\author Adam Smith
 		\date Created : 4th November 2015 Modified 30th June 2017
-		\version 2.2
+		\version 2.3
 	*/
 	class object : public std::enable_shared_from_this<object> {
 	public:
@@ -45,10 +45,6 @@ namespace asmith { namespace gl {
 		virtual ~object();
 
 		context& get_context() const throw();
-
-		virtual void create() = 0;
-		virtual void destroy() = 0;
-		virtual bool is_created() const throw();
 
 		id_t get_id() const throw();
 		operator bool() const throw();

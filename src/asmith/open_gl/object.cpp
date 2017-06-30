@@ -46,12 +46,4 @@ namespace asmith { namespace gl {
 		return static_cast<id_t>(mID);
 	}
 
-	bool object::is_created() const throw() {
-		return mID != INVALID_ID;
-	}
-	
-	object::operator bool() const throw() {
-		return is_created();
-	}
-
 }}

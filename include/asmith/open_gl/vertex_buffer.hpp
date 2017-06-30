@@ -22,7 +22,7 @@ namespace asmith { namespace gl {
 		\brief Base class for OpenGL shader objects
 		\author Adam Smith
 		\date Created : 4th November 2015 Modified 30th June 2017
-		\version 2.3
+		\version 2.4
 	*/
 	class vertex_buffer : public object {
 	private:
@@ -61,11 +61,6 @@ namespace asmith { namespace gl {
 		bool unmap() throw();
 		bool is_mapped() const throw();
 #endif
-
-		// Inherited from object 
-		
-		void create() override;
-		void destroy() override;
 	};
 }}
 

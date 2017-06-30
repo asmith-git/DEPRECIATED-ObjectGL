@@ -23,7 +23,7 @@ namespace asmith { namespace gl {
 		\brief Base class for OpenGL vertex array objects (VAO)
 		\author Adam Smith
 		\date Created : 22nd June 2017 Modified 30th June 2017
-		\version 1.1
+		\version 1.2
 	*/
 	class vertex_array : public object {
 	public:
@@ -44,11 +44,6 @@ namespace asmith { namespace gl {
 		GLuint add_attribute(std::shared_ptr<vertex_buffer>, const vertex_attribute&);
 
 		void draw_arrays(GLenum, GLint, GLsizei) const throw();
-
-		// Inherited from object 
-		
-		void create() override;
-		void destroy() override;
 	};
 }}
 

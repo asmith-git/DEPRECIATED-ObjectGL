@@ -22,21 +22,26 @@ namespace asmith { namespace gl {
 	program::program(context& aContext) :
 		object(aContext),
 		mBound(false)
-	{}
+	{
+		mID = glCreateProgram();
+		if (mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::program::destroy : glCreateProgram returned 0");
+	}
 	
 	program::~program() {
 		while(is_bound()) {
 			unbind();
 		}
+		if(mID != 0) {
+			glDeleteProgram(mID);
+			mID = 0;
+		}
 	}
 
 	void program::attach(std::shared_ptr<shader> aShader) {
-		if(is_created()) throw std::runtime_error("asmith::gl::program::attach : Shaders can only be attached before program is linked");
 		mShaders.push_back(aShader);
 	}
 
 	void program::detach(std::shared_ptr<shader> aShader) {
-		if(is_created()) throw std::runtime_error("asmith::gl::program::detach : Shaders can only be detached before program is linked");
 		const auto end = mShaders.end();
 		const auto i = std::find(mShaders.begin(), end, aShader);
 		if(i != end) mShaders.erase(i);
@@ -83,16 +88,11 @@ namespace asmith { namespace gl {
 		return mContext.state->currently_bound_program == shared_from_this();
 	}
 
-	void program::create() {
-		if(is_created()) destroy();
-		
-		mID = glCreateProgram();
-		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::program::destroy : glCreateProgram returned 0");
-		
-		for(const std::shared_ptr<shader>& i : mShaders){
-			glAttachShader(mID, static_cast<GLuint>(i->get_id()));
+	void program::link() {
+		for(const std::shared_ptr<shader>& i : mShaders) {
+			if(! i->is_compiled()) throw std::runtime_error("asmith::gl::program::link : Shader has not been compiled");
+			glAttachShader(mID, i->get_id());
 		}
-        
 		glLinkProgram(mID);
         
 		GLint status = 0;
@@ -104,9 +104,7 @@ namespace asmith { namespace gl {
 			std::string log(logLength, '\0');
 			glGetProgramInfoLog(mID, logLength, &logLength, &log[0]);
         
-			destroy();
-        
-			throw std::runtime_error(std::string("asmith::gl::program::create : Link error : ") + log.c_str());
+			throw std::runtime_error(std::string("asmith::gl::program::link : Link error : ") + log.c_str());
 		}
 		
 		for(const std::shared_ptr<shader>& i : mShaders){
@@ -114,14 +112,8 @@ namespace asmith { namespace gl {
 		}
 	}
 
-	void program::destroy() {
-		if(! is_created()) throw std::runtime_error("asmith::gl::program::destroy : Program has not been linked");
-		glDeleteProgram(mID);
-		mID = 0;
-	}
-
 	GLint program::get_uniform_location(const GLchar* aName) const {
-		if(! is_created()) throw std::runtime_error("asmith::gl::program::get_uniform_location : Program has not been linked");
+		if(mID == 0) throw std::runtime_error("asmith::gl::program::get_uniform_location : Program has not been linked");
 		return glGetUniformLocation(mID, aName);
 	}
 

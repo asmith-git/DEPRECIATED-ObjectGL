@@ -22,7 +22,7 @@ namespace asmith { namespace gl {
 		\brief Base class for OpenGL shader objects
 		\author Adam Smith
 		\date Created : 6th November 2015 Modified 30th June 2017
-		\version 2.1
+		\version 2.2
 	*/
 	class shader : public object {
 	public:
@@ -39,33 +39,28 @@ namespace asmith { namespace gl {
 			#endif
 		};
 	private:
-		bool mLinked;
+		const type mType;
+		bool mCompiled;
 	public:
-		shader(context&);
+		shader(context&, type);
 		virtual ~shader();
 		
-		void link(const char*);
-		bool is_linked() const throw();
+		void compile(const char*);
+		bool is_compiled() const throw();
 
-		virtual type get_type() const throw() = 0;
+		type get_type() const throw();
 
 		virtual GLuint get_max_uniform_components() const throw() = 0;
 		virtual GLuint get_max_uniform_blocks() const throw() = 0;
 		virtual GLuint get_max_input_components() const throw() = 0;
 		virtual GLuint get_max_output_components() const throw() = 0;
 		virtual GLuint get_max_texture_image_units() const throw() = 0;
-
-		// Inherited from object 
-		
-		void create() override;
-		void destroy() override;
 	};
 
 	template<class T>
 	static std::shared_ptr<shader> compile_shader(context& aContext, const char* aSource) {
 		std::shared_ptr<shader> tmp(new T(aContext));
-		tmp->create();
-		tmp->link(aSource);
+		tmp->compile(aSource);
 		return tmp;
 	}
 	
@@ -81,7 +76,6 @@ namespace asmith { namespace gl {
 		fragment_shader(context&);
 		// Inherited from shader
 
-		type get_type() const override;
 		GLuint get_max_uniform_components() const throw() override;
 		GLuint get_max_uniform_blocks() const throw() override;
 		GLuint get_max_input_components() const throw() override;
@@ -102,7 +96,6 @@ namespace asmith { namespace gl {
 		vertex_shader(context&);
 		// Inherited from shader
 
-		type get_type() const override;
 		GLuint get_max_uniform_components() const throw() override;
 		GLuint get_max_uniform_blocks() const throw() override;
 		GLuint get_max_input_components() const throw() override;
@@ -123,7 +116,6 @@ namespace asmith { namespace gl {
 		geometry_shader(context&);
 		// Inherited from shader
 
-		type get_type() const override;
 		GLuint get_max_uniform_components() const throw() override;
 		GLuint get_max_uniform_blocks() const throw() override;
 		GLuint get_max_input_components() const throw() override;
@@ -145,7 +137,6 @@ namespace asmith { namespace gl {
 		compute_shader(context&);
 		// Inherited from shader
 
-		type get_type() const override;
 		GLuint get_max_uniform_components() const throw() override;
 		GLuint get_max_uniform_blocks() const throw() override;
 		GLuint get_max_input_components() const throw() override;
@@ -167,7 +158,6 @@ namespace asmith { namespace gl {
 		tessellation_control_shader(context&);
 		// Inherited from shader
 
-		type get_type() const override;
 		GLuint get_max_uniform_components() const throw() override;
 		GLuint get_max_uniform_blocks() const throw() override;
 		GLuint get_max_input_components() const throw() override;
@@ -188,7 +178,6 @@ namespace asmith { namespace gl {
 		tessellation_evaluation_shader(context&);
 		// Inherited from shader
 
-		type get_type() const override;
 		GLuint get_max_uniform_components() const throw() override;
 		GLuint get_max_uniform_blocks() const throw() override;
 		GLuint get_max_input_components() const throw() override;

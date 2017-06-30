@@ -103,7 +103,11 @@ namespace asmith { namespace gl {
 		mSize(0),
 		mUsage(GL_INVALID_ENUM),
 		mIsMapped(false)
-	{}
+	{
+		glGenBuffers(1, &mID);
+		mSize = 0;
+		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::vertex_buffer::vertex_buffer : glGenBuffers returned 0");
+	}
 
 	vertex_buffer::vertex_buffer(context& aContext, GLenum aUsage) :
 		object(aContext),
@@ -114,8 +118,12 @@ namespace asmith { namespace gl {
 	{}
 
 	vertex_buffer::~vertex_buffer() {
+		if(mID == 0) return;
 		if(is_mapped()) unmap();
 		if(is_bound()) unbind();
+		glDeleteBuffers(1, &mID);
+		mID = 0;
+		mSize = 0;
 	}
 
 	GLsizeiptr vertex_buffer::size() const throw() {
@@ -123,7 +131,6 @@ namespace asmith { namespace gl {
 	}
 
 	bool vertex_buffer::set_usage(GLenum aUsage) throw() {
-		if(is_created()) return false;
 		mUsage = aUsage;
 		return true;
 	}
@@ -149,7 +156,7 @@ namespace asmith { namespace gl {
 #endif
 
 	void vertex_buffer::buffer(const GLvoid* aData, GLsizeiptr aSize) {
-		if(! is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::buffer : Buffer does not exist");
+		if(mID == 0) throw std::runtime_error("asmith::gl::vertex_buffer::buffer : Buffer does not exist");
 		if(mUsage == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::vertex_buffer::buffer : Usage not set");
 
 		bool autoBind = false;
@@ -164,7 +171,7 @@ namespace asmith { namespace gl {
 	}
 
 	void vertex_buffer::sub_buffer(GLsizeiptr aOffset, const GLvoid* aData, GLsizeiptr aSize) {
-		if(!is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Buffer does not exist");
+		if(mID == 0) throw std::runtime_error("asmith::gl::vertex_buffer::set_data : Buffer does not exist");
 
 		bool autoBind = false;
 		if(! is_bound()) {
@@ -178,7 +185,7 @@ namespace asmith { namespace gl {
 	}
 
 	void vertex_buffer::get_buffer(GLsizeiptr aOffset, GLvoid* aData, GLsizeiptr aSize) {
-		if(! is_created()) throw std::runtime_error("asmith::gl::vertex_buffer::get_buffer : Buffer does not exist");
+		if(mID == 0) throw std::runtime_error("asmith::gl::vertex_buffer::get_buffer : Buffer does not exist");
 
 		bool autoBind = false;
 		if (!is_bound()) {
@@ -234,21 +241,6 @@ namespace asmith { namespace gl {
 
 	GLenum vertex_buffer::get_bind_target() const throw() {
 		return mTarget;
-	}
-
-	void vertex_buffer::create() {
-		if(is_created()) destroy();
-
-		glGenBuffers(1, &mID);
-		mSize = 0;
-		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::vertex_buffer::create : glGenBuffers returned 0");
-	}
-
-	void vertex_buffer::destroy() {
-		if(! is_created()) return;
-		glDeleteBuffers(1, &mID);
-		mID = 0;
-		mSize = 0;
 	}
 
 #if ASMITH_GL_VERSION_GE(3, 0)	

@@ -18,16 +18,28 @@ namespace asmith { namespace gl {
 	
 	// shader
 	
-	shader::shader(context& aContext):
+	shader::shader(context& aContext, type aType):
 		object(aContext),
-		mLinked(false)
-	{}
-	
-	shader::~shader(){
-		
+		mType(aType),
+		mCompiled(false)
+	{
+		mID = glCreateShader(mType);
+		if (mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::shader::create : glCreateShader returned 0");
 	}
 	
-	void shader::link(const char* aSource) {
+	shader::~shader(){
+		if(mID != 0) {
+			glDeleteShader(mID);
+			mID = 0;
+			mCompiled = false;
+		}
+	}
+
+	shader::type shader::get_type() const throw() {
+		return mType;
+	}
+	
+	void shader::compile(const char* aSource) {
 		const GLint length = strlen(aSource);
 		glShaderSource(mID, 1, &aSource, &length);
 		glCompileShader(mID);
@@ -40,41 +52,21 @@ namespace asmith { namespace gl {
          
 		 	std::string log(logLength, '\0');
 		 	glGetShaderInfoLog(mID, logLength, &logLength, &log[0]);
-        
-		 	destroy();
          
 		 	throw std::runtime_error(std::string("asmith::gl::shader::create : Compilation error : ") + log.c_str());
 		}
-		mLinked = true;
+		mCompiled = true;
 	}
 
-	bool shader::is_linked() const throw() {
-		return mLinked;
-	}
-
-	void shader::create(){
-		if(is_created()) destroy();
-		mID = glCreateShader(static_cast<GLenum>(get_type()));
-		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::shader::create : glCreateShader returned 0");
-	}
-
-	void shader::destroy(){
-		if(is_created()) {
-			glDeleteShader(mID);
-			mID = 0;
-			mLinked = false;
-		}
+	bool shader::is_compiled() const throw() {
+		return mCompiled;
 	}
 	
 	// fragment_shader
 	
 	fragment_shader::fragment_shader(context& aContext) :
-		shader(aContext)
+		shader(aContext, FRAGMENT)
 	{}
-		
-	shader::type fragment_shader::get_type() const {
-		return FRAGMENT;
-	}
 	
 	GLuint fragment_shader::get_max_uniform_components() const throw() {
 		return GL_MAX_FRAGMENT_UNIFORM_COMPONENTS;
@@ -99,12 +91,8 @@ namespace asmith { namespace gl {
 	// vertex_shader
 	
 	vertex_shader::vertex_shader(context& aContext) :
-		shader(aContext)
+		shader(aContext, VERTEX)
 	{}
-		
-	shader::type vertex_shader::get_type() const {
-		return VERTEX;
-	}
 	
 	GLuint vertex_shader::get_max_uniform_components() const throw() {
 		return GL_MAX_FRAGMENT_UNIFORM_COMPONENTS;
@@ -129,12 +117,8 @@ namespace asmith { namespace gl {
 	// geometry_shader
 	
 	geometry_shader::geometry_shader(context& aContext) :
-		shader(aContext)
+		shader(aContext, GEOMETRY)
 	{}
-		
-	shader::type geometry_shader::get_type() const {
-		return GEOMETRY;
-	}
 	
 	GLuint geometry_shader::get_max_uniform_components() const throw() {
 		return GL_MAX_FRAGMENT_UNIFORM_COMPONENTS;
@@ -160,12 +144,8 @@ namespace asmith { namespace gl {
 	// compute_shader
 	
 	compute_shader::compute_shader(context& aContext) :
-		shader(aContext)
+		shader(aContext, COMPUTE)
 	{}
-		
-	shader::type compute_shader::get_type() const {
-		return COMPUTE;
-	}
 	
 	GLuint compute_shader::get_max_uniform_components() const throw() {
 		return GL_MAX_FRAGMENT_UNIFORM_COMPONENTS;
@@ -191,12 +171,8 @@ namespace asmith { namespace gl {
 	// tessellation_control_shader
 	
 	tessellation_control_shader::tessellation_control_shader(context& aContext) :
-		shader(aContext)
+		shader(aContext, TESSELLATION_CONTROL)
 	{}
-		
-	shader::type tessellation_control_shader::get_type() const {
-		return TESSELLATION_CONTROL;
-	}
 	
 	GLuint tessellation_control_shader::get_max_uniform_components() const throw() {
 		return GL_MAX_FRAGMENT_UNIFORM_COMPONENTS;
@@ -221,12 +197,8 @@ namespace asmith { namespace gl {
 	// tessellation_evaluation_shader
 	
 	tessellation_evaluation_shader::tessellation_evaluation_shader(context& aContext) :
-		shader(aContext)
+		shader(aContext, TESSELLATION_EVALUATION)
 	{}
-		
-	shader::type tessellation_evaluation_shader::get_type() const {
-		return TESSELLATION_EVALUATION;
-	}
 	
 	GLuint tessellation_evaluation_shader::get_max_uniform_components() const throw() {
 		return GL_MAX_FRAGMENT_UNIFORM_COMPONENTS;

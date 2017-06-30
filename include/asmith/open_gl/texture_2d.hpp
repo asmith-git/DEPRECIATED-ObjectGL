@@ -23,7 +23,7 @@ namespace asmith { namespace gl {
 		\brief
 		\author Adam Smith
 		\date Created : 27th June 2017 Modified 27th June 2017
-		\version 1.0
+		\version 1.1
 	*/
 	class texture_2d : public object {
 	private:
@@ -77,11 +77,6 @@ namespace asmith { namespace gl {
 			set_internal_format(C::INTERNAL_FORMAT);
 			load_raw(aData, aWidth, aHeight);
 		}
-
-		// Inherited from object 
-
-		void create() override;
-		void destroy() override;
 	};
 
 }}

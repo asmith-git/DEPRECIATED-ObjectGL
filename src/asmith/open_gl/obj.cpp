@@ -181,13 +181,11 @@ namespace asmith { namespace gl {
 		std::shared_ptr<gl::vertex_array> vao(new gl::vertex_array(aContext));
 
 		vbo->set_usage(GL_STATIC_DRAW);
-		vbo->create();
 		vbo->buffer(&model[0], model.size() * sizeof(vertex));
 
 		vao->add_attribute(vbo, { 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)(0) });
 		vao->add_attribute(vbo, { 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)(sizeof(GLfloat) * 3) });
 		vao->add_attribute(vbo, { 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)(sizeof(GLfloat) * 5) });
-		vao->create();
 
 		return vao;
 	}

@@ -23,7 +23,7 @@ namespace asmith { namespace gl {
 		\brief OpenGL program
 		\author Adam Smith
 		\date Created : 6th November 2015 Modified 30th June 2017
-		\version 2.3
+		\version 2.4
 	*/
 	class program : public object {
 	public:
@@ -37,6 +37,8 @@ namespace asmith { namespace gl {
 	public:
 		program(context&);
 		~program();
+
+		void link();
 
 		void attach(std::shared_ptr<shader>);
 		void detach(std::shared_ptr<shader>);
@@ -90,16 +92,12 @@ namespace asmith { namespace gl {
 		void get_uniform(GLint, mat2&) const;
 		void get_uniform(GLint, mat3&) const;
 		void get_uniform(GLint, mat4&) const;
-		
-		// Inherited from object
-		void create() override;
-		void destroy() override;
 	};
 
 	static std::shared_ptr<program> link_program(const std::vector<std::shared_ptr<shader>>& aShaders) {
 		std::shared_ptr<program> tmp(new program(aShaders[0]->get_context()));
 		for(const std::shared_ptr<shader>& i : aShaders) tmp->attach(i);
-		tmp->create();
+		tmp->link();
 		return tmp;
 	}
 

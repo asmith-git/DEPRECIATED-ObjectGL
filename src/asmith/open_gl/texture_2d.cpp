@@ -30,10 +30,15 @@ namespace asmith { namespace gl {
 		mWrap(GL_CLAMP_TO_BORDER),
 		mFilter(GL_LINEAR),
 		mMipmaps(false)
-	{}
+	{
+		glGenTextures(1, &mID);
+		glBindTexture(mTarget, 0);
+	}
 
 	texture_2d::~texture_2d() throw() {
-
+		if(mID == 0) return;
+		glDeleteTextures(1, &mID);
+		mID = 0;
 	}
 
 	GLenum texture_2d::get_target() const throw() {
@@ -124,30 +129,19 @@ namespace asmith { namespace gl {
 		mWrap = aValue;
 	}
 
-	void texture_2d::create() {
-		if(is_created()) destroy();
-		glGenTextures(1, &mID);
-		glBindTexture(mTarget, mID);
-		glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, mWrap);
-		glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, mWrap);
-		if(mWrap == GL_CLAMP_TO_BORDER) glTexParameterfv(mTarget, GL_TEXTURE_BORDER_COLOR, &mBorderColour[0]);
-		glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER, mFilter);
-		glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER, mFilter);
-		if(mMipmaps) glGenerateMipmap(mTarget);
-		glBindTexture(mTarget, 0);
-	}
-
-	void texture_2d::destroy() {
-		if(! is_created()) return;
-		glDeleteTextures(1, &mID);
-		mID = 0;
-	}
-
 	void texture_2d::bind() throw() {
 		glBindTexture(mTarget, mID);
 	}
 
 	void texture_2d::load_raw(const void* aValue, GLsizei aWidth, GLsizei aHeight) throw() {
+		glBindTexture(mTarget, mID);
+		glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, mWrap);
+		glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, mWrap);
+		if (mWrap == GL_CLAMP_TO_BORDER) glTexParameterfv(mTarget, GL_TEXTURE_BORDER_COLOR, &mBorderColour[0]);
+		glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER, mFilter);
+		glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER, mFilter);
+		if(mMipmaps) glGenerateMipmap(mTarget);
+
 		mWidth = aWidth;
 		mHeight = aHeight;
 		glTexImage2D(mTarget, mLevel, mInternalFormat, aWidth, aHeight, mBorder, mFormat, mType, aValue);

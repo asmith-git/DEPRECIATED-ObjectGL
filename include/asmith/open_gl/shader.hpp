@@ -21,8 +21,8 @@ namespace asmith { namespace gl {
 	/*!
 		\brief Base class for OpenGL shader objects
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
-		\version 2.0
+		\date Created : 6th November 2015 Modified 30th June 2017
+		\version 2.1
 	*/
 	class shader : public object {
 	public:
@@ -39,12 +39,13 @@ namespace asmith { namespace gl {
 			#endif
 		};
 	private:
-		const char* mSource;
+		bool mLinked;
 	public:
 		shader();
 		virtual ~shader();
 		
-		void set_source(const char*) throw();
+		void link(const char*);
+		bool is_linked() const throw();
 
 		virtual type get_type() const throw() = 0;
 
@@ -63,8 +64,8 @@ namespace asmith { namespace gl {
 	template<class T>
 	static std::shared_ptr<shader> compile_shader(const char* aSource) {
 		std::shared_ptr<shader> tmp(new T());
-		tmp->set_source(aSource);
 		tmp->create();
+		tmp->link(aSource);
 		return tmp;
 	}
 	

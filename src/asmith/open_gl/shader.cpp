@@ -19,29 +19,16 @@ namespace asmith { namespace gl {
 	// shader
 	
 	shader::shader():
-		mSource(nullptr)
+		mLinked(false)
 	{}
 	
 	shader::~shader(){
 		
 	}
 	
-	void shader::set_source(const char* aSource) throw() {
-		mSource = aSource;
-	}
-
-	void shader::create(){
-		if(is_created()) destroy();
-		if(mSource == nullptr) throw std::runtime_error("asmith::gl::shader::create : Shader source not set");
-		
-		const char* const source = mSource;
-		mSource = nullptr;
-		const GLenum type = static_cast<GLenum>(get_type());
-		const GLint length = strlen(source);
-         
-		mID = glCreateShader(type);
-		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::shader::create : glCreateShader returned 0");
-		glShaderSource(mID, 1, &source, &length);
+	void shader::link(const char* aSource) {
+		const GLint length = strlen(aSource);
+		glShaderSource(mID, 1, &aSource, &length);
 		glCompileShader(mID);
          
 		GLint status = 0;
@@ -59,10 +46,21 @@ namespace asmith { namespace gl {
 		}
 	}
 
+	bool shader::is_linked() const throw() {
+		return mLinked;
+	}
+
+	void shader::create(){
+		if(is_created()) destroy();
+		mID = glCreateShader(static_cast<GLenum>(get_type()));
+		if(mID == object::INVALID_ID) throw std::runtime_error("asmith::gl::shader::create : glCreateShader returned 0");
+	}
+
 	void shader::destroy(){
 		if(is_created()) {
 			glDeleteShader(mID);
 			mID = 0;
+			mLinked = false;
 		}
 	}
 	

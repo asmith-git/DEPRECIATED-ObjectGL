@@ -44,6 +44,7 @@ namespace asmith { namespace gl {
          
 		 	throw std::runtime_error(std::string("asmith::gl::shader::create : Compilation error : ") + log.c_str());
 		}
+		mLinked = true;
 	}
 
 	bool shader::is_linked() const throw() {

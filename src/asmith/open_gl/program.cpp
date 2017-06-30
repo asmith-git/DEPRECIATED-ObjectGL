@@ -16,9 +16,13 @@
 
 namespace asmith { namespace gl {
 	
-	std::vector<std::shared_ptr<object>> PROGRAM_BIND_STACK;
+	static std::shared_ptr<program> CURRENTLY_BOUND_PROGRAM;
 	
 	// program
+	
+	program::program() :
+		mBound(false)
+	{}
 	
 	program::~program() {
 		while(is_bound()) {
@@ -48,32 +52,35 @@ namespace asmith { namespace gl {
 	}
 
 	void program::bind() {
-		PROGRAM_BIND_STACK.push_back(shared_from_this());
+		if(is_bound()) throw std::runtime_error("asmith::gl::program::bind : Program is already bound");
+		mPreviousBind = CURRENTLY_BOUND_PROGRAM;
+		CURRENTLY_BOUND_PROGRAM = std::static_pointer_cast<program>(shared_from_this());
+		mBound = true;
 		glUseProgram(mID);
 	}
 
 	void program::unbind() {
-		std::shared_ptr<object> tmp = shared_from_this();
-		if(PROGRAM_BIND_STACK.back() == tmp) {
-			PROGRAM_BIND_STACK.pop_back();
-			glUseProgram(PROGRAM_BIND_STACK.empty() ? 0 : PROGRAM_BIND_STACK.back()->get_id());
+		if(! is_bound()) throw std::runtime_error("asmith::gl::program::unbind : Program is not bound");
+		if(! is_currently_bound()) throw std::runtime_error("asmith::gl::program::unbind : Program is not the currently bound program"); //! \todo Unbinding of programs that are not current
+
+		if(mPreviousBind) {
+			glUseProgram(mPreviousBind->get_id());
+			CURRENTLY_BOUND_PROGRAM.swap(mPreviousBind);
+			mPreviousBind.swap(std::shared_ptr<program>());
 		}else {
-			const auto end = PROGRAM_BIND_STACK.rend();
-			const auto i = std::find(PROGRAM_BIND_STACK.rbegin(), end, shared_from_this());
-			if(i == end) throw std::runtime_error("asmith::gl::program::unbind : Program is not bound");
-			//PROGRAM_BIND_STACK.erase(i);
-			//! \todo Erase program from binding stack
+			glUseProgram(0);
+			CURRENTLY_BOUND_PROGRAM.swap(std::shared_ptr<program>());
+			mPreviousBind.swap(std::shared_ptr<program>());
 		}
+		mBound = false;
 	}
 
 	bool program::is_bound() const {
-		const auto end = PROGRAM_BIND_STACK.end();
-		const auto i = std::find(PROGRAM_BIND_STACK.begin(), end, shared_from_this());
-		return i != end;
+		return mBound;
 	}
 
 	bool program::is_currently_bound() const throw() {
-		return PROGRAM_BIND_STACK.back() == shared_from_this();
+		return CURRENTLY_BOUND_PROGRAM == shared_from_this();
 	}
 
 	void program::create() {

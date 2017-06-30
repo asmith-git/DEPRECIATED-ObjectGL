@@ -123,6 +123,10 @@ namespace asmith { namespace gl {
 		while(! aStream.eof()) {
 			aStream >> c;
 			switch (c) {
+			case '#':
+				break;
+			case 's':
+				break;
 			case 'f':
 				faces.push_back(obj_read_triangle(aStream));
 				break;

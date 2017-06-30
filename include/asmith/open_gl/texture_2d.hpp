@@ -40,7 +40,7 @@ namespace asmith { namespace gl {
 		GLenum mFilter;
 		bool mMipmaps;
 	public:
-		texture_2d() throw();
+		texture_2d(context&) throw();
 		~texture_2d() throw();
 
 		GLenum get_target() const throw();
@@ -75,7 +75,7 @@ namespace asmith { namespace gl {
 			set_format(C::FORMAT);
 			set_type(C::TYPE);
 			set_internal_format(C::INTERNAL_FORMAT);
-			load_raw(aData);
+			load_raw(aData, aWidth, aHeight);
 		}
 
 		// Inherited from object 

@@ -21,8 +21,8 @@ namespace asmith { namespace gl {
 	/*!
 		\brief Base class for OpenGL shader objects
 		\author Adam Smith
-		\date Created : 4th November 2015 Modified 22nd June 2017
-		\version 2.2
+		\date Created : 4th November 2015 Modified 30th June 2017
+		\version 2.3
 	*/
 	class vertex_buffer : public object {
 	private:
@@ -34,8 +34,8 @@ namespace asmith { namespace gl {
 	public:
 		static std::shared_ptr<vertex_buffer> get_buffer_bound_to(GLenum) throw();
 
-		vertex_buffer();
-		vertex_buffer(GLenum);
+		vertex_buffer(context&);
+		vertex_buffer(context&, GLenum);
 		~vertex_buffer();
 
 		void buffer(const GLvoid*, GLsizeiptr);

@@ -15,15 +15,15 @@
 #define ASMITH_OPENGL_OBJECT_HPP
 
 #include <memory>
-#include "core.hpp"
+#include "context.hpp"
 
 namespace asmith { namespace gl {
 	
 	/*!
 		\brief Base class for OpenGL objects
 		\author Adam Smith
-		\date Created : 4th November 2015 Modified 20th June 2017
-		\version 2.1
+		\date Created : 4th November 2015 Modified 30th June 2017
+		\version 2.2
 	*/
 	class object : public std::enable_shared_from_this<object> {
 	public:
@@ -31,6 +31,7 @@ namespace asmith { namespace gl {
 			INVALID_ID = 0
 		};
 	protected:
+		context& mContext;
 		GLuint mID;
 	private:
 		object(const object&) = delete;
@@ -40,8 +41,10 @@ namespace asmith { namespace gl {
 	public:
 		static std::shared_ptr<object> get_object_with_id(id_t) throw();
 
-		object();
+		object(context&);
 		virtual ~object();
+
+		context& get_context() const throw();
 
 		virtual void create() = 0;
 		virtual void destroy() = 0;

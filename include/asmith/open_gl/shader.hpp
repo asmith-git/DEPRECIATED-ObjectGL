@@ -41,7 +41,7 @@ namespace asmith { namespace gl {
 	private:
 		bool mLinked;
 	public:
-		shader();
+		shader(context&);
 		virtual ~shader();
 		
 		void link(const char*);
@@ -62,8 +62,8 @@ namespace asmith { namespace gl {
 	};
 
 	template<class T>
-	static std::shared_ptr<shader> compile_shader(const char* aSource) {
-		std::shared_ptr<shader> tmp(new T());
+	static std::shared_ptr<shader> compile_shader(context& aContext, const char* aSource) {
+		std::shared_ptr<shader> tmp(new T(aContext));
 		tmp->create();
 		tmp->link(aSource);
 		return tmp;
@@ -73,11 +73,12 @@ namespace asmith { namespace gl {
 	/*!
 		\brief OpenGL fragment shader
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
-		\version 2.0
+		\date Created : 6th November 2015 Modified 30th June 2017
+		\version 2.1
 	*/
 	class fragment_shader : public shader {
 	public:
+		fragment_shader(context&);
 		// Inherited from shader
 
 		type get_type() const override;
@@ -88,16 +89,17 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 
-	inline static std::shared_ptr<shader> compile_fragment_shader(const char* aSource) { return compile_shader<fragment_shader>(aSource); }
+	inline static std::shared_ptr<shader> compile_fragment_shader(context& aContext, const char* aSource) { return compile_shader<fragment_shader>(aContext, aSource); }
 	
 	/*!
 		\brief OpenGL vertex shader
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
-		\version 2.0
+		\date Created : 6th November 2015 Modified 30th June 2017
+		\version 2.1
 	*/
 	class vertex_shader : public shader {
 	public:
+		vertex_shader(context&);
 		// Inherited from shader
 
 		type get_type() const override;
@@ -108,16 +110,17 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 
-	inline static std::shared_ptr<shader> compile_vertex_shader(const char* aSource) { return compile_shader<vertex_shader>(aSource); }
+	inline static std::shared_ptr<shader> compile_vertex_shader(context& aContext, const char* aSource) { return compile_shader<vertex_shader>(aContext, aSource); }
 	
 	/*!
 		\brief OpenGL geometry shader
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
-		\version 2.0
+		\date Created : 6th November 2015 Modified 30th June 2017
+		\version 2.1
 	*/
 	class geometry_shader : public shader {
 	public:
+		geometry_shader(context&);
 		// Inherited from shader
 
 		type get_type() const override;
@@ -128,17 +131,18 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 
-	inline static std::shared_ptr<shader> compile_geometry_shader(const char* aSource) { return compile_shader<geometry_shader>(aSource); }
+	inline static std::shared_ptr<shader> compile_geometry_shader(context& aContext, const char* aSource) { return compile_shader<geometry_shader>(aContext, aSource); }
 	
 #if ASMITH_GL_VERSION_GE(4,3)
 	/*!
 		\brief OpenGL compute shader
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
-		\version 2.0
+		\date Created : 6th November 2015 Modified 30th June 2017
+		\version 2.1
 	*/
 	class compute_shader : public shader {
 	public:
+		compute_shader(context&);
 		// Inherited from shader
 
 		type get_type() const override;
@@ -149,17 +153,18 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 
-	inline static std::shared_ptr<shader> compile_compute_shader(const char* aSource) { return compile_shader<compute_shader>(aSource); }
+	inline static std::shared_ptr<shader> compile_compute_shader(context& aContext, const char* aSource) { return compile_shader<compute_shader>(aContext, aSource); }
 #endif
 #if ASMITH_GL_VERSION_GE(4,0)
 	/*!
 		\brief OpenGL tessellation control shader shader
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 19th Jube 2017
-		\version 2.0
+		\date Created : 6th November 2015 Modified 30th June 2017
+		\version 2.1
 	*/
 	class tessellation_control_shader : public shader {
 	public:
+		tessellation_control_shader(context&);
 		// Inherited from shader
 
 		type get_type() const override;
@@ -170,16 +175,17 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 
-	inline static std::shared_ptr<shader> compile_tessellation_control_shader(const char* aSource) { return compile_shader<tessellation_control_shader>(aSource); }
+	inline static std::shared_ptr<shader> compile_tessellation_control_shader(context& aContext, const char* aSource) { return compile_shader<tessellation_control_shader>(aContext, aSource); }
 	
 	/*!
 		\brief OpenGL tessellation evaluation shader shader
 		\author Adam Smith
-		\date Created : 6th November 2015 Modified 20th June 2017
-		\version 2.0
+		\date Created : 6th November 2015 Modified 30th June 2017
+		\version 2.1
 	*/
 	class tessellation_evaluation_shader : public shader {
 	public:
+		tessellation_evaluation_shader(context&);
 		// Inherited from shader
 
 		type get_type() const override;
@@ -190,7 +196,7 @@ namespace asmith { namespace gl {
 		GLuint get_max_texture_image_units() const throw() override;
 	};
 
-	inline static std::shared_ptr<shader> compile_tessellation_evaluation_shader(const char* aSource) { return compile_shader<tessellation_evaluation_shader>(aSource); }
+	inline static std::shared_ptr<shader> compile_tessellation_evaluation_shader(context& aContext, const char* aSource) { return compile_shader<tessellation_evaluation_shader>(aContext, aSource); }
 #endif
 }}
 

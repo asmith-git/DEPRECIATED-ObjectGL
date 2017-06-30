@@ -27,7 +27,8 @@ namespace asmith { namespace gl {
 		return std::shared_ptr<object>();
 	}
 	
-	object::object() :
+	object::object(context& aContext) :
+		mContext(aContext),
 		mID(INVALID_ID)
 	{
 		OBJECT_LIST.push_back(this);
@@ -36,6 +37,10 @@ namespace asmith { namespace gl {
 	object::~object() {
 		// if(is_created()) destroy();
 		OBJECT_LIST.erase(std::find(OBJECT_LIST.begin(), OBJECT_LIST.end(), this));
+	}
+
+	context& object::get_context() const throw() {
+		return mContext;
 	}
 	
 	object::id_t object::get_id() const throw() {

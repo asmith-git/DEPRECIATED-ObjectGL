@@ -18,7 +18,8 @@ namespace asmith { namespace gl {
 	
 	// shader
 	
-	shader::shader():
+	shader::shader(context& aContext):
+		object(aContext),
 		mLinked(false)
 	{}
 	
@@ -66,6 +67,10 @@ namespace asmith { namespace gl {
 	}
 	
 	// fragment_shader
+	
+	fragment_shader::fragment_shader(context& aContext) :
+		shader(aContext)
+	{}
 		
 	shader::type fragment_shader::get_type() const {
 		return FRAGMENT;
@@ -92,6 +97,10 @@ namespace asmith { namespace gl {
 	}
 	
 	// vertex_shader
+	
+	vertex_shader::vertex_shader(context& aContext) :
+		shader(aContext)
+	{}
 		
 	shader::type vertex_shader::get_type() const {
 		return VERTEX;
@@ -118,6 +127,10 @@ namespace asmith { namespace gl {
 	}
 	
 	// geometry_shader
+	
+	geometry_shader::geometry_shader(context& aContext) :
+		shader(aContext)
+	{}
 		
 	shader::type geometry_shader::get_type() const {
 		return GEOMETRY;
@@ -145,6 +158,10 @@ namespace asmith { namespace gl {
 
 #if ASMITH_GL_VERSION_GE(4,3)
 	// compute_shader
+	
+	compute_shader::compute_shader(context& aContext) :
+		shader(aContext)
+	{}
 		
 	shader::type compute_shader::get_type() const {
 		return COMPUTE;
@@ -172,6 +189,10 @@ namespace asmith { namespace gl {
 #endif
 #if ASMITH_GL_VERSION_GE(4,0)
 	// tessellation_control_shader
+	
+	tessellation_control_shader::tessellation_control_shader(context& aContext) :
+		shader(aContext)
+	{}
 		
 	shader::type tessellation_control_shader::get_type() const {
 		return TESSELLATION_CONTROL;
@@ -198,6 +219,10 @@ namespace asmith { namespace gl {
 	}
 	
 	// tessellation_evaluation_shader
+	
+	tessellation_evaluation_shader::tessellation_evaluation_shader(context& aContext) :
+		shader(aContext)
+	{}
 		
 	shader::type tessellation_evaluation_shader::get_type() const {
 		return TESSELLATION_EVALUATION;

@@ -159,7 +159,7 @@ namespace asmith { namespace gl {
 		if(normals.empty()) normals.push_back({0.f, 0.f, 1.f});
 	}
 
-	std::shared_ptr<vertex_array> obj::create_vao() const {
+	std::shared_ptr<vertex_array> obj::create_vao(context& aContext) const {
 		struct vertex {
 			vec3f v;
 			vec2f t;
@@ -177,8 +177,8 @@ namespace asmith { namespace gl {
 			}
 		}
 
-		std::shared_ptr<gl::vertex_buffer> vbo(new gl::vertex_buffer());
-		std::shared_ptr<gl::vertex_array> vao(new gl::vertex_array());
+		std::shared_ptr<gl::vertex_buffer> vbo(new gl::vertex_buffer(aContext));
+		std::shared_ptr<gl::vertex_array> vao(new gl::vertex_array(aContext));
 
 		vbo->set_usage(GL_STATIC_DRAW);
 		vbo->create();

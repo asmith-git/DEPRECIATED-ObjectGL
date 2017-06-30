@@ -22,8 +22,8 @@ namespace asmith { namespace gl {
 	/*!
 		\brief Base class for OpenGL vertex array objects (VAO)
 		\author Adam Smith
-		\date Created : 22nd June 2017 Modified 22nd June 2017
-		\version 1.0
+		\date Created : 22nd June 2017 Modified 30th June 2017
+		\version 1.1
 	*/
 	class vertex_array : public object {
 	public:
@@ -38,7 +38,7 @@ namespace asmith { namespace gl {
 		std::vector<vertex_attribute> mAttributes;
 		std::vector<std::shared_ptr<vertex_buffer>> mBuffers;
 	public:
-		vertex_array();
+		vertex_array(context& aContext);
 		~vertex_array();
 
 		GLuint add_attribute(std::shared_ptr<vertex_buffer>, const vertex_attribute&);

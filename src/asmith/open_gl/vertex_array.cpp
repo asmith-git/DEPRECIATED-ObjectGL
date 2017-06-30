@@ -17,9 +17,9 @@ namespace asmith { namespace gl {
 	
 	// class vertex_array
 	
-	vertex_array::vertex_array() {
-
-	}
+	vertex_array::vertex_array(context& aContext) :
+		object(aContext)
+	{}
 
 	vertex_array::~vertex_array() {
 

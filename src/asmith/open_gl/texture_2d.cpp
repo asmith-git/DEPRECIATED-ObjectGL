@@ -16,7 +16,8 @@
 namespace asmith { namespace gl {
 	//texture_2d
 
-	texture_2d::texture_2d() throw() :
+	texture_2d::texture_2d(context& aContext) throw() :
+		object(aContext),
 		mBorderColour(0.f, 0.f, 0.f, 1.f),
 		mTarget(GL_TEXTURE_2D),
 		mInternalFormat(GL_RGB),
@@ -71,6 +72,10 @@ namespace asmith { namespace gl {
 		return mFilter;
 	}
 
+	GLenum texture_2d::get_wrap() const throw() {
+		return mWrap;
+	}
+
 	bool texture_2d::has_mipmaps() const throw() {
 		return mMipmaps;
 	}
@@ -113,6 +118,10 @@ namespace asmith { namespace gl {
 
 	void texture_2d::set_internal_format(GLint aValue) throw() {
 		mInternalFormat = aValue;
+	}
+
+	void texture_2d::set_wrap(GLenum aValue) throw() {
+		mWrap = aValue;
 	}
 
 	void texture_2d::create() {

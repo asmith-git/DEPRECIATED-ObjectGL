@@ -98,14 +98,16 @@ namespace asmith { namespace gl {
 		return VERTEX_BUFFER_TARGETS[buffer_target_to_index(aTarget)].lock();
 	}
 
-	vertex_buffer::vertex_buffer() :
+	vertex_buffer::vertex_buffer(context& aContext) :
+		object(aContext),
 		mTarget(GL_INVALID_ENUM),
 		mSize(0),
 		mUsage(GL_INVALID_ENUM),
 		mIsMapped(false)
 	{}
 
-	vertex_buffer::vertex_buffer(GLenum aUsage) :
+	vertex_buffer::vertex_buffer(context& aContext, GLenum aUsage) :
+		object(aContext),
 		mTarget(GL_INVALID_ENUM),
 		mSize(0),
 		mUsage(aUsage),

@@ -20,7 +20,8 @@ namespace asmith { namespace gl {
 	
 	// program
 	
-	program::program() :
+	program::program(context& aContext) :
+		object(aContext),
 		mBound(false)
 	{}
 	

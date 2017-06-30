@@ -11,40 +11,18 @@
 //	See the License for the specific language governing permissions and
 //	limitations under the License.
 
-#ifndef ASMITH_OPENGL_OBJ_HPP
-#define ASMITH_OPENGL_OBJ_HPP
-
-#include <iostream>
-#include <vector>
-#include "vertex_array.hpp"
+#include "asmith/open_gl/context.hpp"
 
 namespace asmith { namespace gl {
 	
-	/*!
-		\brief 
-		\author Adam Smith
-		\date Created : ? Modified 29th June 2017
-		\version 3.0
-	*/
-	struct obj {
-		struct face {
-			GLuint vertex;
-			GLuint texture_coordinate;
-			GLuint normal;
-		};
+	// context
 
-		struct triangle {
-			face points[3];
-		};
-		
-		std::vector<vec3f> vertices;
-		std::vector<vec3f> normals;
-		std::vector<vec2f> texture_coordinates;
-		std::vector<triangle> faces;
+	context::context() :
+		state(nullptr)
+	{}
 
-		void load(std::istream&);
-		std::shared_ptr<vertex_array> create_vao(context&) const;
-	};
+	context::~context() {
+		if(state) delete state;
+	}
+
 }}
-
-#endif

@@ -12,6 +12,7 @@
 //	limitations under the License.
 
 #include "asmith/open_gl/texture_2d.hpp"
+#include <stdexcept>
 
 namespace asmith { namespace gl {
 	//texture_2d
@@ -19,20 +20,14 @@ namespace asmith { namespace gl {
 	texture_2d::texture_2d(context& aContext) throw() :
 		object(aContext),
 		mBorderColour(0.f, 0.f, 0.f, 1.f),
-		mTarget(GL_TEXTURE_2D),
-		mInternalFormat(GL_RGB),
-		mLevel(0),
+		mTarget(GL_INVALID_ENUM),
 		mWidth(0),
 		mHeight(0),
-		mBorder(0),
-		mFormat(GL_RGB),
-		mType(GL_FLOAT),
 		mWrap(GL_CLAMP_TO_BORDER),
-		mFilter(GL_LINEAR),
-		mMipmaps(false)
+		mFilter(GL_LINEAR)
 	{
 		glGenTextures(1, &mID);
-		glBindTexture(mTarget, 0);
+		if(mID == 0) throw std::runtime_error("asmith::gl::texture_2d::texture_2d : glGenTextures returned 0");
 	}
 
 	texture_2d::~texture_2d() throw() {
@@ -41,32 +36,12 @@ namespace asmith { namespace gl {
 		mID = 0;
 	}
 
-	GLenum texture_2d::get_target() const throw() {
-		return mTarget;
-	}
-
-	GLint texture_2d::get_level() const throw() {
-		return mLevel;
-	}
-
 	GLsizei texture_2d::get_width() const throw() {
 		return mWidth;
 	}
 
 	GLsizei texture_2d::get_height() const throw() {
 		return mHeight;
-	}
-
-	GLint texture_2d::get_border() const throw() {
-		return mBorder;
-	}
-
-	GLenum texture_2d::get_format() const throw() {
-		return mFormat;
-	}
-
-	GLenum texture_2d::get_type() const throw() {
-		return mType;
 	}
 
 	const vec4f& texture_2d::get_border_colour() const throw() {
@@ -81,70 +56,54 @@ namespace asmith { namespace gl {
 		return mWrap;
 	}
 
-	bool texture_2d::has_mipmaps() const throw() {
-		return mMipmaps;
-	}
-
-	GLint texture_2d::get_internal_format() const throw() {
-		return mInternalFormat;
-	}
-
-	void texture_2d::set_target(GLenum aValue) throw() {
-		mTarget = aValue;
-	}
-
-	void texture_2d::set_level(GLint aValue) throw() {
-		mLevel = aValue;
-	}
-
-	void texture_2d::set_border(GLint aValue) throw() {
-		mBorder = aValue;
-	}
-
-	void texture_2d::set_format(GLenum aValue) throw() {
-		mFormat = aValue;
-	}
-
-	void texture_2d::set_type(GLenum aValue) throw() {
-		mType = aValue;
-	}
-
 	void texture_2d::set_border_colour(const vec4f& aValue) throw() {
+		if(mTarget == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::texture_2d::set_border_colour : Texture is not bound");
 		memcpy(&mBorderColour[0], &aValue[0], 4 * sizeof(GLfloat));
+		glTexParameterfv(mTarget, GL_TEXTURE_BORDER_COLOR, &mBorderColour[0]);
 	}
 
 	void texture_2d::set_filter(GLenum aValue) throw() {
+		if(mTarget == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::texture_2d::set_filter : Texture is not bound");
 		mFilter = aValue;
-	}
-
-	void texture_2d::set_mipmaps(bool aValue) throw() {
-		mMipmaps = aValue;
-	}
-
-	void texture_2d::set_internal_format(GLint aValue) throw() {
-		mInternalFormat = aValue;
+		glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER, mFilter);
+		glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER, mFilter);
 	}
 
 	void texture_2d::set_wrap(GLenum aValue) throw() {
+		if(mTarget == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::texture_2d::set_wrap : Texture is not bound");
 		mWrap = aValue;
-	}
-
-	void texture_2d::bind() throw() {
-		glBindTexture(mTarget, mID);
-	}
-
-	void texture_2d::load_raw(const void* aValue, GLsizei aWidth, GLsizei aHeight) throw() {
-		glBindTexture(mTarget, mID);
 		glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, mWrap);
 		glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, mWrap);
-		if (mWrap == GL_CLAMP_TO_BORDER) glTexParameterfv(mTarget, GL_TEXTURE_BORDER_COLOR, &mBorderColour[0]);
-		glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER, mFilter);
-		glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER, mFilter);
-		if(mMipmaps) glGenerateMipmap(mTarget);
+	}
 
+	void texture_2d::generate_mipmaps() throw() {
+		if(mTarget == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::texture_2d::generate_mipmaps : Texture is not bound");
+		glGenerateMipmap(mTarget);
+	}
+
+	void texture_2d::bind(GLenum aTarget) {
+		if(mTarget != GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::texture_2d::bind : Texture is already bound");
+		//! \todo Implement binding stack
+		mTarget = aTarget;
+		glBindTexture(mTarget, mID);
+	}
+
+	void texture_2d::unbind() {
+		if(mTarget == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::texture_2d::unbind : Texture is not bound");
+		//! \todo Implement binding stack
+		glBindTexture(mTarget, 0);
+		mTarget = GL_INVALID_ENUM;
+	}
+
+	bool texture_2d::is_bound(GLenum aTarget) const throw() {
+		return mTarget == aTarget;
+	}
+
+	void texture_2d::load_raw(GLint aLevel, GLint aInternalFormat, GLsizei aWidth, GLsizei aHeight, GLenum aFormat, GLenum aType, const GLvoid* aValue) throw() {
+		if(mTarget == GL_INVALID_ENUM) throw std::runtime_error("asmith::gl::texture_2d::load_raw : Texture is not bound");
 		mWidth = aWidth;
 		mHeight = aHeight;
-		glTexImage2D(mTarget, mLevel, mInternalFormat, aWidth, aHeight, mBorder, mFormat, mType, aValue);
+		glTexImage2D(mTarget, aLevel, aInternalFormat, aWidth, aHeight, 0, aFormat, aType, aValue);
 	}
 
 }}

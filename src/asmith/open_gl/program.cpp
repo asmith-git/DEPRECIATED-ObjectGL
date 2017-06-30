@@ -13,10 +13,9 @@
 
 #include "asmith/open_gl/program.hpp"
 #include <string>
+#include "asmith/open_gl/context_state.hpp"
 
 namespace asmith { namespace gl {
-	
-	static std::shared_ptr<program> CURRENTLY_BOUND_PROGRAM;
 	
 	// program
 	
@@ -54,8 +53,8 @@ namespace asmith { namespace gl {
 
 	void program::bind() {
 		if(is_bound()) throw std::runtime_error("asmith::gl::program::bind : Program is already bound");
-		mPreviousBind = CURRENTLY_BOUND_PROGRAM;
-		CURRENTLY_BOUND_PROGRAM = std::static_pointer_cast<program>(shared_from_this());
+		mPreviousBind = mContext.state->currently_bound_program;
+		mContext.state->currently_bound_program = std::static_pointer_cast<program>(shared_from_this());
 		mBound = true;
 		glUseProgram(mID);
 	}
@@ -66,11 +65,11 @@ namespace asmith { namespace gl {
 
 		if(mPreviousBind) {
 			glUseProgram(mPreviousBind->get_id());
-			CURRENTLY_BOUND_PROGRAM.swap(mPreviousBind);
+			mContext.state->currently_bound_program.swap(mPreviousBind);
 			mPreviousBind.swap(std::shared_ptr<program>());
 		}else {
 			glUseProgram(0);
-			CURRENTLY_BOUND_PROGRAM.swap(std::shared_ptr<program>());
+			mContext.state->currently_bound_program.swap(std::shared_ptr<program>());
 			mPreviousBind.swap(std::shared_ptr<program>());
 		}
 		mBound = false;
@@ -81,7 +80,7 @@ namespace asmith { namespace gl {
 	}
 
 	bool program::is_currently_bound() const throw() {
-		return CURRENTLY_BOUND_PROGRAM == shared_from_this();
+		return mContext.state->currently_bound_program == shared_from_this();
 	}
 
 	void program::create() {

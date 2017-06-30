@@ -14,6 +14,7 @@
 #include <vector>
 #include <stdexcept>
 #include "asmith/open_gl/vertex_buffer.hpp"
+#include "asmith/open_gl/context_state.hpp"
 
 //! \todo Implement binding at multiple targets
 //! \todo Implement global binding stack
@@ -89,13 +90,11 @@ namespace asmith { namespace gl {
 		GL_COPY_WRITE_BUFFER
 #endif
 	};
-
-	static std::weak_ptr<vertex_buffer> VERTEX_BUFFER_TARGETS[BUFFER_TARGET_COUNT];
 	
 	// vertex_buffer
 
-	std::shared_ptr<vertex_buffer> vertex_buffer::get_buffer_bound_to(GLenum aTarget) throw() {
-		return VERTEX_BUFFER_TARGETS[buffer_target_to_index(aTarget)].lock();
+	std::shared_ptr<vertex_buffer> vertex_buffer::get_buffer_bound_to(context& aContext, GLenum aTarget) throw() {
+		return aContext.state->currently_bound_vbos[buffer_target_to_index(aTarget)].lock();
 	}
 
 	vertex_buffer::vertex_buffer(context& aContext) :
@@ -198,12 +197,12 @@ namespace asmith { namespace gl {
 		const std::shared_ptr<vertex_buffer> ptr = std::dynamic_pointer_cast<vertex_buffer>(shared_from_this());
 		const uint8_t i = buffer_target_to_index(aTarget);
 
-		const std::shared_ptr<vertex_buffer> prev = VERTEX_BUFFER_TARGETS[i].lock();
+		const std::shared_ptr<vertex_buffer> prev = mContext.state->currently_bound_vbos[i].lock();
 		if(prev && prev->is_mapped()) return false;
 
 		glBindBuffer(aTarget, mID);
 		mPreviousBinding = prev;
-		VERTEX_BUFFER_TARGETS[i] = ptr;
+		mContext.state->currently_bound_vbos[i] = ptr;
 		mTarget = aTarget;
 		return true;
 	}
@@ -216,7 +215,7 @@ namespace asmith { namespace gl {
 		std::shared_ptr<vertex_buffer> prev = mPreviousBinding.lock();
 
 		glBindBuffer(mTarget, prev ? prev->get_id() : 0);
-		VERTEX_BUFFER_TARGETS[i] = mPreviousBinding;
+		mContext.state->currently_bound_vbos[i] = mPreviousBinding;
 		mTarget = GL_INVALID_ENUM;
 		return true;
 	}
@@ -224,7 +223,7 @@ namespace asmith { namespace gl {
 	bool vertex_buffer::is_currently_bound() const throw() {
 		if(mTarget == GL_INVALID_ENUM) return false;
 		const uint8_t i = buffer_target_to_index(mTarget);
-		std::shared_ptr<vertex_buffer> prev = VERTEX_BUFFER_TARGETS[i].lock();
+		std::shared_ptr<vertex_buffer> prev = mContext.state->currently_bound_vbos[i].lock();
 		if(! prev) return false;
 		return prev->get_id() == mID;
 	}

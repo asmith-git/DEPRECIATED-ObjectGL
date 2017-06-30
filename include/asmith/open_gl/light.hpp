@@ -15,7 +15,7 @@
 #define ASMITH_OPENGL_LIGHT_HPP
 
 #include <memory>
-#include "core.hpp"
+#include "context.hpp"
 
 namespace asmith { namespace gl {
 	
@@ -27,6 +27,7 @@ namespace asmith { namespace gl {
 	*/
 	class light : public std::enable_shared_from_this<light> {
 	private:
+ 		context& mContext;
 		vec4f mPosition;
 		vec4f mAmbient;
 		vec4f mDiffuse;
@@ -45,14 +46,14 @@ namespace asmith { namespace gl {
 		light& operator=(const light&) = delete;
 		light& operator=(light&&) = delete;
 
-		light(GLenum) throw();
+		light(context&, GLenum) throw();
 	public:
-		static std::shared_ptr<light> get_light(GLenum) throw();
-		static void enable_lighting() throw();
-		static void disable_lighting() throw();
-		static bool is_lighting_enabled() throw();
-		static void set_scene_ambient(const vec4f&) throw();
-		static const vec4f& get_scene_ambient() throw();
+		static std::shared_ptr<light> get_light(context&, GLenum) throw();
+		static void enable_lighting(context&) throw();
+		static void disable_lighting(context&) throw();
+		static bool is_lighting_enabled(context&) throw();
+		static void set_scene_ambient(context&, const vec4f&) throw();
+		static const vec4f& get_scene_ambient(context&) throw();
 
 		~light() throw();
 

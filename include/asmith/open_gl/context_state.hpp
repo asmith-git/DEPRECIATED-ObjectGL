@@ -11,19 +11,32 @@
 //	See the License for the specific language governing permissions and
 //	limitations under the License.
 
-#include "asmith/open_gl/context.hpp"
-#include "asmith/open_gl/context_state.hpp"
+#ifndef ASMITH_OPENGL_CONTEXT_STATE_HPP
+#define ASMITH_OPENGL_CONTEXT_STATE_HPP
+
+#include "program.hpp"
+#include "vertex_buffer.hpp"
+#include "light.hpp"
 
 namespace asmith { namespace gl {
 	
-	// context
+	/*!
+		\brief
+		\author Adam Smith
+		\date Created : 30th June 2017 Modified 30th June 2017
+		\version 1.0
+	*/
+	struct context_state {
+		std::vector<object*> object_list;
+		std::shared_ptr<program> currently_bound_program;
+		std::weak_ptr<vertex_buffer> currently_bound_vbos[14];
+		std::shared_ptr<light> lights[GL_MAX_LIGHTS];
+		vec4f ambient_scene_colour;
+		bool lighting_enabled;
 
-	context::context() :
-		state(new context_state())
-	{}
-
-	context::~context() {
-		if(state) delete state;
-	}
+		context_state();
+	};
 
 }}
+
+#endif

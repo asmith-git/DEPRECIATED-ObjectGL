@@ -11,19 +11,14 @@
 //	See the License for the specific language governing permissions and
 //	limitations under the License.
 
-#include "asmith/open_gl/context.hpp"
 #include "asmith/open_gl/context_state.hpp"
 
 namespace asmith { namespace gl {
 	
-	// context
+	// context_state
 
-	context::context() :
-		state(new context_state())
+	context_state::context_state() :
+		lighting_enabled(false)
 	{}
-
-	context::~context() {
-		if(state) delete state;
-	}
 
 }}

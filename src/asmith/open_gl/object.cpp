@@ -13,30 +13,22 @@
 
 #include <vector>
 #include "asmith/open_gl/object.hpp"
+#include "asmith/open_gl/context_state.hpp"
 
 namespace asmith { namespace gl {
 	
 	// object
 
-	static std::vector<object*> OBJECT_LIST;
-
-	std::shared_ptr<object> object::get_object_with_id(id_t aID) throw() {
-		for(object* i : OBJECT_LIST) {
-			if(i->get_id() == aID) return i->shared_from_this();
-		}
-		return std::shared_ptr<object>();
-	}
-	
 	object::object(context& aContext) :
 		mContext(aContext),
 		mID(INVALID_ID)
 	{
-		OBJECT_LIST.push_back(this);
+		mContext.state->object_list.push_back(this);
 	}
 	
 	object::~object() {
 		// if(is_created()) destroy();
-		OBJECT_LIST.erase(std::find(OBJECT_LIST.begin(), OBJECT_LIST.end(), this));
+		mContext.state->object_list.erase(std::find(mContext.state->object_list.begin(), mContext.state->object_list.end(), this));
 	}
 
 	context& object::get_context() const throw() {

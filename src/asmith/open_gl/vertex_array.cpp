@@ -39,7 +39,7 @@ namespace asmith { namespace gl {
 
 		const GLuint  s = mAttributes.size();
 		if(s > 0) {
-			const std::shared_ptr<vertex_buffer> previous = vertex_buffer::get_buffer_bound_to(GL_ARRAY_BUFFER);
+			const std::shared_ptr<vertex_buffer> previous = vertex_buffer::get_buffer_bound_to(mContext, GL_ARRAY_BUFFER); 
 			if(previous && previous->is_mapped())  throw std::runtime_error("asmith::gl::vertex_array::create : VBO currently bound to GL_ARRAY_BUFFER is mapped");
 
 			glBindVertexArray(mID);

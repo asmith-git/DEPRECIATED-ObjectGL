@@ -12,48 +12,46 @@
 //	limitations under the License.
 
 #include "asmith/open_gl/light.hpp"
+#include "asmith/open_gl/context_state.hpp"
 
 namespace asmith { namespace gl {
-
-	static std::shared_ptr<light> LIGHTS[GL_MAX_LIGHTS];
-	static vec4f SCENE_AMBIENT;
-	static bool LIGHTING_ENABLED = false;
 	
 	// light
 
-	std::shared_ptr<light> light::get_light(GLenum aID) throw() {
+	std::shared_ptr<light> light::get_light(context& aContext, GLenum aID) throw() {
 		if(aID < GL_LIGHT0 || aID >= (GL_LIGHT0 + GL_MAX_LIGHTS)) return std::shared_ptr<light>();
-		std::shared_ptr<light>& l = LIGHTS[aID - GL_LIGHT0];
-		if(! l) l.reset(new light(aID));
+		std::shared_ptr<light>& l = aContext.state->lights[aID - GL_LIGHT0];
+		if(! l) l.reset(new light(aContext, aID));
 		return l;
 	}
 
-	void light::enable_lighting() throw() {
-		if(LIGHTING_ENABLED) return;
-		LIGHTING_ENABLED = true;
+	void light::enable_lighting(context& aContext) throw() {
+		if(aContext.state->lighting_enabled) return;
+		aContext.state->lighting_enabled = true;
 		glEnable(GL_LIGHTING);
 	}
 
-	void light::disable_lighting() throw() {
-		if(! LIGHTING_ENABLED) return;
-		LIGHTING_ENABLED = false;
+	void light::disable_lighting(context& aContext) throw() {
+		if(!aContext.state->lighting_enabled) return;
+		aContext.state->lighting_enabled = false;
 		glDisable(GL_LIGHTING);
 	}
 
-	bool light::is_lighting_enabled() throw() {
-		return LIGHTING_ENABLED;
+	bool light::is_lighting_enabled(context& aContext) throw() {
+		return aContext.state->lighting_enabled;
 	}
 
-	void light::set_scene_ambient(const vec4f& aValue) throw() {
-		SCENE_AMBIENT = aValue;
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, &SCENE_AMBIENT[0]);
+	void light::set_scene_ambient(context& aContext, const vec4f& aValue) throw() {
+		aContext.state->ambient_scene_colour = aValue;
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, &aContext.state->ambient_scene_colour[0]);
 	}
 
-	const vec4f& light::get_scene_ambient() throw() {
-		return SCENE_AMBIENT;
+	const vec4f& light::get_scene_ambient(context& aContext) throw() {
+		return aContext.state->ambient_scene_colour;
 	}
 
-	light::light(GLenum aID) throw() :
+	light::light(context& aContext, GLenum aID) throw() :
+		mContext(aContext),
 		mPosition(0.f, 0.f, 0.f, 1.f),
 		mAmbient(0.f, 0.f, 0.f, 1.f),
 		mDiffuse(1.f, 1.f, 1.f, 1.f),

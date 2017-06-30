@@ -18,7 +18,7 @@
 #include "vertex_buffer.hpp"
 #include "light.hpp"
 
-namespace asmith { namespace gl {
+namespace asmith { namespace gl { namespace implementation {
 	
 	/*!
 		\brief
@@ -37,6 +37,6 @@ namespace asmith { namespace gl {
 		context_state();
 	};
 
-}}
+}}}
 
 #endif

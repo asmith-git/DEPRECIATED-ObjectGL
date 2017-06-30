@@ -19,7 +19,7 @@ namespace asmith { namespace gl {
 	// context
 
 	context::context() :
-		state(new context_state())
+		state(new implementation::context_state())
 	{}
 
 	context::~context() {

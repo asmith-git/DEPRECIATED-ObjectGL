@@ -18,7 +18,9 @@
 
 namespace asmith { namespace gl {
 
-	class context_state;
+	namespace implementation {
+		class context_state;
+	}
 	
 	/*!
 		\brief
@@ -36,7 +38,7 @@ namespace asmith { namespace gl {
 		context();
 		~context();
 
-		context_state* const state;
+		implementation::context_state* const state;
 	};
 
 }}

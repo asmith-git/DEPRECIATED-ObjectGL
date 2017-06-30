@@ -13,7 +13,7 @@
 
 #include "asmith/open_gl/context_state.hpp"
 
-namespace asmith { namespace gl {
+namespace asmith { namespace gl { namespace implementation {
 	
 	// context_state
 
@@ -21,4 +21,4 @@ namespace asmith { namespace gl {
 		lighting_enabled(false)
 	{}
 
-}}
+}}}

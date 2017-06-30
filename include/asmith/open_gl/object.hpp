@@ -39,6 +39,8 @@ namespace asmith { namespace gl {
 		object& operator=(const object&) = delete;
 		object& operator=(object&&) = delete;
 	public:
+		static std::shared_ptr<object> get_object_with_id(context&, id_t) throw();
+
 		object(context&);
 		virtual ~object();
 

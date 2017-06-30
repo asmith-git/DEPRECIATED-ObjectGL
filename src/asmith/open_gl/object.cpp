@@ -19,6 +19,13 @@ namespace asmith { namespace gl {
 	
 	// object
 
+	std::shared_ptr<object> object::get_object_with_id(context& aContext, id_t aID) throw() {
+		for(object* i : aContext.state->object_list) {
+			if(i->get_id() == aID) return i->shared_from_this();
+		}
+		return std::shared_ptr<object>();
+	}
+
 	object::object(context& aContext) :
 		mContext(aContext),
 		mID(INVALID_ID)

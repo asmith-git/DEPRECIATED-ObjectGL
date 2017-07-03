@@ -16,96 +16,75 @@
 
 namespace asmith { namespace gl {
 
-	static void obj_end_line(std::istream& aStream) throw() {
-		if(aStream.eof()) return;
-		char buf = aStream.peek();
-		while(buf != '\n') {
-			aStream.read(&buf, 1);
-			if(aStream.eof()) return;
-			buf = aStream.peek();
+	static inline const char* obj_skip_whitespace(const char* aPos) throw() {
+		while(std::isspace(*aPos))++aPos;
+		return aPos;
+	}
+
+	static const char* obj_read_f(const char* aPos, GLfloat& aValue) {
+		aPos = obj_skip_whitespace(aPos);
+		aValue = std::atof(aPos);
+		while((*aPos >= '0' && *aPos <= '9') || *aPos == '-' || *aPos == '.') ++aPos;
+		return aPos;
+	}
+
+	static const char* obj_read_u(const char* aPos, GLuint& aValue) {
+		aPos = obj_skip_whitespace(aPos);
+		aValue = std::atoi(aPos);
+		while (*aPos >= '0' && *aPos <= '9') ++aPos;
+		return aPos;
+	}
+
+	static inline const char* obj_read_v2(const char* aPos, vec2f& aValue) {
+		aPos = obj_read_f(aPos, aValue[0]);
+		aPos = obj_read_f(aPos, aValue[1]);
+		return aPos;
+	}
+
+	static inline const char* obj_read_v3(const char* aPos, vec3f& aValue) {
+		aPos = obj_read_f(aPos, aValue[0]);
+		aPos = obj_read_f(aPos, aValue[1]);
+		aPos = obj_read_f(aPos, aValue[2]);
+		return aPos;
+	}
+
+	static const char* obj_read_face(const char* aPos, obj::face& aValue) {
+		aPos = obj_read_u(aPos, aValue.vertex);
+		aPos = obj_skip_whitespace(aPos);
+		if(*aPos != '/') {
+			aValue.texture_coordinate = 1;
+			aValue.normal = 1;
+			return aPos;
 		}
-	}
+		aPos = obj_skip_whitespace(aPos + 1);
 
-	static void obj_skip_whitespace(std::istream& aStream) throw() {
-		//if(aStream.eof()) return;
-		//char buf = aStream.peek();
-		//while(std::isspace(buf)) {
-		//	aStream.read(&buf, 1);
-		//	if(aStream.eof()) return;
-		//	buf = aStream.peek();
-		//}
-	}
-
-	static void obj_read_v2(std::istream& aStream, vec2f& aValue) {
-		aStream >> aValue[0];
-		aStream >> aValue[1];
-	}
-
-	static void obj_read_v3(std::istream& aStream, vec3f& aValue) {
-		aStream >> aValue[0];
-		aStream >> aValue[1];
-		aStream >> aValue[2];
-	}
-
-	static obj::face obj_read_face(std::istream& aStream) {
-		char c;
-		obj::face f;
-		
-		aStream >> f.vertex;
-		obj_skip_whitespace(aStream);
-		if(aStream.peek() != '/') {
-			f.texture_coordinate = 1;
-			f.normal = 1;
-			return f;
+		if(*aPos == '/') {
+			aPos = obj_skip_whitespace(aPos + 1);
+			aPos = obj_read_u(aPos, aValue.normal);
+			aValue.texture_coordinate = 1;
+			return aPos;
 		}
-		aStream.read(&c, 1);
-		obj_skip_whitespace(aStream);
 
-		if(aStream.peek() == '/') {
-			aStream.read(&c, 1);
-			obj_skip_whitespace(aStream);
-			aStream >> f.normal;
-			obj_skip_whitespace(aStream);
-			f.texture_coordinate = 1;
-			return f;
+		aPos = obj_read_u(aPos, aValue.texture_coordinate);
+		aPos = obj_skip_whitespace(aPos);
+		if(*aPos != '/') {
+			aValue.normal = 1;
+			return aPos;
 		}
-			
-		aStream >> f.texture_coordinate;
-		obj_skip_whitespace(aStream);
-		if(aStream.peek() != '/') {
-			f.normal = 1;
-			return f;
-		}
-		aStream.read(&c, 1);
-		obj_skip_whitespace(aStream);
+		aPos = obj_skip_whitespace(aPos + 1);
+		aPos = obj_read_u(aPos, aValue.normal);
 
-		aStream >> f.normal;
-
-		return f;
+		return aPos;
 	}
 
-	static const obj::triangle obj_read_triangle(std::istream& aStream) {
-		const auto pos = aStream.tellg();
-		uint32_t count = 0;
-
-		char c;
-		//aStream.read(&c, 1);
-		//while(aStream.peek() != '\n') {
-		//	aStream.read(&c, 1);
-		//	if(c == '/') ++count;
-		//}
-
-		aStream.seekg(pos);
-
-		obj::triangle v;
-
-		//! \todo Break larger faces into triangles
-		v.points[0]  = obj_read_face(aStream);
-		v.points[1] = obj_read_face(aStream);
-		v.points[2] = obj_read_face(aStream);
-
-
-		return v;
+	static const char* obj_read_primative(const char* aPos, obj::primative& aValue) {
+		aValue.count = 0;
+		while(*aPos != '\0') {
+			aPos = obj_skip_whitespace(aPos);
+			if(aValue.count >= 8) throw std::runtime_error("asmith::gl::obj::read_obj : Maximum number of face points exceeded");
+			aPos = obj_read_face(aPos, aValue.faces[aValue.count++]);
+		}
+		return aPos;
 	};
 	
 	// obj
@@ -118,40 +97,59 @@ namespace asmith { namespace gl {
 
 		vec2f buf2;
 		vec3f buf3;
+		primative buffp;
 
 		char c;
+		char line[256];
+		uint8_t length = 0;
+
 		while(! aStream.eof()) {
-			aStream >> c;
-			switch (c) {
+			// Read line
+			length = 0;
+			aStream.read(&c, 1);
+			while(c != '\n' && ! aStream.eof()) {
+				if(length == UINT8_MAX) throw std::runtime_error("asmith::gl::obj::read_obj : Maximum line length exceeded");
+				line[length++] = c;
+				aStream.read(&c, 1);
+			}
+			if(length == 0) continue;
+			line[length] = '\0';
+
+			const char* pos = obj_skip_whitespace(line);
+
+			// Process line
+			switch(*pos) {
 			case '#':
 				break;
 			case 's':
 				break;
+			case 'm':
+				throw std::runtime_error("asmith::gl::obj::read_obj : Materials not implemented");
+			case 'g':
+				throw std::runtime_error("asmith::gl::obj::read_obj : Groups not implemented");
 			case 'f':
-				faces.push_back(obj_read_triangle(aStream));
+				pos = obj_read_primative(pos + 1, buffp);
+				faces.push_back(buffp);
 				break;
 			case 'v':
-				switch(aStream.peek()) {
+				switch(pos[1]) {
 				case 't':
-					aStream.read(&c, 1);
-					obj_read_v2(aStream, buf2);
+					pos = obj_read_v2(pos + 2, buf2);
 					texture_coordinates.push_back(buf2);
 					break;
 				case 'n':
-					aStream.read(&c, 1);
-					obj_read_v3(aStream, buf3);
+					pos = obj_read_v3(pos + 2, buf3);
 					normals.push_back(buf3);
 					break;
 				default:
-					obj_read_v3(aStream, buf3);
+					pos = obj_read_v3(pos + 1, buf3);
 					vertices.push_back(buf3);
 					break;
 				}
 				break;
 			default:
-				throw std::runtime_error("asmith::gl::read_obj : Unexpected character found");
+				throw std::runtime_error("asmith::gl::obj::read_obj : Unexpected character found");
 			}
-			obj_end_line(aStream);
 		}
 
 		if(vertices.empty()) vertices.push_back({0.f, 0.f, 0.f});
@@ -169,11 +167,13 @@ namespace asmith { namespace gl {
 		const size_t f = faces.size();
 		std::vector<vertex> model(f * 3);
 		for(size_t i = 0; i < f; ++i) {
+			//! \todo Break larger faces into triangles
+			if(faces[i].count != 3) throw std::runtime_error("asmith::gl::obj::create_vao : Non-triangular face detected");
 			for(size_t j = 0; j < 3; ++j) {
 				vertex& v = model[i*3 + j];
-				v.v = vertices[faces[i].points[j].vertex - 1];
-				v.t = texture_coordinates[faces[i].points[j].texture_coordinate - 1];
-				v.n = normals[faces[i].points[j].normal - 1];
+				v.v = vertices[faces[i].faces[j].vertex - 1];
+				v.t = texture_coordinates[faces[i].faces[j].texture_coordinate - 1];
+				v.n = normals[faces[i].faces[j].normal - 1];
 			}
 		}
 

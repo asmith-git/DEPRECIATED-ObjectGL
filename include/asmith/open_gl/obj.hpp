@@ -33,14 +33,15 @@ namespace asmith { namespace gl {
 			GLuint normal;
 		};
 
-		struct triangle {
-			face points[3];
+		struct primative {
+			face faces[8];
+			uint8_t count;
 		};
 		
 		std::vector<vec3f> vertices;
 		std::vector<vec3f> normals;
 		std::vector<vec2f> texture_coordinates;
-		std::vector<triangle> faces;
+		std::vector<primative> faces;
 
 		void load(std::istream&);
 		std::shared_ptr<vertex_array> create_vao(context&) const;

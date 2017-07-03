@@ -33,8 +33,10 @@ namespace asmith { namespace gl {
 			GLuint normal;
 		};
 
+		enum {MAX_FACE_POINTS = 8};
+
 		struct primative {
-			face faces[8];
+			face faces[MAX_FACE_POINTS];
 			uint8_t count;
 		};
 		

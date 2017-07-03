@@ -81,7 +81,7 @@ namespace asmith { namespace gl {
 		aValue.count = 0;
 		while(*aPos != '\0') {
 			aPos = obj_skip_whitespace(aPos);
-			if(aValue.count >= 8) throw std::runtime_error("asmith::gl::obj::read_obj : Maximum number of face points exceeded");
+			if(aValue.count >= obj::MAX_FACE_POINTS) throw std::runtime_error("asmith::gl::obj::read_obj : MAX_FACE_POINTS exceeded");
 			aPos = obj_read_face(aPos, aValue.faces[aValue.count++]);
 		}
 		return aPos;

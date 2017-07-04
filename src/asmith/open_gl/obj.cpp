@@ -12,6 +12,7 @@
 //	limitations under the License.
 
 #include "asmith/open_gl/obj.hpp"
+#include "asmith/utilities/strings.hpp"
 #include <cctype>
 
 namespace asmith { namespace gl {
@@ -21,18 +22,18 @@ namespace asmith { namespace gl {
 		return aPos;
 	}
 
-	static const char* obj_read_f(const char* aPos, GLfloat& aValue) {
+	static inline const char* obj_read_f(const char* aPos, GLfloat& aValue) {
 		aPos = obj_skip_whitespace(aPos);
-		aValue = std::atof(aPos);
-		while((*aPos >= '0' && *aPos <= '9') || *aPos == '-' || *aPos == '.') ++aPos;
-		return aPos;
+		const char* p = strings::read_f(aPos, aValue);
+		if(p == aPos) throw std::runtime_error("asmith::gl::obj::read_obj : expected float");
+		return p;
 	}
 
-	static const char* obj_read_u(const char* aPos, GLuint& aValue) {
+	static inline const char* obj_read_u(const char* aPos, GLuint& aValue) {
 		aPos = obj_skip_whitespace(aPos);
-		aValue = std::atoi(aPos);
-		while (*aPos >= '0' && *aPos <= '9') ++aPos;
-		return aPos;
+		const char* p = strings::read_32u(aPos, aValue);
+		if(p == aPos) throw std::runtime_error("asmith::gl::obj::read_obj : expected unsigned integer");
+		return p;
 	}
 
 	static inline const char* obj_read_v2(const char* aPos, vec2f& aValue) {

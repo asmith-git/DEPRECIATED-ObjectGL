@@ -166,14 +166,37 @@ namespace asmith { namespace gl {
 
 		const size_t f = faces.size();
 		std::vector<vertex> model(f * 3);
+		size_t index = 0;
 		for(size_t i = 0; i < f; ++i) {
-			//! \todo Break larger faces into triangles
-			if(faces[i].count != 3) throw std::runtime_error("asmith::gl::obj::create_vao : Non-triangular face detected");
-			for(size_t j = 0; j < 3; ++j) {
-				vertex& v = model[i*3 + j];
-				v.v = vertices[faces[i].faces[j].vertex - 1];
-				v.t = texture_coordinates[faces[i].faces[j].texture_coordinate - 1];
-				v.n = normals[faces[i].faces[j].normal - 1];
+			if(faces[i].count == 3) {
+				// Triangular faces
+				for(size_t j = 0; j < 3; ++j) {
+					vertex& v = model[index++];
+					v.v = vertices[faces[i].faces[j].vertex - 1];
+					v.t = texture_coordinates[faces[i].faces[j].texture_coordinate - 1];
+					v.n = normals[faces[i].faces[j].normal - 1];
+				}
+			}else {
+				// Non-triangular faces
+				const size_t newVerts = faces[i].count - 3;
+				for(size_t j = 0; j < newVerts; ++j) model.push_back(vertex());
+				for(size_t j = 1; j < faces[i].count - 1; ++j) {
+					vertex& v1 = model[index++];
+					vertex& v2 = model[index++];
+					vertex& v3 = model[index++];
+
+					v1.v = vertices[faces[i].faces[0].vertex - 1];
+					v1.t = texture_coordinates[faces[i].faces[0].texture_coordinate - 1];
+					v1.n = normals[faces[i].faces[0].normal - 1];
+
+					v2.v = vertices[faces[i].faces[j].vertex - 1];
+					v2.t = texture_coordinates[faces[i].faces[j].texture_coordinate - 1];
+					v2.n = normals[faces[i].faces[j].normal - 1];
+
+					v2.v = vertices[faces[i].faces[j + 1].vertex - 1];
+					v2.t = texture_coordinates[faces[i].faces[j + 1].texture_coordinate - 1];
+					v2.n = normals[faces[i].faces[j + 1].normal - 1];
+				}
 			}
 		}
 

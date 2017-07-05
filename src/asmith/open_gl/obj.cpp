@@ -104,6 +104,9 @@ namespace asmith { namespace gl {
 		char line[256];
 		uint8_t length = 0;
 
+		bool materialError = true;
+		bool groupError = true;
+
 		while(! aStream.eof()) {
 			// Read line
 			length = 0;
@@ -126,9 +129,17 @@ namespace asmith { namespace gl {
 				break;
 			case 'm':
 			case 'u':
-				throw std::runtime_error("asmith::gl::obj::read_obj : Materials not implemented");
+				if(materialError) {
+					materialError = false;
+					std::cerr << "asmith::gl::obj::read_obj : Materials not implemented" << std::endl;
+				}
+				break;
 			case 'g':
-				throw std::runtime_error("asmith::gl::obj::read_obj : Groups not implemented");
+				if(groupError) {
+					groupError = false;
+					std::cerr << "asmith::gl::obj::read_obj : Groups not implemented" << std::endl;
+				}
+				break;
 			case 'f':
 				pos = obj_read_primative(pos + 1, buffp);
 				faces.push_back(buffp);
@@ -196,9 +207,9 @@ namespace asmith { namespace gl {
 					v2.t = texture_coordinates[p.faces[j].texture_coordinate - 1];
 					v2.n = normals[p.faces[j].normal - 1];
 
-					v2.v = vertices[p.faces[j + 1].vertex - 1];
-					v2.t = texture_coordinates[p.faces[j + 1].texture_coordinate - 1];
-					v2.n = normals[p.faces[j + 1].normal - 1];
+					v3.v = vertices[p.faces[j + 1].vertex - 1];
+					v3.t = texture_coordinates[p.faces[j + 1].texture_coordinate - 1];
+					v3.n = normals[p.faces[j + 1].normal - 1];
 				}
 			}
 		}

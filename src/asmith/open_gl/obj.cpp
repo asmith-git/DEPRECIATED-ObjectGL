@@ -105,6 +105,7 @@ namespace asmith { namespace gl {
 		uint8_t length = 0;
 		uint8_t object = 0;
 		uint8_t group = 0;
+		bool smooth = false;
 
 		bool materialError = true;
 
@@ -127,6 +128,23 @@ namespace asmith { namespace gl {
 			case '#':
 				break;
 			case 's':
+				pos = obj_skip_whitespace(pos + 1);
+				if(*pos == '1') {
+					smooth = true;
+				}else if(*pos == '0') {
+					smooth = false;
+				}else if(*pos == 'o') {
+					++pos;
+					if(*pos == 'n') {
+						smooth = true;
+					}else if(*pos == 'f') {
+						smooth = false;
+					}else {
+						throw std::runtime_error("asmith::gl::obj::read_obj : Unexpected character found");
+					}
+				}else {
+					throw std::runtime_error("asmith::gl::obj::read_obj : Unexpected character found");
+				}
 				break;
 			case 'm':
 			case 'u':
@@ -137,6 +155,7 @@ namespace asmith { namespace gl {
 				break;
 			case 'o':
 				if(object == MAX_OBJECTS) throw std::runtime_error("asmith::gl::obj::read_obj : MAX_OBJECTS exceeded");
+				group = 0;
 				++object;
 				break;
 			case 'g':
@@ -147,6 +166,7 @@ namespace asmith { namespace gl {
 				pos = obj_read_primative(pos + 1, buffp);
 				buffp.object = object;
 				buffp.group = group;
+				buffp.smooth_shading = smooth ? 1 : 0;
 				faces.push_back(buffp);
 				break;
 			case 'v':

@@ -23,8 +23,8 @@ namespace asmith { namespace gl {
 	/*!
 		\brief 
 		\author Adam Smith
-		\date Created : ? Modified 29th June 2017
-		\version 3.0
+		\date Created : ? Modified 5th July 2017
+		\version 3.3
 	*/
 	struct obj {
 		struct face {
@@ -35,15 +35,18 @@ namespace asmith { namespace gl {
 
 		enum {
 			MAX_FACE_POINTS = 8,
-			MAX_OBJECTS = UINT8_MAX,
-			MAX_GROUPS = UINT8_MAX,
+			MAX_OBJECTS = 31,
+			MAX_GROUPS = 63,
 		};
 
 		struct primative {
 			face faces[MAX_FACE_POINTS];
-			uint8_t count;
-			uint8_t object;
-			uint8_t group;
+			struct {
+				uint16_t count : 4;
+				uint16_t object : 5;
+				uint16_t group : 6;
+				uint16_t smooth_shading : 1;
+			};
 		};
 		
 		std::vector<vec3f> vertices;

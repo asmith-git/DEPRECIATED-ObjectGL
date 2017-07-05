@@ -94,7 +94,10 @@ namespace asmith { namespace gl {
 		vertices.clear();
 		texture_coordinates.clear();
 		normals.clear();
-		faces.clear();
+		objects.clear();
+
+		object* currentObject = nullptr;
+		group* currentGroup = nullptr;
 
 		vec2f buf2;
 		vec3f buf3;
@@ -103,8 +106,6 @@ namespace asmith { namespace gl {
 		char c;
 		char line[256];
 		uint8_t length = 0;
-		uint8_t object = 0;
-		uint8_t group = 0;
 		bool smooth = false;
 
 		bool materialError = true;
@@ -154,20 +155,43 @@ namespace asmith { namespace gl {
 				}
 				break;
 			case 'o':
-				if(object == MAX_OBJECTS) throw std::runtime_error("asmith::gl::obj::read_obj : MAX_OBJECTS exceeded");
-				group = 0;
-				++object;
+				pos = obj_skip_whitespace(pos + 1);
+				objects.push_back(object());
+				currentObject = &objects.back();
+				currentObject = nullptr;
+
+				while(*pos != '\0') {
+					currentObject->name += *pos;
+					++pos;
+				}
 				break;
 			case 'g':
-				if(group == MAX_GROUPS) throw std::runtime_error("asmith::gl::obj::read_obj : MAX_GROUPS exceeded");
-				++group;
+				if(currentObject == nullptr) {
+					objects.push_back(object());
+					currentObject = &objects.back();
+				}
+
+				pos = obj_skip_whitespace(pos + 1);
+				currentObject->groups.push_back(group());
+				currentGroup = &currentObject->groups.back();
+
+				while(*pos != '\0') {
+					currentGroup->name += *pos;
+					++pos;
+				}
 				break;
 			case 'f':
+				if(currentObject == nullptr) {
+					objects.push_back(object());
+					currentObject = &objects.back();
+				}
+				if(currentGroup == nullptr) {
+					currentObject->groups.push_back(group());
+					currentGroup = &currentObject->groups.back();
+				}
 				pos = obj_read_primative(pos + 1, buffp);
-				buffp.object = object;
-				buffp.group = group;
 				buffp.smooth_shading = smooth ? 1 : 0;
-				faces.push_back(buffp);
+				currentGroup->faces.push_back(buffp);
 				break;
 			case 'v':
 				switch(pos[1]) {
@@ -195,50 +219,57 @@ namespace asmith { namespace gl {
 		if(normals.empty()) normals.push_back({0.f, 0.f, 1.f});
 	}
 
-	std::shared_ptr<vertex_array> obj::create_vao(context& aContext) const {
+	std::shared_ptr<vertex_array> obj::create_vao(context& aContext, GLsizei & aVerts) const {
 		struct vertex {
 			vec3f v;
 			vec2f t;
 			vec3f n;
 		};
 
-		const size_t f = faces.size();
-		std::vector<vertex> model(f * 3);
+		aVerts = 0;
+		for(const object& o : objects) for(const group& g : o.groups) aVerts += g.faces.size();
+
+		std::vector<vertex> model(aVerts * 3);
 		size_t index = 0;
-		for(size_t i = 0; i < f; ++i) {
-			const primative& p = faces[i];
-			if(p.count == 3) {
-				// Triangular faces
-				for(size_t j = 0; j < 3; ++j) {
-					vertex& v = model[index++];
-					v.v = vertices[p.faces[j].vertex - 1];
-					v.t = texture_coordinates[p.faces[j].texture_coordinate - 1];
-					v.n = normals[p.faces[j].normal - 1];
-				}
-			}else {
-				// Non-triangular faces
-				const size_t newVerts = (p.count - 3) * 3;
-				for(size_t j = 0; j < newVerts; ++j) model.push_back(vertex());
-				for(size_t j = 1; j < p.count - 1; ++j) {
-					vertex& v1 = model[index++];
-					vertex& v2 = model[index++];
-					vertex& v3 = model[index++];
+		for(const object& obj : objects) {
+			for(const group& grp : obj.groups) {
+				const size_t f2 = grp.faces.size();
+				for(size_t i = 0; i < f2; ++i) {
+					const primative& p = grp.faces[i];
+					if(p.count == 3) {
+						// Triangular faces
+						for(size_t j = 0; j < 3; ++j) {
+							vertex& v = model[index++];
+							v.v = vertices[p.faces[j].vertex - 1];
+							v.t = texture_coordinates[p.faces[j].texture_coordinate - 1];
+							v.n = normals[p.faces[j].normal - 1];
+						}
+					}else {
+						// Non-triangular faces
+						const size_t newVerts = (p.count - 3) * 3;
+						aVerts += newVerts;
+						for(size_t j = 0; j < newVerts; ++j) model.push_back(vertex());
+						for(size_t j = 1; j < p.count - 1; ++j) {
+							vertex& v1 = model[index++];
+							vertex& v2 = model[index++];
+							vertex& v3 = model[index++];
 
-					v1.v = vertices[p.faces[0].vertex - 1];
-					v1.t = texture_coordinates[p.faces[0].texture_coordinate - 1];
-					v1.n = normals[p.faces[0].normal - 1];
+							v1.v = vertices[p.faces[0].vertex - 1];
+							v1.t = texture_coordinates[p.faces[0].texture_coordinate - 1];
+							v1.n = normals[p.faces[0].normal - 1];
 
-					v2.v = vertices[p.faces[j].vertex - 1];
-					v2.t = texture_coordinates[p.faces[j].texture_coordinate - 1];
-					v2.n = normals[p.faces[j].normal - 1];
+							v2.v = vertices[p.faces[j].vertex - 1];
+							v2.t = texture_coordinates[p.faces[j].texture_coordinate - 1];
+							v2.n = normals[p.faces[j].normal - 1];
 
-					v3.v = vertices[p.faces[j + 1].vertex - 1];
-					v3.t = texture_coordinates[p.faces[j + 1].texture_coordinate - 1];
-					v3.n = normals[p.faces[j + 1].normal - 1];
+							v3.v = vertices[p.faces[j + 1].vertex - 1];
+							v3.t = texture_coordinates[p.faces[j + 1].texture_coordinate - 1];
+							v3.n = normals[p.faces[j + 1].normal - 1];
+						}
+					}
 				}
 			}
 		}
-
 		std::shared_ptr<gl::vertex_buffer> vbo(new gl::vertex_buffer(aContext));
 		std::shared_ptr<gl::vertex_array> vao(new gl::vertex_array(aContext));
 

@@ -24,7 +24,7 @@ namespace asmith { namespace gl {
 		\brief 
 		\author Adam Smith
 		\date Created : ? Modified 5th July 2017
-		\version 3.3
+		\version 3.4
 	*/
 	struct obj {
 		struct face {
@@ -34,28 +34,34 @@ namespace asmith { namespace gl {
 		};
 
 		enum {
-			MAX_FACE_POINTS = 8,
-			MAX_OBJECTS = 31,
-			MAX_GROUPS = 63,
+			MAX_FACE_POINTS = 8
 		};
 
 		struct primative {
 			face faces[MAX_FACE_POINTS];
 			struct {
-				uint16_t count : 4;
-				uint16_t object : 5;
-				uint16_t group : 6;
-				uint16_t smooth_shading : 1;
+				uint8_t count : 7;
+				uint8_t smooth_shading : 1;
 			};
+		};
+
+		struct group {
+			std::string name;
+			std::vector<primative> faces;
+		};
+
+		struct object {
+			std::string name;
+			std::vector<group> groups;
 		};
 		
 		std::vector<vec3f> vertices;
 		std::vector<vec3f> normals;
 		std::vector<vec2f> texture_coordinates;
-		std::vector<primative> faces;
+		std::vector<object> objects;
 
 		void load(std::istream&);
-		std::shared_ptr<vertex_array> create_vao(context&) const;
+		std::shared_ptr<vertex_array> create_vao(context&, GLsizei&) const;
 	};
 }}
 

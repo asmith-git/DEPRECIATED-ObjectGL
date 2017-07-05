@@ -103,9 +103,10 @@ namespace asmith { namespace gl {
 		char c;
 		char line[256];
 		uint8_t length = 0;
+		uint8_t object = 0;
+		uint8_t group = 0;
 
 		bool materialError = true;
-		bool groupError = true;
 
 		while(! aStream.eof()) {
 			// Read line
@@ -134,14 +135,18 @@ namespace asmith { namespace gl {
 					std::cerr << "asmith::gl::obj::read_obj : Materials not implemented" << std::endl;
 				}
 				break;
+			case 'o':
+				if(object == MAX_OBJECTS) throw std::runtime_error("asmith::gl::obj::read_obj : MAX_OBJECTS exceeded");
+				++object;
+				break;
 			case 'g':
-				if(groupError) {
-					groupError = false;
-					std::cerr << "asmith::gl::obj::read_obj : Groups not implemented" << std::endl;
-				}
+				if(group == MAX_GROUPS) throw std::runtime_error("asmith::gl::obj::read_obj : MAX_GROUPS exceeded");
+				++group;
 				break;
 			case 'f':
 				pos = obj_read_primative(pos + 1, buffp);
+				buffp.object = object;
+				buffp.group = group;
 				faces.push_back(buffp);
 				break;
 			case 'v':

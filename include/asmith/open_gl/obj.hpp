@@ -33,11 +33,17 @@ namespace asmith { namespace gl {
 			GLuint normal;
 		};
 
-		enum {MAX_FACE_POINTS = 8};
+		enum {
+			MAX_FACE_POINTS = 8,
+			MAX_OBJECTS = UINT8_MAX,
+			MAX_GROUPS = UINT8_MAX,
+		};
 
 		struct primative {
 			face faces[MAX_FACE_POINTS];
 			uint8_t count;
+			uint8_t object;
+			uint8_t group;
 		};
 		
 		std::vector<vec3f> vertices;
